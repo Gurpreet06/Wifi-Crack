@@ -105,6 +105,4 @@ def check_parms():
         menu_panel()
 
 
-
-
 signal.signal(signal.SIGINT, ctrl_c)
