@@ -29,7 +29,7 @@ def get_colours(text, color):
 
 
 def menu_panel():
-    get_colours("[*] Usage: sudo python3 main.py <Network InterFace> <parameters>", "green")
+    get_colours("[*] Usage: sudo python3 wifiCrack.py <Network InterFace> <parameters>", "green")
     get_colours("-a  Attack mode", "yellow")
     get_colours(f"\t Handshake", "yellow")
     get_colours(f"\t PKMID (Not Working)", "cyan")
