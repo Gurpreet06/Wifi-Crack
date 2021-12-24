@@ -79,4 +79,10 @@ def ctrl_c(signum, frame):
     exit(1)
 
 
+def check_parms():
+    if len(sys.argv) > 1:
+        if sys.argv[1] == "-h":
+            menu_panel()
+
+
 signal.signal(signal.SIGINT, ctrl_c)
