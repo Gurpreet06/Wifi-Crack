@@ -80,6 +80,9 @@ def attack_func(network_interface, attack_mode):
         airodump_pid = subprocess.run(["pgrep", "xterm"], capture_output=True, text=True)
         access_point_name = input(Fore.YELLOW + "Access point name: ")
         access_point_channel = input(Fore.YELLOW + "Channel name: ")
+    if airodump_pid.stdout != "0":
+            os.system(f"sudo kill {airodump_pid.stdout}")
+    time.sleep(1)
 
 
 
