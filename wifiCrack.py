@@ -47,3 +47,5 @@ def check_deps():
         get_colours("Installing [Macchanger]....", "magenta")
         install_macchanger = subprocess.run(["sudo", "apt", "install", "macchanger", "-y"], capture_output=True,
                                             text=True)
+        if "Setting up macchanger" in install_macchanger.stdout:
+            get_colours("Macchanger Installed...", "blue")
