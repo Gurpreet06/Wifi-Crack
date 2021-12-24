@@ -95,8 +95,12 @@ def check_parms():
                     else:
                         check_deps()
                         attack_func(sys.argv[2], sys.argv[4])
+                else:
+                    get_colours("Select a attack Mode..", "red")
+            else:
+                get_colours("Select a attack Mode..", "red")
 
-                        
+
 
 
 signal.signal(signal.SIGINT, ctrl_c)
