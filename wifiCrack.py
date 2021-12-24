@@ -70,6 +70,7 @@ def stop_attack(network_interface, attack_parm):
         get_colours("Stoping attack...", "red")
         subprocess.run(["sudo", "airmon-ng", "stop", network_interface + "mon"])
         get_colours("Network set to it's normal mode...", "magenta")
+        get_colours("[*] Exiting the program...", "blue")
 
 
 def ctrl_c(signum, frame):
