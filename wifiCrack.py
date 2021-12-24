@@ -88,6 +88,15 @@ def check_parms():
                 if len(sys.argv) > 4:
                     check_interface_exist = subprocess.run(["ifconfig"], capture_output=True, text=True)
                     check_attack_mode = ["Handshake", "PKMID"]
+                    if sys.argv[2] not in check_interface_exist.stdout:
+                        get_colours("Select a valid Interface..", "red")
+                    elif sys.argv[4] not in check_attack_mode:
+                        get_colours("Select a valid attack Mode..", "red")
+                    else:
+                        check_deps()
+                        attack_func(sys.argv[2], sys.argv[4])
+
+                        
 
 
 signal.signal(signal.SIGINT, ctrl_c)
