@@ -86,6 +86,8 @@ def check_parms():
         elif len(sys.argv) > 2:
             if len(sys.argv) > 3:
                 if len(sys.argv) > 4:
+                    check_interface_exist = subprocess.run(["ifconfig"], capture_output=True, text=True)
+                    check_attack_mode = ["Handshake", "PKMID"]
 
 
 signal.signal(signal.SIGINT, ctrl_c)
