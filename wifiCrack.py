@@ -99,6 +99,10 @@ def check_parms():
                     get_colours("Select a attack Mode..", "red")
             else:
                 get_colours("Select a attack Mode..", "red")
+        else:
+            get_colours("\nIncorrect Option...", "red")
+    else:
+        menu_panel()
 
 
 
