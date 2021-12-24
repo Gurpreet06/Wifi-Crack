@@ -64,7 +64,10 @@ def attack_func(network_interface, attack_mode):
     time.sleep(1)
     subprocess.run(["clear"])
     get_colours("\nSetting up network card...", "yellow")
-
+    subprocess.run(["sudo", "airmon-ng", "start", network_interface])
+    get_colours("\nGetting new Mac Address...", "yellow")
+    time.sleep(3)
+    
 
 def stop_attack(network_interface, attack_parm):
     if attack_parm == "STOP":
