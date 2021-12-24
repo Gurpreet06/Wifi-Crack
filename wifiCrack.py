@@ -17,3 +17,13 @@ def get_colours(text, color):
     elif color == "blue":
         blue_color = Fore.BLUE + text
         print(blue_color)
+    elif color == "yellow":
+        yellow_color = Fore.YELLOW + text
+        print(yellow_color)
+    elif color == "magenta":
+        magenta_color = Fore.MAGENTA + text
+        print(magenta_color)
+    elif color == "cyan":
+        cyan_color = Fore.CYAN + text
+        print(cyan_color)
+
