@@ -69,3 +69,6 @@ def ctrl_c(signum, frame):
     subprocess.run(["sudo", "airmon-ng", "stop", "wlan0mon"])
     get_colours("[*] Exiting the program...", "blue")
     exit(1)
+
+
+signal.signal(signal.SIGINT, ctrl_c)
