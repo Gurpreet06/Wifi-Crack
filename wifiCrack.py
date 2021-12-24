@@ -40,7 +40,7 @@ def menu_panel():
 def check_deps():
     get_colours("\nChecking necessary programs...", "cyan")
     check_macchanger = subprocess.run(["which", "macchanger"], capture_output=True, text=True)
-    if "macchanger" in check_macchanger.stdout:
+    if "/usr/bin/macchanger" or "/usr/sbin/macchanger" in check_macchanger.stdout:
         get_colours(f"\nMacchanger\t\t {Fore.GREEN + '(V)'}", "magenta")
     else:
         get_colours(f"\nMacchanger \t\t {Fore.RED + '(X)'}", "red")
@@ -50,7 +50,7 @@ def check_deps():
         if "Setting up macchanger" in install_macchanger.stdout:
             get_colours("Macchanger Installed...", "blue")
     check_airmon_ng = subprocess.run(["which", "airmon-ng"], capture_output=True, text=True)
-    if "airmon-ng" in check_airmon_ng.stdout:
+  if "/usr/bin/airmon-ng"  or "/usr/sbin/airmon-ng" in check_airmon_ng.stdout:
         get_colours(f"\nAirmon-ng \t\t {Fore.GREEN + '(V)'}", "magenta")
     else:
         get_colours(f"\nAirmon-ng \t\t {Fore.RED + '(X)'}", "red")
