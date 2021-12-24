@@ -29,12 +29,12 @@ def get_colours(text, color):
 
 
 def menu_panel():
-    get_colours("[*] Usage: python3 main.py <Network InterFace> <parameters>", "green")
-    get_colours("-a  Attack mode", "yellow")
+    get_colours("\n[*] Usage: python3 main.py <Network InterFace> <parameters>", "green")
+    get_colours("1. (-a)  Attack mode", "yellow")
     get_colours(f"\t Handshake", "yellow")
     get_colours(f"\t PKMID (Not Working)", "cyan")
-    get_colours("-n Network card name", "yellow")
-    get_colours("-h Help Panel", "yellow")
+    get_colours("2. (-n) Network card name", "yellow")
+    get_colours("3. (-h) Help Panel", "yellow")
 
 
 def check_deps():
