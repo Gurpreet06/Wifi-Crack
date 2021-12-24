@@ -27,3 +27,10 @@ def get_colours(text, color):
         cyan_color = Fore.CYAN + text
         print(cyan_color)
 
+def menu_panel():
+    get_colours("[*] Usage: python3 main.py <Network InterFace> <parameters>", "green")
+    get_colours("-a  Attack mode", "yellow")
+    get_colours(f"\t Handshake", "yellow")
+    get_colours(f"\t PKMID (Not Working)", "cyan")
+    get_colours("-n Network card name", "yellow")
+    get_colours("-h Help Panel", "yellow")
