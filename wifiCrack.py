@@ -73,6 +73,10 @@ def attack_func(network_interface, attack_mode):
     get_colours("\n New Mac Address Generated ", "blue")
     time.sleep(1)
     subprocess.run(["clear"])
+    
+    # HandShake Attack Mode
+    if attack_mode == "Handshake":
+        os.system(f"xterm -hold -e sudo airodump-ng {network_interface}mon &")
 
 
 
