@@ -10,5 +10,6 @@ PKMID Attack mode which focuses its attention on wireless networks that do not h
 
 
 ## Examples of How To Use
-The program has 2 parameters, the first parameter -n to specify the name of the network card.
+The program has 2 parameters, the first parameter "-n" to specify the name of the network card.
 The second parameter '-a' to specify the attack mode (Handshake | PKMID).
+
