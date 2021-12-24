@@ -62,3 +62,10 @@ def check_deps():
 
 def attack_func(network_interface, attack_mode):
     print(" ")
+
+
+
+def ctrl_c(signum, frame):
+    subprocess.run(["sudo", "airmon-ng", "stop", "wlan0mon"])
+    get_colours("[*] Exiting the program...", "blue")
+    exit(1)
