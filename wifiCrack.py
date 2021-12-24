@@ -65,6 +65,13 @@ def attack_func(network_interface, attack_mode):
 
 
 
+def stop_attack(network_interface, attack_parm):
+    if attack_parm == "STOP":
+        get_colours("Stoping attack...", "red")
+        subprocess.run(["sudo", "airmon-ng", "stop", network_interface + "mon"])
+        get_colours("Network set to it's normal mode...", "magenta")
+
+
 def ctrl_c(signum, frame):
     subprocess.run(["sudo", "airmon-ng", "stop", "wlan0mon"])
     get_colours("[*] Exiting the program...", "blue")
