@@ -40,4 +40,5 @@ def menu_panel():
 def check_deps():
     get_colours("\nChecking necessary programs...", "cyan")
     check_macchanger = subprocess.run(["which", "macchanger"], capture_output=True, text=True)
-    
+    if "macchanger" in check_macchanger.stdout:
+        get_colours(f"\nMacchanger\t\t {Fore.GREEN + '(V)'}", "magenta")
