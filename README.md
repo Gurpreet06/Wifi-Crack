@@ -23,5 +23,5 @@ The program also has a help menu with the parameter "-h"
              Handshake
              PKMID (Not Working)
     -n Network card name
-    -h Help Pan
+    -h Help Panel
 ```
