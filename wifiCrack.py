@@ -49,3 +49,6 @@ def check_deps():
                                             text=True)
         if "Setting up macchanger" in install_macchanger.stdout:
             get_colours("Macchanger Installed...", "blue")
+    check_airmon_ng = subprocess.run(["which", "airmon-ng"], capture_output=True, text=True)
+    if "airmon-ng" in check_airmon_ng.stdout:
+        get_colours(f"\nAirmon-ng \t\t {Fore.GREEN + '(V)'}", "magenta")
