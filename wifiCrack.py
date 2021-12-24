@@ -57,3 +57,5 @@ def check_deps():
         get_colours("\nInstalling [Airmon-ng]....", "magenta")
         install_airmon_ng = subprocess.run(["sudo", "apt", "install", "airmon-ng", "-y"], capture_output=True,
                                            text=True)
+        if "Setting up airmon-ng" in install_airmon_ng.stdout:
+            get_colours("Airmon-ng Installed...", "blue")
