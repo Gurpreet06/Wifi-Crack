@@ -59,3 +59,4 @@ def check_deps():
                                            text=True)
         if "Setting up airmon-ng" in install_airmon_ng.stdout:
             get_colours("Airmon-ng Installed...", "blue")
+
