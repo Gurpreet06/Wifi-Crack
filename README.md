@@ -13,7 +13,7 @@ PKMID Attack mode which focuses its attention on wireless networks that do not h
 The program has 2 parameters, the first parameter "-n" to specify the name of the network card.
 The second parameter '-a' to specify the attack mode (Handshake | PKMID).
 
-The program also have a help menu with the parameter "-h"
+The program also has a help menu with the parameter "-h"
 
 ```bash
 ❯ sudo python3 wifiCrack.py
