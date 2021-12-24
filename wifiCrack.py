@@ -77,6 +77,9 @@ def attack_func(network_interface, attack_mode):
     # HandShake Attack Mode
     if attack_mode == "Handshake":
         os.system(f"xterm -hold -e sudo airodump-ng {network_interface}mon &")
+        airodump_pid = subprocess.run(["pgrep", "xterm"], capture_output=True, text=True)
+        access_point_name = input(Fore.YELLOW + "Access point name: ")
+        access_point_channel = input(Fore.YELLOW + "Channel name: ")
 
 
 
