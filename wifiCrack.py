@@ -61,8 +61,9 @@ def check_deps():
             get_colours("Airmon-ng Installed...", "blue")
 
 def attack_func(network_interface, attack_mode):
-    print(" ")
-
+    time.sleep(1)
+    subprocess.run(["clear"])
+    get_colours("\nSetting up network card...", "yellow")
 
 
 def stop_attack(network_interface, attack_parm):
