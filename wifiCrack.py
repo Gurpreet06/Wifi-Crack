@@ -60,3 +60,5 @@ def check_deps():
         if "Setting up airmon-ng" in install_airmon_ng.stdout:
             get_colours("Airmon-ng Installed...", "blue")
 
+def attack_func(network_interface, attack_mode):
+    print(" ")
