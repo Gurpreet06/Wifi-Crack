@@ -99,6 +99,7 @@ def attack_func(network_interface, attack_mode):
         airodump_pid_handshake = subprocess.run(["pgrep", "xterm"], capture_output=True, text=True)
         os.system(f"sudo kill {airodump_pid_handshake.stdout}")
         os.system("xterm -hold -e aircrack-ng -w /usr/share/wordlists/rockyou.txt HandShake-Capture/Capture-01.cap &")
+    # PKMID Attack Mode
     elif attack_mode == "PKMID":
         subprocess.run(["clear"])
         time.sleep(1)
