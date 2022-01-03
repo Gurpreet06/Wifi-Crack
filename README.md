@@ -21,7 +21,7 @@ The program also has a help menu with the parameter "-h"
     [*] Usage: python3 main.py <Network InterFace> <parameters>
     -a  Attack mode
              Handshake
-             PKMID (Not Working)
+             PKMID
     -n Network card name
     -h Help Panel
 ```

