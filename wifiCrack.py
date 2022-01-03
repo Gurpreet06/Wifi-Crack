@@ -123,9 +123,9 @@ def attack_func(network_interface, attack_mode):
             get_colours("\nno packet captured...", "red")
 
 
-def ctrl_c(signum, frame):
+def ctrl_c(signal_received, frame):
     get_colours("\nStopping attack...", "red")
-    subprocess.run(["sudo", "airmon-ng", "stop", "wlan0mon"])
+    subprocess.run(["sudo", "airmon-ng", "stop", sys.argv[2] + "mon"])
     subprocess.run(["sudo", "service", "NetworkManager", "restart"])
     get_colours("Network set to it's normal mode...", "magenta")
     get_colours("\n[*] Exiting the program...", "blue")
