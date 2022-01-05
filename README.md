@@ -15,6 +15,7 @@ The second parameter '-a' to specify the attack mode (Handshake | PKMID).
 
 The program also has a help menu with the parameter "-h"
 
+### Help Menu
 ```bash
 ❯ sudo python3 wifiCrack.py -h
 
@@ -26,6 +27,7 @@ The program also has a help menu with the parameter "-h"
     -h Help Panel
 ```
 
+### Usage
 ```bash
 ❯ sudo python3 wifiCrack.py -n wlan0 -a handshake / PKMID
 ```
