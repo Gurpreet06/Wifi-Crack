@@ -78,7 +78,7 @@ def attack_func(network_interface, attack_mode):
     subprocess.run(["clear"])
 
     # HandShake Attack Mode
-    if attack_mode == "handshake":
+    if attack_mode == "Handshake":
         os.system(f"xterm -hold -e sudo airodump-ng {network_interface}mon &")
         airodump_pid = subprocess.run(["pgrep", "xterm"], capture_output=True, text=True)
         access_point_name = input(Fore.YELLOW + "Access point name: ")
@@ -147,18 +147,18 @@ def check_parms():
                     check_interface_exist = subprocess.run(["ifconfig"], capture_output=True, text=True)
                     check_attack_mode = ["Handshake", "PKMID"]
                     if sys.argv[2] not in check_interface_exist.stdout:
-                        get_colours("Select a valid Interface..", "red")
+                        get_colours("Select a valid Interface (wlan0 / eth0)", "red")
                     elif sys.argv[4] not in check_attack_mode:
-                        get_colours("Select a valid attack Mode..", "red")
+                        get_colours("\nSelect a valid attack Mode (Handshake / PKMID)", "red")
                     else:
                         check_deps()
                         attack_func(sys.argv[2], sys.argv[4])
                 else:
-                    get_colours("Select a attack Mode..", "red")
+                    get_colours("\nSelect a valid attack Mode (Handshake / PKMID)", "red")
             else:
-                get_colours("Select a attack Mode..", "red")
+                get_colours("\nSelect a valid attack Mode (Handshake / PKMID)", "red")
         else:
-            get_colours("\nIncorrect Option...", "red")
+            get_colours("\nSelect a valid Interface (wlan0 / eth0)", "red")
     else:
         menu_panel()
 
