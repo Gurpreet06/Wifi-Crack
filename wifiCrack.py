@@ -29,7 +29,7 @@ def get_colours(text, color):
 
 
 def menu_panel():
-    get_colours("\n[*] Usage: python3 " + sys.argv[0] + " <Network InterFace> <parameters>", "green")
+    get_colours("\n[*] Usage: sudo python3 " + sys.argv[0] + " <Network InterFace> <parameters>", "green")
     get_colours("\n(-a)  Attack mode", "yellow")
     get_colours(f"\t Handshake", "cyan")
     get_colours(f"\t PKMID", "cyan")
