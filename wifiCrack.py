@@ -29,7 +29,7 @@ def get_colours(text, color):
 
 
 def menu_panel():
-    get_colours("\n[*] Usage: python3 main.py <Network InterFace> <parameters>", "green")
+    get_colours("\n[*] Usage: python3 " + sys.argv[0] + " <Network InterFace> <parameters>", "green")
     get_colours("\n(-a)  Attack mode", "yellow")
     get_colours(f"\t Handshake", "cyan")
     get_colours(f"\t PKMID", "cyan")
@@ -128,7 +128,7 @@ def attack_func(network_interface, attack_mode):
             get_colours("\nno packet captured...", "red")
 
 
-def ctrl_c(signal_received, frame):
+def ctrl_c(sig, frame):
     get_colours("\nStopping attack...", "red")
     subprocess.run(["sudo", "airmon-ng", "stop", sys.argv[2] + "mon"])
     subprocess.run(["sudo", "service", "NetworkManager", "restart"])
