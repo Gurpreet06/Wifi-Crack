@@ -19,7 +19,7 @@ The program also has a help menu with the parameter "-h"
 ```bash
 ❯ sudo python3 wifiCrack.py -h
 
-    [*] Usage: python3 main.py <Network InterFace> <parameters>
+    [*] Usage: python3 wifiCrack.py <Network InterFace> <parameters>
     -a  Attack mode
              Handshake
              PKMID
