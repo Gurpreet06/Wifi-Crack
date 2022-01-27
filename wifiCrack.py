@@ -35,7 +35,7 @@ def menu_panel():
     get_colours(f"\t Handshake", "cyan")
     get_colours(f"\t PKMID", "cyan")
     get_colours("(-h) Help Panel", "yellow")
-
+    print(" ")  # To avoid leaving the terminal with colors.
 
 
 def check_deps():
