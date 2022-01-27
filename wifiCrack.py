@@ -144,7 +144,7 @@ def check_parms():
         elif len(sys.argv) > 2:
             if len(sys.argv) > 3:
                 if len(sys.argv) > 4:
-                    check_interface_exist = subprocess.run(["ifconfig"], capture_output=True, text=True)
+                    check_interface_exist = subprocess.run(["ip", "a"], capture_output=True, text=True)
                     check_attack_mode = ["Handshake", "PKMID"]
                     if sys.argv[2] not in check_interface_exist.stdout:
                         get_colours("Select a valid Interface (wlan0 / eth0)", "red")
@@ -152,7 +152,7 @@ def check_parms():
                         get_colours("\nSelect a valid attack Mode (Handshake / PKMID)", "red")
                     else:
                         check_deps()
-                        attack_func(sys.argv[2], sys.argv[4])
+                        # attack_func(sys.argv[2], sys.argv[4])
                 else:
                     get_colours("\nSelect a valid attack Mode (Handshake / PKMID)", "red")
             else:
