@@ -7,10 +7,12 @@ from colorama import Fore
 
 
 def ctrl_c(signum, frame):
-    get_colours("\nStopping attack...", "red")
-    subprocess.run(["sudo", "airmon-ng", "stop", sys.argv[2] + "mon"])
-    subprocess.run(["sudo", "service", "NetworkManager", "restart"])
+    get_colours("\nStopping attack...", "mangeta")
+    get_colours("\nSetting Network interface to it normal mode..", "mangeta")
+    subprocess.run(["sudo", "airmon-ng", "stop", sys.argv[2] + "mon"], stdout=subprocess.DEVNULL)
+    subprocess.run(["sudo", "service", "NetworkManager", "restart"], stdout=subprocess.DEVNULL)
     get_colours("Network set to it's normal mode...", "magenta")
+    time.sleep(3)
     get_colours("\n[*] Exiting the program...", "blue")
     exit(1)
 
@@ -178,7 +180,7 @@ def check_parms():
                         get_colours("\nSelect a valid attack Mode (Handshake / PKMID)", "red")
                     else:
                         check_deps()
-                        # attack_func(sys.argv[2], sys.argv[4])
+                        attack_func(sys.argv[2], sys.argv[4])
                 else:
                     get_colours("\nSelect a valid attack Mode (Handshake / PKMID)", "red")
             else:
