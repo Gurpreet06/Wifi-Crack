@@ -94,7 +94,7 @@ def attack_func(network_interface, attack_mode):
     subprocess.run(["clear"])
     get_colours("\nSetting up network card...", "yellow")
     subprocess.run(["sudo", "airmon-ng", "start", network_interface], stdout=subprocess.DEVNULL)
-    get_colours("\nGetting new Mac Address...", "yellow")
+    get_colours("\nGenerating new Mac Address...", "cyan")
     time.sleep(3)
     subprocess.run(["sudo", "ifconfig", network_interface + "mon", "down"], stdout=subprocess.DEVNULL)
     subprocess.run(["sudo", "macchanger", "-r", network_interface + "mon"], stdout=subprocess.DEVNULL)
