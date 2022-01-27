@@ -147,7 +147,7 @@ def check_parms():
                     check_interface_exist = subprocess.run(["ip", "a"], capture_output=True, text=True)
                     check_attack_mode = ["Handshake", "PKMID"]
                     if sys.argv[2] not in check_interface_exist.stdout:
-                        get_colours("Select a valid Interface (wlan0 / eth0)", "red")
+                        get_colours("\nInvalid Network Interface name (Ej: wlan0 / eth0)", "red")
                     elif sys.argv[4] not in check_attack_mode:
                         get_colours("\nSelect a valid attack Mode (Handshake / PKMID)", "red")
                     else:
