@@ -154,7 +154,7 @@ def attack_func(network_interface, attack_mode):
             subprocess.run(["sudo", "hashcat", "-m", "16800", "-a", "0", "-w", "4", "myHashes_PKMID",
                             "/usr/share/wordlists/rockyou.txt", "-d", "1", "--force"])
         else:
-            get_colours("\nno packet captured...", "red")
+            get_colours("\n[-] no packet captured...", "red")
             quit_program()
 
 
