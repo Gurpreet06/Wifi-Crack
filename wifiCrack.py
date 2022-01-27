@@ -100,7 +100,7 @@ def attack_func(network_interface, attack_mode):
     subprocess.run(["sudo", "macchanger", "-r", network_interface + "mon"], stdout=subprocess.DEVNULL)
     subprocess.run(["sudo", "ifconfig", network_interface + "mon", "up"], stdout=subprocess.DEVNULL)
     subprocess.run(["sudo", "airmon-ng", "check", "kill"], stdout=subprocess.DEVNULL)
-    subprocess.run(["killall", "dhclient", "wpa_supplicant"], stdout=subprocess.DEVNULL)
+    # subprocess.run(["killall", "dhclient", "wpa_supplicant"], stdout=subprocess.DEVNULL)
     get_colours("\n New Mac Address Generated ", "blue")
     time.sleep(1)
     subprocess.run(["clear"])
@@ -131,6 +131,7 @@ def attack_func(network_interface, attack_mode):
     elif attack_mode == "PKMID":
         subprocess.run(["clear"])
         time.sleep(1)
+        subprocess.run(["sudo", "airmon-ng", "check", "kill"], stdout=subprocess.DEVNULL)
         get_colours("Starting the PKMID Client-Less ATTACK", "magenta")
         time.sleep(3)
         get_colours("", "yellow")
