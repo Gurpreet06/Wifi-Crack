@@ -6,6 +6,18 @@ import signal
 from colorama import Fore
 
 
+def ctrl_c(signum, frame):
+    get_colours("\nStopping attack...", "red")
+    subprocess.run(["sudo", "airmon-ng", "stop", sys.argv[2] + "mon"])
+    subprocess.run(["sudo", "service", "NetworkManager", "restart"])
+    get_colours("Network set to it's normal mode...", "magenta")
+    get_colours("\n[*] Exiting the program...", "blue")
+    exit(1)
+
+
+signal.signal(signal.SIGINT, ctrl_c)
+
+
 # Colours
 def get_colours(text, color):
     if color == "green":
@@ -140,15 +152,15 @@ def attack_func(network_interface, attack_mode):
                             "/usr/share/wordlists/rockyou.txt", "-d", "1", "--force"])
         else:
             get_colours("\nno packet captured...", "red")
+            quit_program()
 
 
-def ctrl_c(sig, frame):
-    get_colours("\nStopping attack...", "red")
+def quit_program():
+    get_colours("\n[*] Exiting the program...", "blue")
     subprocess.run(["sudo", "airmon-ng", "stop", sys.argv[2] + "mon"])
     subprocess.run(["sudo", "service", "NetworkManager", "restart"])
     get_colours("Network set to it's normal mode...", "magenta")
-    get_colours("\n[*] Exiting the program...", "blue")
-    exit(1)
+    exit(0)
 
 
 def check_parms():
@@ -178,4 +190,3 @@ def check_parms():
 
 
 check_parms()
-signal.signal(signal.SIGINT, ctrl_c)
