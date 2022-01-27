@@ -39,6 +39,7 @@ def menu_panel():
 
 def check_deps():
     get_colours("\nChecking necessary programs...", "cyan")
+    # Check Mac-Changer
     check_macchanger = subprocess.run(["which", "macchanger"], capture_output=True, text=True)
     if "/usr/bin/macchanger" in check_macchanger.stdout or "/usr/sbin/macchanger" in check_macchanger.stdout:
         get_colours(f"\nMacchanger\t\t {Fore.GREEN + '(V)'}", "magenta")
@@ -49,6 +50,7 @@ def check_deps():
                                             text=True)
         if "Setting up macchanger" in install_macchanger.stdout:
             get_colours("Macchanger Installed...", "blue")
+    # Check Airmon-Ng
     check_airmon_ng = subprocess.run(["which", "airmon-ng"], capture_output=True, text=True)
     if "/usr/bin/airmon-ng" in check_airmon_ng.stdout or "/usr/sbin/airmon-ng" in check_airmon_ng.stdout:
         get_colours(f"\nAirmon-ng \t\t {Fore.GREEN + '(V)'}", "magenta")
@@ -59,6 +61,17 @@ def check_deps():
                                            text=True)
         if "Setting up airmon-ng" in install_airmon_ng.stdout:
             get_colours("Airmon-ng Installed...", "blue")
+    # Check hcxdumptool
+    check_hcxdumptool = subprocess.run(["which", "hcxdumptool"], capture_output=True, text=True)
+    if "/usr/bin/hcxdumptool" in check_hcxdumptool.stdout or "/usr/sbin/hcxdumptool" in check_hcxdumptool.stdout:
+        get_colours(f"\nhcxdumpTool \t\t {Fore.GREEN + '(V)'}", "magenta")
+    else:
+        get_colours(f"\nhcxdumpTool \t\t {Fore.RED + '(X)'}", "red")
+        get_colours("\nInstalling [hcxdumpTool]....", "magenta")
+        install_airmon_ng = subprocess.run(["sudo", "apt", "install", "hcxdumpTool", "-y"], capture_output=True,
+                                           text=True)
+        if "Setting up hcxdumptool" in install_airmon_ng.stdout:
+            get_colours("hcxdumpTool Installed...", "blue")
 
 
 def attack_func(network_interface, attack_mode):
