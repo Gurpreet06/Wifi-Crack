@@ -20,10 +20,10 @@ The program also has a help menu with the parameter "-h"
 ❯ sudo python3 wifiCrack.py -h
 
     [*] Usage: sudo python3 wifiCrack.py <Network InterFace> <parameters>
+    -n Network card name
     -a  Attack mode
              Handshake
              PKMID
-    -n Network card name
     -h Help Panel
 ```
 
