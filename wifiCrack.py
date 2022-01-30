@@ -7,12 +7,12 @@ from colorama import Fore
 
 
 def ctrl_c(signum, frame):
-    get_colours("\nStopping attack...", "mangeta")
-    get_colours("\nSetting Network interface to it normal mode..", "mangeta")
+    get_colours("\n[!] Stopping attack...", "mangeta")
+    get_colours("\n[*] Setting Network interface to it normal mode..", "mangeta")
     subprocess.run(["sudo", "airmon-ng", "stop", sys.argv[2] + "mon"], stdout=subprocess.DEVNULL)
     subprocess.run(["sudo", "service", "NetworkManager", "restart"], stdout=subprocess.DEVNULL)
-    get_colours("Network set to it's normal mode...", "magenta")
-    time.sleep(3)
+    get_colours("\n[*] Network set to it's normal mode...", "yellow")
+    time.sleep(2)
     get_colours("\n[*] Exiting the program...", "blue")
     exit(1)
 
@@ -53,6 +53,7 @@ def menu_panel():
 
 
 def check_deps():
+    subprocess.run(["clear"])
     program_status = False
     get_colours("\nChecking necessary programs...", "cyan")
     # Check Mac-Changer
@@ -99,6 +100,13 @@ def check_deps():
             program_status = True
     if program_status:
         attack_func(sys.argv[2], sys.argv[4])  # If all the necessary programs are installed then call the attack func.
+    else:
+        get_colours(f"\n[!] There was an error installing the necessary programs, Please install the following"
+                    f" programs manually: ", 'red')
+        get_colours(f"\n1. airmon-ng", "cyan")
+        get_colours(f"2. macchanger", "cyan")
+        get_colours(f"3. hcxdumptool\n", "cyan")
+
 
 
 def attack_func(network_interface, attack_mode):
