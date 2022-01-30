@@ -53,40 +53,52 @@ def menu_panel():
 
 
 def check_deps():
+    program_status = False
     get_colours("\nChecking necessary programs...", "cyan")
     # Check Mac-Changer
     check_macchanger = subprocess.run(["which", "macchanger"], capture_output=True, text=True)
     if "/usr/bin/macchanger" in check_macchanger.stdout or "/usr/sbin/macchanger" in check_macchanger.stdout:
         get_colours(f"\nMacchanger\t\t {Fore.GREEN + '(V)'}", "magenta")
+        program_status = True
     else:
+        program_status = False
         get_colours(f"\nMacchanger \t\t {Fore.RED + '(X)'}", "red")
         get_colours("Installing [Macchanger]....", "magenta")
         install_macchanger = subprocess.run(["sudo", "apt", "install", "macchanger", "-y"], capture_output=True,
                                             text=True)
         if "Setting up macchanger" in install_macchanger.stdout:
-            get_colours("Macchanger Installed...", "blue")
+            get_colours("\n[*] Macchanger Installed...", "blue")
+            program_status = True
     # Check Airmon-Ng
     check_airmon_ng = subprocess.run(["which", "airmon-ng"], capture_output=True, text=True)
     if "/usr/bin/airmon-ng" in check_airmon_ng.stdout or "/usr/sbin/airmon-ng" in check_airmon_ng.stdout:
         get_colours(f"\nAirmon-ng \t\t {Fore.GREEN + '(V)'}", "magenta")
+        program_status = True
     else:
+        program_status = False
         get_colours(f"\nAirmon-ng \t\t {Fore.RED + '(X)'}", "red")
         get_colours("\nInstalling [Airmon-ng]....", "magenta")
         install_airmon_ng = subprocess.run(["sudo", "apt", "install", "airmon-ng", "-y"], capture_output=True,
                                            text=True)
         if "Setting up airmon-ng" in install_airmon_ng.stdout:
-            get_colours("Airmon-ng Installed...", "blue")
+            get_colours("\n[*] Airmon-ng Installed...", "blue")
+            program_status = True
     # Check hcxdumptool
     check_hcxdumptool = subprocess.run(["which", "hcxdumptool"], capture_output=True, text=True)
     if "/usr/bin/hcxdumptool" in check_hcxdumptool.stdout or "/usr/sbin/hcxdumptool" in check_hcxdumptool.stdout:
         get_colours(f"\nhcxdumpTool \t\t {Fore.GREEN + '(V)'}", "magenta")
+        program_status = True
     else:
+        program_status = False
         get_colours(f"\nhcxdumpTool \t\t {Fore.RED + '(X)'}", "red")
         get_colours("\nInstalling [hcxdumpTool]....", "magenta")
-        install_airmon_ng = subprocess.run(["sudo", "apt", "install", "hcxdumpTool", "-y"], capture_output=True,
+        install_hcxdump = subprocess.run(["sudo", "apt", "install", "hcxdumptool", "-y"], capture_output=True,
                                            text=True)
-        if "Setting up hcxdumptool" in install_airmon_ng.stdout:
-            get_colours("hcxdumpTool Installed...", "blue")
+        if "Setting up hcxdumptool" in install_hcxdump.stdout:
+            get_colours("\n[*] hcxdumpTool Installed...", "blue")
+            program_status = True
+    if program_status:
+        attack_func(sys.argv[2], sys.argv[4])  # If all the necessary programs are installed then call the attack func.
 
 
 def attack_func(network_interface, attack_mode):
@@ -182,8 +194,7 @@ def check_parms():
                     elif sys.argv[4] not in check_attack_mode:
                         get_colours("\nSelect a valid attack Mode (Handshake / PKMID)", "red")
                     else:
-                        check_deps()
-                        attack_func(sys.argv[2], sys.argv[4])
+                        check_deps()  # Check for neccesary program to run this script.
                 else:
                     get_colours("\nSelect a valid attack Mode (Handshake / PKMID)", "red")
             else:
