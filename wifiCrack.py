@@ -14,6 +14,7 @@ def ctrl_c(signum, frame):
     get_colours("\n[*] Network set to it's normal mode...", "yellow")
     time.sleep(2)
     get_colours("\n[*] Exiting the program...", "blue")
+    print(Fore.WHITE) # To avoid leaving the terminal with colors.
     exit(1)
 
 
@@ -106,7 +107,7 @@ def check_deps():
         get_colours(f"\n1. airmon-ng", "cyan")
         get_colours(f"2. macchanger", "cyan")
         get_colours(f"3. hcxdumptool\n", "cyan")
-
+        print(Fore.WHITE)
 
 
 def attack_func(network_interface, attack_mode):
@@ -184,6 +185,7 @@ def quit_program():
     subprocess.run(["sudo", "airmon-ng", "stop", sys.argv[2] + "mon"], stdout=subprocess.DEVNULL)
     subprocess.run(["sudo", "service", "NetworkManager", "restart"], stdout=subprocess.DEVNULL)
     get_colours("Network set to it's normal mode...", "magenta")
+    print(Fore.WHITE)
     time.sleep(3)
     exit(0)
 
@@ -199,16 +201,21 @@ def check_parms():
                     check_attack_mode = ["Handshake", "PKMID"]
                     if sys.argv[2] not in check_interface_exist.stdout:
                         get_colours("\nInvalid Network Interface name (Ej: wlan0 / eth0)", "red")
+                        print(Fore.WHITE)
                     elif sys.argv[4] not in check_attack_mode:
                         get_colours("\nSelect a valid attack Mode (Handshake / PKMID)", "red")
+                        print(Fore.WHITE)
                     else:
                         check_deps()  # Check for neccesary program to run this script.
                 else:
                     get_colours("\nSelect a valid attack Mode (Handshake / PKMID)", "red")
+                    print(Fore.WHITE)
             else:
                 get_colours("\nSelect a valid attack Mode (Handshake / PKMID)", "red")
+                print(Fore.WHITE)
         else:
             get_colours("\nSelect a valid Interface (wlan0 / eth0)", "red")
+            print(Fore.WHITE)
     else:
         menu_panel()
 
