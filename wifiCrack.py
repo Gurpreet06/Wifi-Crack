@@ -161,7 +161,7 @@ def attack_func(network_interface, attack_mode):
         get_colours("", "yellow")
         process = subprocess.Popen(["sudo", "hcxdumptool", "-i" + network_interface + "mon", "--enable_status=1", "-o", "Capture_PKMID"])
         try:
-            process.wait(timeout=70)  # Time for the process
+            process.wait(timeout=5)  # Time for the process
         except subprocess.TimeoutExpired:
             print('\n[!] Timed out - killing process ID - ', process.pid)
             process.kill()
@@ -195,12 +195,13 @@ def attack_func(network_interface, attack_mode):
 
 def quit_program():
     get_colours("\n[!] Clearing Temporary files..", "red")
+    os.system("rm -rf Cap*")
+    time.sleep(2)
     get_colours("\n[!] Exiting the program...", "blue")
     get_colours("\nSetting Network interface to it normal mode..", "mangeta")
     subprocess.run(["sudo", "airmon-ng", "stop", sys.argv[2] + "mon"], stdout=subprocess.DEVNULL)
     subprocess.run(["sudo", "service", "NetworkManager", "restart"], stdout=subprocess.DEVNULL)
     get_colours("[*] Network set to it's normal mode...", "magenta")
-    os.system("rm -rf Cap*")
     print(Fore.WHITE)
     exit(0)
 
