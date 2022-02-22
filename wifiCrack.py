@@ -186,10 +186,10 @@ def attack_func(network_interface, attack_mode):
             subprocess.run(["sudo", "hashcat", "-m", "16800", "-a", "0", "-w", "4", "myHashes_PKMID",
                             "/usr/share/wordlists/rockyou.txt", "-d", "1", "--force"])
         else:
-            subprocess.run(["clear"])
+            os.system('clear')
             get_colours("\n[-] no packet captured...", "red")
             time.sleep(2)
-            subprocess.run(["clear"])
+            os.system('clear')
             quit_program()
 
 
