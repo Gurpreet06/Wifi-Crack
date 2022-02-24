@@ -172,7 +172,7 @@ def attack_func(network_interface, attack_mode):
         process = subprocess.Popen(
             ["sudo", "hcxdumptool", "-i" + network_interface + "mon", "--enable_status=1", "-o", "Capture_PKMID"])
         try:
-            process.wait(timeout=60)  # Time for the process
+            process.wait(timeout=65)  # Time for the process
         except subprocess.TimeoutExpired:
             print('\n[!] Timed out - killing process ID - ', process.pid)
             process.kill()
@@ -200,6 +200,7 @@ def attack_func(network_interface, attack_mode):
             os.system('clear')
             get_colours("\n[-] no packet captured...", "red")
             time.sleep(2)
+            os.system("rm -rf Cap*")
             os.system('clear')
             quit_program()
 
