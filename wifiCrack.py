@@ -66,8 +66,8 @@ def check_deps():
         program_status = True
     else:
         program_status = False
-        get_colours(f"\nMacchanger \t\t {Fore.RED + '(X)'}", "red")
-        get_colours("Installing [Macchanger]....", "magenta")
+        get_colours(f"\nMacchanger \t\t {Fore.RED + '(X)'}", "magenta")
+        get_colours("Installing [Macchanger]....", "cyan")
         install_macchanger = subprocess.run(["sudo", "apt", "install", "macchanger", "-y"], capture_output=True,
                                             text=True)
         if "Setting up macchanger" in install_macchanger.stdout:
@@ -80,8 +80,8 @@ def check_deps():
         program_status = True
     else:
         program_status = False
-        get_colours(f"\nAirmon-ng \t\t {Fore.RED + '(X)'}", "red")
-        get_colours("\nInstalling [Airmon-ng]....", "magenta")
+        get_colours(f"\nAirmon-ng \t\t {Fore.RED + '(X)'}", "magenta")
+        get_colours("\nInstalling [Airmon-ng]....", "cyan")
         install_airmon_ng = subprocess.run(["sudo", "apt", "install", "airmon-ng", "-y"], capture_output=True,
                                            text=True)
         if "Setting up airmon-ng" in install_airmon_ng.stdout:
@@ -94,8 +94,8 @@ def check_deps():
         program_status = True
     else:
         program_status = False
-        get_colours(f"\nhcxdumpTool \t\t {Fore.RED + '(X)'}", "red")
-        get_colours("\nInstalling [hcxdumpTool]....", "magenta")
+        get_colours(f"\nhcxdumpTool \t\t {Fore.RED + '(X)'}", "magenta")
+        get_colours("\nInstalling [hcxdumpTool]....", "cyan")
         install_hcxdump = subprocess.run(["sudo", "apt", "install", "hcxdumptool", "-y"], capture_output=True,
                                          text=True)
         subprocess.run(["sudo", "apt", "install", "hcxtools"])
