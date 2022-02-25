@@ -1,6 +1,6 @@
 # Wifi-Crack
 
-## The Wifi-Crack program has 2 attack modes.
+## The Wifi-Crack program has 3 attack modes.
 
 #### Handshake attack
 The Handshake attack mode, where we can obtain a valid handshake with which later we can apply brute force attack to obtain the Wi-Fi password.
@@ -8,6 +8,8 @@ The Handshake attack mode, where we can obtain a valid handshake with which late
 #### PKMID Attack
 PKMID Attack mode is for wireless networks that do not have associated clients, and it tries to obtain a PMKID.
 
+#### Deauthentication attack
+Deauthentication attack is used against wireless connections. It is like a denial-of-service, abruptly rendering networks temporarily inactive.
 
 ## Examples of How To Use
 The program has 2 parameters, the first parameter "-n" to specify the name of the network card.
