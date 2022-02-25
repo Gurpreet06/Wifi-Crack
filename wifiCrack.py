@@ -152,12 +152,20 @@ def attack_func(network_interface, attack_mode):
         get_colours("\n[*] Sending deauthentication packets to victim router\n\n", 'cyan')
         process1 = subprocess.Popen(['ps', '-A'], stdout=subprocess.PIPE)
         out, err = process1.communicate()
-        timer_process = 65
-        for i in range(timer_process):
-            get_colours(f"[*] Time Left: \t\t{timer_process}", 'yellow')
+        timer_total = 65
+        timer_process = range(timer_total, 9, -1)
+        for i in timer_process:
+            get_colours(f"[*] Time Left: \t\t{Fore.YELLOW + str(i)}", 'blue')
             sys.stdout.write("\033[F")  # Cursor up one line
             time.sleep(1)
-            timer_process = timer_process - 1
+
+        os.system('clear')
+        get_colours("\n[*] Sending deauthentication packets to victim router\n\n", 'cyan')
+        timer_process = range(9, 0, -1)
+        for i in timer_process:
+            get_colours(f"[*] Time Left: \t\t{Fore.YELLOW + '0' + str(i)}", 'blue')
+            sys.stdout.write("\033[F")  # Cursor up one line
+            time.sleep(1)
         # time.sleep(65)
         for line in out.splitlines():
             if b'xterm' in line:
