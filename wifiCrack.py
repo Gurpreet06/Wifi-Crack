@@ -62,12 +62,12 @@ def check_deps():
     # Check Mac-Changer
     check_macchanger = subprocess.run(["which", "macchanger"], capture_output=True, text=True)
     if "/usr/bin/macchanger" in check_macchanger.stdout or "/usr/sbin/macchanger" in check_macchanger.stdout:
-        get_colours(f"\nMacchanger\t\t {Fore.GREEN + '(V)'}", "magenta")
+        get_colours(f"\nMacchanger\t\t ({Fore.BLUE + 'V'}{Fore.MAGENTA + ')'}", "magenta")
         program_status = True
     else:
         program_status = False
-        get_colours(f"\nMacchanger \t\t {Fore.RED + '(X)'}", "magenta")
-        get_colours("Installing [Macchanger]....", "cyan")
+        get_colours(f"\nMacchanger \t\t ({Fore.RED + 'X'}{Fore.MAGENTA + ')'}", "magenta")
+        get_colours("\nInstalling [Macchanger]....", "cyan")
         install_macchanger = subprocess.run(["sudo", "apt", "install", "macchanger", "-y"], capture_output=True,
                                             text=True)
         if "Setting up macchanger" in install_macchanger.stdout:
@@ -76,11 +76,11 @@ def check_deps():
     # Check Airmon-Ng
     check_airmon_ng = subprocess.run(["which", "airmon-ng"], capture_output=True, text=True)
     if "/usr/bin/airmon-ng" in check_airmon_ng.stdout or "/usr/sbin/airmon-ng" in check_airmon_ng.stdout:
-        get_colours(f"\nAirmon-ng \t\t {Fore.GREEN + '(V)'}", "magenta")
+        get_colours(f"\nAirmon-ng \t\t ({Fore.BLUE + 'V'}{Fore.MAGENTA + ')'}", "magenta")
         program_status = True
     else:
         program_status = False
-        get_colours(f"\nAirmon-ng \t\t {Fore.RED + '(X)'}", "magenta")
+        get_colours(f"\nAirmon-ng \t\t ({Fore.RED + 'X'}{Fore.MAGENTA + ')'}", "magenta")
         get_colours("\nInstalling [Airmon-ng]....", "cyan")
         install_airmon_ng = subprocess.run(["sudo", "apt", "install", "airmon-ng", "-y"], capture_output=True,
                                            text=True)
@@ -90,11 +90,11 @@ def check_deps():
     # Check hcxdumptool
     check_hcxdumptool = subprocess.run(["which", "hcxdumptool"], capture_output=True, text=True)
     if "/usr/bin/hcxdumptool" in check_hcxdumptool.stdout or "/usr/sbin/hcxdumptool" in check_hcxdumptool.stdout:
-        get_colours(f"\nhcxdumpTool \t\t {Fore.GREEN + '(V)'}", "magenta")
+        get_colours(f"\nhcxdumpTool \t\t ({Fore.BLUE + 'V'}{Fore.MAGENTA + ')'}", "magenta")
         program_status = True
     else:
         program_status = False
-        get_colours(f"\nhcxdumpTool \t\t {Fore.RED + '(X)'}", "magenta")
+        get_colours(f"\nhcxdumpTool \t\t ({Fore.RED + 'X'}{Fore.MAGENTA + ')'}", "magenta")
         get_colours("\nInstalling [hcxdumpTool]....", "cyan")
         install_hcxdump = subprocess.run(["sudo", "apt", "install", "hcxdumptool", "-y"], capture_output=True,
                                          text=True)
