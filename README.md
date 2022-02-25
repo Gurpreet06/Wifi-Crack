@@ -13,7 +13,7 @@ Deauthentication attack is used against wireless connections. It is like a denia
 
 ## Examples of How To Use
 The program has 2 parameters, the first parameter "-n" to specify the name of the network card.
-The second parameter '-a' to specify the attack mode (Handshake | PKMID).
+The second parameter '-a' to specify the attack mode (Handshake | PKMID | DAuth).
 
 The program also has a help menu with the parameter "-h"
 
@@ -32,5 +32,5 @@ The program also has a help menu with the parameter "-h"
 
 ### Usage
 ```bash
-❯ sudo python3 wifiCrack.py -n wlan0 -a handshake / PKMID
+❯ sudo python3 wifiCrack.py -n wlan0 -a handshake / PKMID / DAuth
 ```
