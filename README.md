@@ -24,6 +24,7 @@ The program also has a help menu with the parameter "-h"
     -a  Attack mode
              Handshake
              PKMID
+             DAuth
     -h Help Panel
 ```
 

