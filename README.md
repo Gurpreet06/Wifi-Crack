@@ -9,7 +9,8 @@ The Handshake attack mode, where we can obtain a valid handshake with which late
 PKMID Attack mode is for wireless networks that do not have associated clients, and it tries to obtain a PMKID.
 
 #### Deauthentication attack
-Deauthentication attack is used against wireless connections. It is like a denial-of-service, abruptly rendering networks temporarily inactive.
+Deauthentication attack is used against wireless connections. It is like a denial-of-service, abruptly rendering
+networks temporarily inactive. In this mode you can define the time until you want the attack to perform.
 
 ## Examples of How To Use
 The program has 2 parameters, the first parameter "-n" to specify the name of the network card.
