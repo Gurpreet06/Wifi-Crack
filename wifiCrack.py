@@ -203,7 +203,7 @@ def attack_func(network_interface, attack_mode):
                                           capture_output=True, text=True, shell=True)
         time.sleep(2)
         get_colours("\n[*] Trying getting hashes", "magenta")
-        subprocess.run(["rm", "Capture_PKMID"])
+        # subprocess.run(["rm", "Capture_PKMID"])
         time.sleep(2)
         if "PMKID(s) written to myHashes" in get_pkmid_hashes.stdout:
             get_colours("\nStarting with Brute-Force attack..", "cyan")
@@ -249,8 +249,6 @@ def check_parms():
                     else:
                         check_deps()  # Check for neccesary program to run this script.
                 else:
-                    print("d")
-                    print(sys.argv[4])
                     get_colours("\nSelect a valid attack Mode (Handshake / PKMID)", "red")
                     print(Fore.WHITE)
             else:
