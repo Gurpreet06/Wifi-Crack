@@ -19,7 +19,7 @@ The program also has a help menu with the parameter "-h"
 ```bash
 ❯ sudo python3 wifiCrack.py -h
 
-    [*] Usage: sudo python3 wifiCrack.py <Network InterFace> <parameters>
+    [*] Usage: sudo python3 wifiCrack.py -n <Network InterFace> -a <parameters>
     -n Network card name
     -a  Attack mode
              Handshake
