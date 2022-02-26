@@ -4,6 +4,7 @@ import os
 import subprocess
 import time
 import signal
+import pyfiglet
 
 
 def ctrl_c(signum, frame):
@@ -21,6 +22,22 @@ def ctrl_c(signum, frame):
 
 
 signal.signal(signal.SIGINT, ctrl_c)
+
+
+# Script Banner
+def script_banner():
+    script_name = pyfiglet.figlet_format("WIFI \n~ CRACK", font="slant")
+    owner_name = 'By: Gurpreet ~ Singh (Gurpreet06)'
+    owner = f"""
+    \t┌─────────────────────────────────────────┐
+    \t│                                         │          
+    \t│ {Fore.BLUE + owner_name}       │     
+    \t│                                         │  
+    \t└─────────────────────────────────────────┘
+    """
+
+    print('\n', Fore.YELLOW + script_name, end="")
+    print(owner)
 
 
 # Colours
@@ -58,8 +75,9 @@ def menu_panel():
 
 def check_deps():
     subprocess.run(["clear"])
+    script_banner()
     program_status = False
-    get_colours("\nChecking necessary programs...", "cyan")
+    get_colours("\n\nChecking necessary programs...", "cyan")
     # Check Mac-Changer
     check_macchanger = subprocess.run(["which", "macchanger"], capture_output=True, text=True)
     if "/usr/bin/macchanger" in check_macchanger.stdout or "/usr/sbin/macchanger" in check_macchanger.stdout:
@@ -104,6 +122,7 @@ def check_deps():
             get_colours("\n[*] hcxdumpTool Installed...", "blue")
             program_status = True
     if program_status:
+        time.sleep(3)
         attack_func(sys.argv[2], sys.argv[4])  # If all the necessary programs are installed then call the attack func.
     else:
         get_colours(f"\n[!] There was an error installing the necessary programs, Please install the following"
