@@ -12,6 +12,14 @@ PKMID Attack mode is for wireless networks that do not have associated clients, 
 Deauthentication attack is used against wireless connections. It is like a denial-of-service, abruptly rendering
 networks temporarily inactive. In this mode you can define the time until you want the attack to perform.
 
+## Installations
+First we install the necessary libraries to run this script correctly, with the following command.
+```bash 
+
+❯ pip3 install -r requirements.txt
+
+```
+
 ## Examples of How To Use
 The program has 2 parameters, the first parameter "-n" to specify the name of the network card.
 The second parameter '-a' to specify the attack mode (Handshake | PKMID | DAuth).
