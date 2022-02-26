@@ -179,14 +179,14 @@ def attack_func(network_interface, attack_mode):
         timer_process = range(timer_total, 9, -1)
         for i in timer_process:
             get_colours(f"[*] Time Left: \t\t{Fore.YELLOW + str(i)}", 'blue')
-            sys.stdout.write("\033[F")  # Cursor up one line
+            sys.stdout.write("\033[F")
             time.sleep(1)
         os.system('clear')
         get_colours("\n[*] Sending deauthentication packets to victim router\n\n", 'cyan')
         timer_process = range(9, 0, -1)
         for i in timer_process:
             get_colours(f"[*] Time Left: \t\t{Fore.YELLOW + '0' + str(i)}", 'blue')
-            sys.stdout.write("\033[F")  # Cursor up one line
+            sys.stdout.write("\033[F")
             time.sleep(1)
         # time.sleep(65)
         for line in out.splitlines():
@@ -241,6 +241,7 @@ def attack_func(network_interface, attack_mode):
             os.system("rm -rf Cap*")
             os.system('clear')
             quit_program()
+    # Deauthentication Attack Mode
     elif attack_mode == "DAuth":
         subprocess.run(["sudo", "airmon-ng", "check", "kill"], stdout=subprocess.DEVNULL)
         process = subprocess.Popen(["xterm", "-hold", "-e", "sudo", "airodump-ng", f"{network_interface}mon"])
@@ -265,14 +266,14 @@ def attack_func(network_interface, attack_mode):
         timer_process = range(timer_total, 9, -1)
         for i in timer_process:
             get_colours(f"[*] Time Left: \t\t{Fore.YELLOW + str(i)}", 'blue')
-            sys.stdout.write("\033[F")  # Cursor up one line
+            sys.stdout.write("\033[F")
             time.sleep(1)
         os.system('clear')
         get_colours("\n[*] Sending deauthentication packets to victim router\n\n", 'cyan')
         timer_process = range(9, 0, -1)
         for i in timer_process:
             get_colours(f"[*] Time Left: \t\t{Fore.YELLOW + '0' + str(i)}", 'blue')
-            sys.stdout.write("\033[F")  # Cursor up one line
+            sys.stdout.write("\033[F")
             time.sleep(1)
         # time.sleep(65)
         for line in out.splitlines():
@@ -310,7 +311,7 @@ def check_parms():
                         get_colours("\nSelect a valid attack Mode (Handshake / PKMID / DAuth)", "red")
                         print(Fore.WHITE)
                     else:
-                        check_deps()  # Check for neccesary program to run this script.
+                        check_deps()  # Check for necessary program to run this script.
                 else:
                     get_colours("\nSelect a valid attack Mode (Handshake / PKMID / DAuth)", "red")
                     print(Fore.WHITE)
