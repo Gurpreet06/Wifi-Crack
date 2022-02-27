@@ -65,15 +65,15 @@ def get_colours(text, color):
 def menu_panel():
     get_colours(f"\n[{Fore.RED + '!'}{Fore.GREEN + ''}] Usage: sudo python3 " + sys.argv[0] + "-n <Network InterFace> "
                 "-a <parameters>", "green")
-    print("――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――")
-    print(f"\n{Fore.BLUE + '┃'}  {Fore.YELLOW + '[-n] Interface in monitor mode'}")
+    get_colours("――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――", 'red')
+    print(f"\n{Fore.BLUE + '┃'}  {Fore.MAGENTA + '[-n]'}{Fore.YELLOW + ' Interface in monitor mode'}")
     print("")
-    print(f"{Fore.BLUE + '┃'}  {Fore.YELLOW + '[-a]  Attack mode'}")
-    get_colours(f"\t Handshake", "cyan")
-    get_colours(f"\t PKMID", "cyan")
-    get_colours(f"\t DAuth (Deauthentication attack)", "cyan")
+    print(f"{Fore.BLUE + '┃'}  {Fore.MAGENTA + '[-a]'}{Fore.YELLOW + ' Attack mode'}")
+    get_colours(f"\t Handshake", "blue")
+    get_colours(f"\t PKMID", "blue")
+    get_colours(f"\t DAuth (Deauthentication attack)", "blue")
     print("")
-    print(f"{Fore.BLUE + '┃'}  {Fore.YELLOW + '[-h] Help Panel'}")
+    print(f"{Fore.BLUE + '┃'}  {Fore.MAGENTA + '[-h]'}{Fore.YELLOW + ' Help Panel'}")
     print(Fore.WHITE)  # To avoid leaving the terminal with colors.
 
 
