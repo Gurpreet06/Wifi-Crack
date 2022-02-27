@@ -43,3 +43,7 @@ The program also has a help menu with the parameter "-h"
 ```bash
 ❯ sudo python3 wifiCrack.py -n wlan0 -a handshake / PKMID / DAuth
 ```
+
+# Legal Notice
+
+This script is intended to be used on networks you own. Don't use this script maliciously. You are responsible for your own actions.
