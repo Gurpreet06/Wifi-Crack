@@ -63,12 +63,13 @@ def get_colours(text, color):
 
 
 def menu_panel():
-    get_colours(f"\n[{Fore.RED + '!'}{Fore.GREEN + ''}] Usage: sudo python3 " + sys.argv[0] + "-n <Network InterFace> "
+    get_colours(f"\n[{Fore.RED + '!'}{Fore.GREEN + ''}] Usage: sudo python3 " + sys.argv[0] + " -n <Network InterFace> "
                 "-a <parameters>", "green")
     get_colours("――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――", 'red')
     print(f"\n{Fore.BLUE + '┃'}  {Fore.MAGENTA + '[-n]'}{Fore.YELLOW + ' Interface in monitor mode'}")
     print("")
     print(f"{Fore.BLUE + '┃'}  {Fore.MAGENTA + '[-a]'}{Fore.YELLOW + ' Attack mode'}")
+    print("")
     get_colours(f"\t Handshake", "blue")
     get_colours(f"\t PKMID", "blue")
     get_colours(f"\t DAuth (Deauthentication attack)", "blue")
