@@ -81,7 +81,7 @@ def check_deps():
     subprocess.run(["clear"])
     script_banner()
     program_status = False
-    get_colours("\n\nChecking necessary programs...", "cyan")
+    get_colours("\n\n[*] Checking necessary programs...", "blue")
     # Check Mac-Changer
     check_macchanger = subprocess.run(["which", "macchanger"], capture_output=True, text=True)
     if "/usr/bin/macchanger" in check_macchanger.stdout or "/usr/sbin/macchanger" in check_macchanger.stdout:

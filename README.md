@@ -20,6 +20,10 @@ First we install the necessary libraries to run this script correctly, with the 
 
 ```
 
+## Tested on the following operating systems:
+- Kali linux 2022.1
+- Parrot security 4.11.3
+
 ## Examples of How To Use
 The program has 2 parameters, the first parameter "-n" to specify the name of the network card.
 The second parameter '-a' to specify the attack mode (Handshake | PKMID | DAuth).
