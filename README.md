@@ -39,10 +39,11 @@ The program also has a help menu with the parameter "-h"
 
 ┃  [-n] Interface in monitor mode
 
-┃  [-a]  Attack mode
+┃  [-a] Attack mode
          Handshake
          PKMID
          DAuth (Deauthentication attack)
+         BFlood (Beacon flood attack)
 
 ┃  [-h] Help Panel
 ```
