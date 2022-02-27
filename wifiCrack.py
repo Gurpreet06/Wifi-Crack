@@ -72,7 +72,7 @@ def menu_panel():
     get_colours(f"\t Handshake", "blue")
     get_colours(f"\t PKMID", "blue")
     get_colours(f"\t DAuth (Deauthentication attack)", "blue")
-    get_colours(f"\t BFlood (Beacon flood attack)", "blue")
+    get_colours(f"\t BFlood (Beacon flooding attack)", "blue")
     print("")
     print(f"{Fore.BLUE + '┃'}  {Fore.MAGENTA + '[-h]'}{Fore.YELLOW + ' Help Panel'}")
     print(Fore.WHITE)  # To avoid leaving the terminal with colors.

@@ -1,6 +1,6 @@
 # Wifi-Crack
 
-## The Wifi-Crack program has 3 attack modes.
+## The Wifi-Crack program has 4 attack modes.
 
 #### Handshake attack
 The Handshake attack mode, where we can obtain a valid handshake with which later we can apply brute force attack to obtain the Wi-Fi password.
@@ -11,6 +11,10 @@ PKMID Attack mode is for wireless networks that do not have associated clients, 
 #### Deauthentication attack
 Deauthentication attack is used against wireless connections. It is like a denial-of-service, abruptly rendering
 networks temporarily inactive. In this mode you can define the time until you want the attack to perform.
+
+#### Beacon Flooding attack
+In this attack scenario concerns the connectivity confusion of a wireless client. We are going to transmit countless 
+fake beacon frames.
 
 ## Installations
 First we install the necessary libraries to run this script correctly, with the following command.
@@ -43,7 +47,7 @@ The program also has a help menu with the parameter "-h"
          Handshake
          PKMID
          DAuth (Deauthentication attack)
-         BFlood (Beacon flood attack)
+         BFlood (Beacon flooding attack)
 
 ┃  [-h] Help Panel
 ```
