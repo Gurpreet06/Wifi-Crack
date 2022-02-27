@@ -30,7 +30,7 @@ First we install the necessary libraries to run this script correctly, with the 
 
 ## Examples of How To Use
 The program has 2 parameters, the first parameter "-n" to specify the name of the network card.
-The second parameter '-a' to specify the attack mode (Handshake | PKMID | DAuth).
+The second parameter '-a' to specify the attack mode (Handshake | PKMID | DAuth | BFlood).
 
 The program also has a help menu with the parameter "-h"
 
@@ -54,7 +54,7 @@ The program also has a help menu with the parameter "-h"
 
 ### Usage
 ```bash
-❯ sudo python3 wifiCrack.py -n wlan0 -a handshake / PKMID / DAuth
+❯ sudo python3 wifiCrack.py -n wlan0 -a handshake / PKMID / DAuth / BFlood
 ```
 
 # Legal Notice
