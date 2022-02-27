@@ -83,59 +83,79 @@ def check_deps():
     script_banner()
     program_status = False
     get_colours("\n\n[*] Checking necessary programs...", "blue")
+    # Check MDK3
+    check_mdk3 = subprocess.run(["which", "mdk3"], capture_output=True, text=True)
+    if "/usr/bin/mdk3" in check_mdk3.stdout or "/usr/sbin/mdk3" in check_mdk3.stdout:
+        get_colours(f"\nMDK3\t\t\t ({Fore.BLUE + 'V'}{Fore.MAGENTA + ')'}", "magenta")
+    else:
+        get_colours(f"\nMDK3 \t\t ({Fore.RED + 'X'}{Fore.MAGENTA + ')'}", "magenta")
+        get_colours("\nInstalling [MDK3]....", "cyan")
+        install_mdk3 = subprocess.run(["sudo", "apt", "install", "mdk3", "-y"], capture_output=True,
+                                            text=True)
+        if "Setting up mdk3" in install_mdk3.stdout:
+            get_colours("\n[*] MDK3 Installed...", "blue")
+        else:
+            get_colours(f"\n[!] There was an error installing the necessary program, Please install the following"
+                        f" programs manually: ", 'red')
+            print(f"\n{Fore.BLUE + '┃'}  {Fore.YELLOW + ' sudo apt install mdk3'}")
+            print(Fore.WHITE)
+            exit()
     # Check Mac-Changer
     check_macchanger = subprocess.run(["which", "macchanger"], capture_output=True, text=True)
     if "/usr/bin/macchanger" in check_macchanger.stdout or "/usr/sbin/macchanger" in check_macchanger.stdout:
         get_colours(f"\nMacchanger\t\t ({Fore.BLUE + 'V'}{Fore.MAGENTA + ')'}", "magenta")
-        program_status = True
     else:
-        program_status = False
         get_colours(f"\nMacchanger \t\t ({Fore.RED + 'X'}{Fore.MAGENTA + ')'}", "magenta")
         get_colours("\nInstalling [Macchanger]....", "cyan")
         install_macchanger = subprocess.run(["sudo", "apt", "install", "macchanger", "-y"], capture_output=True,
                                             text=True)
         if "Setting up macchanger" in install_macchanger.stdout:
             get_colours("\n[*] Macchanger Installed...", "blue")
-            program_status = True
+        else:
+            get_colours(f"\n[!] There was an error installing the necessary program, Please install the following"
+                        f" programs manually: ", 'red')
+            print(f"\n{Fore.BLUE + '┃'}  {Fore.YELLOW + ' sudo apt install macchanger'}")
+            print(Fore.WHITE)
+            exit()
     # Check Airmon-Ng
     check_airmon_ng = subprocess.run(["which", "airmon-ng"], capture_output=True, text=True)
     if "/usr/bin/airmon-ng" in check_airmon_ng.stdout or "/usr/sbin/airmon-ng" in check_airmon_ng.stdout:
         get_colours(f"\nAirmon-ng \t\t ({Fore.BLUE + 'V'}{Fore.MAGENTA + ')'}", "magenta")
-        program_status = True
     else:
-        program_status = False
         get_colours(f"\nAirmon-ng \t\t ({Fore.RED + 'X'}{Fore.MAGENTA + ')'}", "magenta")
         get_colours("\nInstalling [Airmon-ng]....", "cyan")
         install_airmon_ng = subprocess.run(["sudo", "apt", "install", "airmon-ng", "-y"], capture_output=True,
                                            text=True)
         if "Setting up airmon-ng" in install_airmon_ng.stdout:
             get_colours("\n[*] Airmon-ng Installed...", "blue")
-            program_status = True
+        else:
+            get_colours(f"\n[!] There was an error installing the necessary program, Please install the following"
+                        f" programs manually: ", 'red')
+            print(f"\n{Fore.BLUE + '┃'}  {Fore.YELLOW + ' sudo apt install airmon-ng'}")
+            print(Fore.WHITE)
+            exit()
     # Check hcxdumptool
     check_hcxdumptool = subprocess.run(["which", "hcxdumptool"], capture_output=True, text=True)
     if "/usr/bin/hcxdumptool" in check_hcxdumptool.stdout or "/usr/sbin/hcxdumptool" in check_hcxdumptool.stdout:
         get_colours(f"\nhcxdumpTool \t\t ({Fore.BLUE + 'V'}{Fore.MAGENTA + ')'}", "magenta")
-        program_status = True
     else:
-        program_status = False
         get_colours(f"\nhcxdumpTool \t\t ({Fore.RED + 'X'}{Fore.MAGENTA + ')'}", "magenta")
         get_colours("\nInstalling [hcxdumpTool]....", "cyan")
         install_hcxdump = subprocess.run(["sudo", "apt", "install", "hcxdumptool", "-y"], capture_output=True,
                                          text=True)
-        subprocess.run(["sudo", "apt", "install", "hcxtools"])
+        subprocess.run(["sudo", "apt", "install", "hcxtools"], stdout=subprocess.DEVNULL)
         if "Setting up hcxdumptool" in install_hcxdump.stdout:
             get_colours("\n[*] hcxdumpTool Installed...", "blue")
-            program_status = True
-    if program_status:
-        time.sleep(3)
-        attack_func(sys.argv[2], sys.argv[4])  # If all the necessary programs are installed then call the attack func.
-    else:
-        get_colours(f"\n[!] There was an error installing the necessary programs, Please install the following"
-                    f" programs manually: ", 'red')
-        get_colours(f"\n1. airmon-ng", "cyan")
-        get_colours(f"2. macchanger", "cyan")
-        get_colours(f"3. hcxdumptool\n", "cyan")
-        print(Fore.WHITE)
+        else:
+            get_colours(f"\n[!] There was an error installing the necessary program, Please install the following"
+                        f" programs manually: ", 'red')
+            print(f"\n{Fore.BLUE + '┃'}  {Fore.YELLOW + ' sudo apt install hcxdumptool'}")
+            print(f"\n{Fore.BLUE + '┃'}  {Fore.YELLOW + ' sudo apt install hcxtools'}")
+            print(Fore.WHITE)
+            exit()
+    time.sleep(3)
+    attack_func(sys.argv[2], sys.argv[4])  # If all the necessary programs are installed then call the attack func.
+    print(Fore.WHITE)
 
 
 def attack_func(network_interface, attack_mode):
