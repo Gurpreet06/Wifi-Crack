@@ -80,6 +80,11 @@ def menu_panel():
 
 
 def check_deps():
+    if os.getuid() != 0:
+        script_banner()
+        print(f"\n{Fore.BLUE + '┃'}  {Fore.GREEN + '['}{Fore.RED + '!'}{Fore.GREEN + ''}]"
+              f"{Fore.RED + ' Run this script with administrator privileges.'}")
+        exit()
     subprocess.run(["clear"])
     script_banner()
     program_status = False
