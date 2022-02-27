@@ -28,15 +28,19 @@ The program also has a help menu with the parameter "-h"
 
 ### Help Menu
 ```bash
-❯ sudo python3 wifiCrack.py -h
+❯ python3 wifiCrack.py
 
-    [*] Usage: sudo python3 wifiCrack.py -n <Network InterFace> -a <parameters>
-    -n Network card name
-    -a  Attack mode
-             Handshake
-             PKMID
-             DAuth
-    -h Help Panel
+[!] Usage: sudo python3 wifiCrack.py-n <Network InterFace> -a <parameters>
+――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――
+
+┃  [-n] Interface in monitor mode
+
+┃  [-a]  Attack mode
+         Handshake
+         PKMID
+         DAuth (Deauthentication attack)
+
+┃  [-h] Help Panel
 ```
 
 ### Usage
