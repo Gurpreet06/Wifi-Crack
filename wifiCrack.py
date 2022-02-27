@@ -153,7 +153,7 @@ def check_deps():
             print(f"\n{Fore.BLUE + '┃'}  {Fore.YELLOW + ' sudo apt install hcxtools'}")
             print(Fore.WHITE)
             exit()
-    time.sleep(3)
+    time.sleep(2)
     attack_func(sys.argv[2], sys.argv[4])  # If all the necessary programs are installed then call the attack func.
     print(Fore.WHITE)
 
@@ -316,6 +316,7 @@ def attack_func(network_interface, attack_mode):
         os.system('clear')
         script_banner()
         get_colours("[*] Starting the attack...", 'blue')
+        get_colours("\n[!] Don't close the windows otherwise the attack will stop.", 'yellow')
         get_colours("\n[!] Press CTRL+C to stop the attack.", "red")
         os.system(
             f"xterm -hold -e sudo mdk3 {network_interface}mon b -a -g -s 1000")
