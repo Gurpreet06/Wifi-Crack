@@ -363,12 +363,12 @@ def attack_func(network_interface, attack_mode):
 
 def quit_program():
     time.sleep(2)
-    get_colours("\n[!] Exiting the program...".strip(), "blue".strip())
+    get_colours("\n[!] Exiting the program...", "blue")
     os.system("rm -rf Cap*")
-    get_colours("\nSetting Network interface to it normal mode..".strip(), "mangeta".strip())
+    get_colours("\nSetting Network interface to it normal mode..", "mangeta")
     subprocess.run(["sudo", "airmon-ng", "stop", sys.argv[2] + "mon"], stdout=subprocess.DEVNULL)
     subprocess.run(["sudo", "service", "NetworkManager", "restart"], stdout=subprocess.DEVNULL)
-    get_colours("\n[*] Network set to it's normal mode...".strip(), "magenta".strip())
+    get_colours("\n[*] Network set to it's normal mode...", "magenta")
     print(Fore.WHITE)
     exit(0)
 
