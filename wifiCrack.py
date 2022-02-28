@@ -294,6 +294,7 @@ def attack_func(network_interface, attack_mode):
             get_colours("[*] Starting with Brute-Force attack..".strip(), "blue".strip())
             os.system(f"xterm -hold -e hashcat -m 22000 -a 0 -w 4 myHashes_PKMID /usr/share/wordlists/rockyou.txt "
                       f"-d 1 --force &")
+            os.system("clear")
             quit_program()
         else:
             os.system('clear')
@@ -362,11 +363,12 @@ def attack_func(network_interface, attack_mode):
 
 def quit_program():
     time.sleep(2)
-    get_colours("\n[!] Exiting the program...", "blue")
-    get_colours("\nSetting Network interface to it normal mode..", "mangeta")
+    get_colours("\n[!] Exiting the program...".strip(), "blue".strip())
+    os.system("rm -rf Cap*")
+    get_colours("\nSetting Network interface to it normal mode..".strip(), "mangeta".strip())
     subprocess.run(["sudo", "airmon-ng", "stop", sys.argv[2] + "mon"], stdout=subprocess.DEVNULL)
     subprocess.run(["sudo", "service", "NetworkManager", "restart"], stdout=subprocess.DEVNULL)
-    get_colours("\n[*] Network set to it's normal mode...", "magenta")
+    get_colours("\n[*] Network set to it's normal mode...".strip(), "magenta".strip())
     print(Fore.WHITE)
     exit(0)
 
