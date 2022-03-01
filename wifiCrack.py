@@ -389,29 +389,54 @@ def check_parms():
                             check_attack_mode = ["Handshake", "PKMID", "DAuth", "BFlood"]
                             if sys.argv[2] != check_interface_exist:
                                 print(f"\n{Fore.RED + '┃'}  {Fore.GREEN + '['}{Fore.RED + '!'}{Fore.GREEN + '] '}"
-                                      f"{Fore.YELLOW + 'Invalid Network Interface name (Ej: wlan0 / eth0)'}")
-                                print(Fore.WHITE)
+                                      f"{Fore.YELLOW + 'Invalid Network Interface name'}")
+                                get_inters = subprocess.check_output("ls /sys/class/net", shell=True).decode().strip()
+                                save_all = get_inters.split('\n')
+                                print(f"\n{Fore.BLUE + '┃'} {Fore.YELLOW + ' Available interfaces are:'}\n")
+                                cnt = 1
+                                for i in save_all:
+                                    print(f"{Fore.RED + '┃'} {Fore.BLUE + str(cnt) }.{Fore.YELLOW + f' {i}'}")
+                                    cnt = cnt + 1
                             elif sys.argv[4] not in check_attack_mode:
-                                print(f"\n{Fore.RED + '┃'}  {Fore.GREEN + '['}{Fore.RED + '!'}{Fore.GREEN + '] '}"
-                                      f"{Fore.YELLOW + 'Select a valid attack Mode (Handshake / PKMID / DAuth / BFlood)'}")
+                                print(f"\n{Fore.BLUE + '┃'}  {Fore.GREEN + '['}{Fore.RED + '!'}{Fore.GREEN + '] '}"
+                                      f"{Fore.YELLOW + 'Select a valid attack Mode: '}")
+                                print(f"\n{Fore.RED + '┃'} {Fore.YELLOW + '1. Handshake'}")
+                                print(f"{Fore.RED + '┃'} {Fore.YELLOW + '2. PKMID'}")
+                                print(f"{Fore.RED + '┃'} {Fore.YELLOW + '3. DAuth'}")
+                                print(f"{Fore.RED + '┃'} {Fore.YELLOW + '4. BFlood'}")
                                 print(Fore.WHITE)
                             else:
                                 check_deps()  # Check for necessary program to run this script.
                         else:
-                            print(f"\n{Fore.RED + '┃'}  {Fore.GREEN + '['}{Fore.RED + '!'}{Fore.GREEN + '] '}"
-                                  f"{Fore.YELLOW + 'Select a valid attack Mode (Handshake / PKMID / DAuth / BFlood)'}")
+                            print(f"\n{Fore.BLUE + '┃'}  {Fore.GREEN + '['}{Fore.RED + '!'}{Fore.GREEN + '] '}"
+                                  f"{Fore.YELLOW + 'Select a valid attack Mode: '}")
+                            print(f"\n{Fore.RED + '┃'} {Fore.YELLOW + '1. Handshake'}")
+                            print(f"{Fore.RED + '┃'} {Fore.YELLOW + '2. PKMID'}")
+                            print(f"{Fore.RED + '┃'} {Fore.YELLOW + '3. DAuth'}")
+                            print(f"{Fore.RED + '┃'} {Fore.YELLOW + '4. BFlood'}")
                             print(Fore.WHITE)
                     else:
                         print(f"\n{Fore.RED + '┃'}  {Fore.GREEN + '['}{Fore.RED + '!'}{Fore.GREEN + '] '}"
                               f"{Fore.YELLOW + 'Missing the [-a] parameter.'}")
                         print(Fore.WHITE)
                 else:
-                    print(f"\n{Fore.RED + '┃'}  {Fore.GREEN + '['}{Fore.RED + '!'}{Fore.GREEN + '] '}"
-                          f"{Fore.YELLOW + 'Select a valid attack Mode (Handshake / PKMID / DAuth / BFlood)'}")
+                    print(f"\n{Fore.BLUE + '┃'}  {Fore.GREEN + '['}{Fore.RED + '!'}{Fore.GREEN + '] '}"
+                          f"{Fore.YELLOW + 'Select a valid attack Mode: '}")
+                    print(f"\n{Fore.RED + '┃'} {Fore.YELLOW + '1. Handshake'}")
+                    print(f"{Fore.RED + '┃'} {Fore.YELLOW + '2. PKMID'}")
+                    print(f"{Fore.RED + '┃'} {Fore.YELLOW + '3. DAuth'}")
+                    print(f"{Fore.RED + '┃'} {Fore.YELLOW + '4. BFlood'}")
                     print(Fore.WHITE)
             else:
                 print(f"\n{Fore.RED + '┃'}  {Fore.GREEN + '['}{Fore.RED + '!'}{Fore.GREEN + '] '}"
-                      f"{Fore.YELLOW + 'Invalid Network Interface name (Ej: wlan0 / eth0)'}")
+                      f"{Fore.YELLOW + 'Invalid Network Interface name'}")
+                get_inters = subprocess.check_output("ls /sys/class/net", shell=True).decode().strip()
+                save_all = get_inters.split('\n')
+                print(f"\n{Fore.BLUE + '┃'} {Fore.YELLOW + ' Available interfaces are:'}\n")
+                cnt = 1
+                for i in save_all:
+                    print(f"{Fore.RED + '┃'} {Fore.BLUE + str(cnt)}.{Fore.YELLOW + f' {i}'}")
+                    cnt = cnt + 1
                 print(Fore.WHITE)
         else:
             print(f"\n{Fore.RED + '┃'}  {Fore.GREEN + '['}{Fore.RED + '!'}{Fore.GREEN + '] '}"
