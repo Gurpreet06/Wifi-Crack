@@ -382,9 +382,12 @@ def check_parms():
                 if len(sys.argv) > 3:
                     if sys.argv[3] == '-a':
                         if len(sys.argv) > 4:
-                            check_interface_exist = subprocess.run(["ip", "a"], capture_output=True, text=True)
+                            check_interface_exist = subprocess.check_output("ip a | grep '%s' | awk '{print $2}' | grep"
+                                                                            " '%s' | awk '{print $1}' FS=':'" % (
+                                                                            sys.argv[2], sys.argv[2]),
+                                                                            shell=True).decode().strip()
                             check_attack_mode = ["Handshake", "PKMID", "DAuth", "BFlood"]
-                            if sys.argv[2] not in check_interface_exist.stdout:
+                            if sys.argv[2] != check_interface_exist:
                                 print(f"\n{Fore.RED + '┃'}  {Fore.GREEN + '['}{Fore.RED + '!'}{Fore.GREEN + '] '}"
                                       f"{Fore.YELLOW + 'Invalid Network Interface name (Ej: wlan0 / eth0)'}")
                                 print(Fore.WHITE)
