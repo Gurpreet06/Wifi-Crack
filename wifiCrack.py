@@ -377,28 +377,42 @@ def check_parms():
     if len(sys.argv) > 1:
         if sys.argv[1] == "-h":
             menu_panel()
-        elif len(sys.argv) > 2:
-            if len(sys.argv) > 3:
-                if len(sys.argv) > 4:
-                    check_interface_exist = subprocess.run(["ip", "a"], capture_output=True, text=True)
-                    check_attack_mode = ["Handshake", "PKMID", "DAuth", "BFlood"]
-                    if sys.argv[2] not in check_interface_exist.stdout:
-                        get_colours("\n[!] Invalid Network Interface name (Ej: wlan0 / eth0)", "red")
-                        print(Fore.WHITE)
-                    elif sys.argv[4] not in check_attack_mode:
-                        get_colours("\n[!] Select a valid attack Mode (Handshake / PKMID / DAuth / BFlood)", "red")
-                        print(Fore.WHITE)
+        elif sys.argv[1] == '-n':
+            if len(sys.argv) > 2:
+                if len(sys.argv) > 3:
+                    if sys.argv[3] == '-a':
+                        if len(sys.argv) > 4:
+                            check_interface_exist = subprocess.run(["ip", "a"], capture_output=True, text=True)
+                            check_attack_mode = ["Handshake", "PKMID", "DAuth", "BFlood"]
+                            if sys.argv[2] not in check_interface_exist.stdout:
+                                print(f"\n{Fore.RED + '┃'}  {Fore.GREEN + '['}{Fore.RED + '!'}{Fore.GREEN + '] '}"
+                                      f"{Fore.YELLOW + 'Invalid Network Interface name (Ej: wlan0 / eth0)'}")
+                                print(Fore.WHITE)
+                            elif sys.argv[4] not in check_attack_mode:
+                                print(f"\n{Fore.RED + '┃'}  {Fore.GREEN + '['}{Fore.RED + '!'}{Fore.GREEN + '] '}"
+                                      f"{Fore.YELLOW + 'Select a valid attack Mode (Handshake / PKMID / DAuth / BFlood)'}")
+                                print(Fore.WHITE)
+                            else:
+                                check_deps()  # Check for necessary program to run this script.
+                        else:
+                            print(f"\n{Fore.RED + '┃'}  {Fore.GREEN + '['}{Fore.RED + '!'}{Fore.GREEN + '] '}"
+                                  f"{Fore.YELLOW + 'Select a valid attack Mode (Handshake / PKMID / DAuth / BFlood)'}")
+                            print(Fore.WHITE)
                     else:
-                        check_deps()  # Check for necessary program to run this script.
+                        print(f"\n{Fore.RED + '┃'}  {Fore.GREEN + '['}{Fore.RED + '!'}{Fore.GREEN + '] '}"
+                              f"{Fore.YELLOW + 'Missing the [-a] parameter.'}")
+                        print(Fore.WHITE)
                 else:
-                    get_colours("\n[!] Select a valid attack Mode (Handshake / PKMID / DAuth / BFlood)", "red")
+                    print(f"\n{Fore.RED + '┃'}  {Fore.GREEN + '['}{Fore.RED + '!'}{Fore.GREEN + '] '}"
+                          f"{Fore.YELLOW + 'Select a valid attack Mode (Handshake / PKMID / DAuth / BFlood)'}")
                     print(Fore.WHITE)
             else:
-                get_colours("\n[!] Select a valid attack Mode (Handshake / PKMID / DAuth / BFlood)", "red")
+                print(f"\n{Fore.RED + '┃'}  {Fore.GREEN + '['}{Fore.RED + '!'}{Fore.GREEN + '] '}"
+                      f"{Fore.YELLOW + 'Invalid Network Interface name (Ej: wlan0 / eth0)'}")
                 print(Fore.WHITE)
         else:
-            get_colours("\n[!] Select a valid Interface (wlan0 / eth0)", "red")
-            print(Fore.WHITE)
+            print(f"\n{Fore.RED + '┃'}  {Fore.GREEN + '['}{Fore.RED + '!'}{Fore.GREEN + '] '}"
+                  f"{Fore.YELLOW + 'Missing the [-n] parameter.'}")
     else:
         menu_panel()
 
