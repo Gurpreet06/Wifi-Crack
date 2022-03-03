@@ -456,7 +456,9 @@ def attack_func(network_interface, attack_mode):
             if b'xterm' in line:
                 pid = int(line.split(None, 1)[0])
                 os.kill(pid, signal.SIGKILL)
-        get_colours("\n\n\n[*] Attack completed successfully", 'green')
+        print(f"\n{Fore.RED + '┃'} {Fore.YELLOW + ' Deleting temporary files..'}")
+        os.system('rm -rf wifi_hostapd.conf wifi_dnsmasq.conf')
+        get_colours("\n\n[*] Attack completed successfully", 'green')
         quit_program()
 
 
