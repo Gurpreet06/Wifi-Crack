@@ -53,7 +53,7 @@ The program also has a help menu with the parameter "-h"
          PKMID
          DAuth (Deauthentication attack)
          BFlood (Beacon flooding attack)
-         ETwin (Evil Twin attack) (working on it)
+         ETwin (Evil Twin attack)
 
 ┃  [-h] Help Panel
 ```
