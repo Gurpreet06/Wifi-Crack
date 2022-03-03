@@ -18,8 +18,8 @@ fake beacon frames.
 
 #### Evil Twin attack
 In this evil twin attack we will set up a fake Wi-Fi access point hoping that users will connect to it instead of a 
-legitimate one. When users connect to this access point, all the data they share with the network passes through a 
-server controlled by the attacker.
+legitimate one. When users connect to this access point, all the data they share with the network we will save it into
+a file.
 
 ## Installations
 First we install the necessary libraries to run this script correctly, with the following command.
