@@ -46,7 +46,7 @@ The program also has a help menu with the parameter "-h"
 [!] Usage: sudo python3 wifiCrack.py -n <Network InterFace> -a <parameters>
 ――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――
 
-┃  [-n] Interface in monitor mode
+┃  [-n] Monitor mode interface
 
 ┃  [-a] Attack mode
          Handshake

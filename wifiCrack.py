@@ -67,7 +67,7 @@ def menu_panel():
                                                                                               "-a <parameters>",
                 "green")
     get_colours("――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――", 'red')
-    print(f"\n{Fore.BLUE + '┃'}  {Fore.MAGENTA + '[-n]'}{Fore.YELLOW + ' Interface in monitor mode'}")
+    print(f"\n{Fore.BLUE + '┃'}  {Fore.MAGENTA + '[-n]'}{Fore.YELLOW + ' Monitor mode interface'}")
     print("")
     print(f"{Fore.BLUE + '┃'}  {Fore.MAGENTA + '[-a]'}{Fore.YELLOW + ' Attack mode'}")
     print("")
