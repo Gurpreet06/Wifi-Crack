@@ -1,6 +1,6 @@
 # Wifi-Crack
 
-## The Wifi-Crack program has 4 attack modes.
+## The Wifi-Crack program has 5 attack modes.
 
 #### Handshake attack
 The Handshake attack mode, where we can obtain a valid handshake with which later we can apply brute force attack to obtain the Wi-Fi password.
@@ -16,6 +16,11 @@ networks temporarily inactive. In this mode you can define the time until you wa
 In this attack scenario concerns the connectivity confusion of a wireless client. We are going to transmit countless 
 fake beacon frames.
 
+#### Evil Twin attack
+In this evil twin attack we will set up a fake Wi-Fi access point hoping that users will connect to it instead of a 
+legitimate one. When users connect to this access point, all the data they share with the network passes through a 
+server controlled by the attacker.
+
 ## Installations
 First we install the necessary libraries to run this script correctly, with the following command.
 ```bash 
@@ -30,7 +35,7 @@ First we install the necessary libraries to run this script correctly, with the 
 
 ## Examples of How To Use
 The program has 2 parameters, the first parameter "-n" to specify the name of the network card.
-The second parameter '-a' to specify the attack mode (Handshake | PKMID | DAuth | BFlood).
+The second parameter '-a' to specify the attack mode (Handshake | PKMID | DAuth | BFlood | ETwin).
 
 The program also has a help menu with the parameter "-h"
 
@@ -48,13 +53,14 @@ The program also has a help menu with the parameter "-h"
          PKMID
          DAuth (Deauthentication attack)
          BFlood (Beacon flooding attack)
+         ETwin (Evil Twin attack) (working on it)
 
 ┃  [-h] Help Panel
 ```
 
 ### Usage
 ```bash
-❯ sudo python3 wifiCrack.py -n wlan0 -a handshake / PKMID / DAuth / BFlood
+❯ sudo python3 wifiCrack.py -n wlan0 -a handshake / PKMID / DAuth / BFlood / ETwin
 ```
 
 # Legal Notice
