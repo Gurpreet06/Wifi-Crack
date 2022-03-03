@@ -433,7 +433,7 @@ def attack_func(network_interface, attack_mode):
         print(f"\n{Fore.BLUE + '┃'} {Fore.YELLOW + 'Starting PHP Server...'}")
         time.sleep(3)
         print(f"\n{Fore.RED + '┃'} {Fore.YELLOW + ' [!] Press CTRL+C to stop the attack.'}")
-        os.system(f"xterm -hold -e sudo php -S 192.168.1.1:80")
+        os.system(f"cd login-temp;xterm -hold -e sudo php -S 192.168.1.1:80")
         # Killing all the process.
         process1 = subprocess.Popen(['ps', '-A'], stdout=subprocess.PIPE)
         out, err = process1.communicate()

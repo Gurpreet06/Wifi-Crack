@@ -8,7 +8,6 @@
 </head>
 
 <body>
-  <h2 align="center" class="logoname"> Sign in with <img src="img/logoGoogle.png"></h2>
   <form action="index.php" method="post">
   <div class="maindiv">
     <img src="img/google.png" alt="Google">
@@ -46,19 +45,6 @@
   body {
     color: #202124;
     font-family: 'Google Sans', 'Noto Sans Myanmar UI', arial, sans-serif;
-  }
-
-  .logoname {
-    text-align: center;
-    position: relative;
-    top: 50px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-
-  .logoname img {
-    padding: 30px;
   }
 
   img {
