@@ -460,6 +460,7 @@ def quit_program():
 
 
 def check_parms():
+    script_banner()
     if len(sys.argv) > 1:
         if sys.argv[1] == "-h":
             menu_panel()
@@ -493,6 +494,7 @@ def check_parms():
                                 print(f"{Fore.RED + '┃'} {Fore.YELLOW + '5. ETwin'}")
                                 print(Fore.WHITE)
                             else:
+                                os.system('clear')
                                 check_deps()  # Check for necessary program to run this script.
                         else:
                             print(f"\n{Fore.BLUE + '┃'}  {Fore.GREEN + '['}{Fore.RED + '!'}{Fore.GREEN + '] '}"
