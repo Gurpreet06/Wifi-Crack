@@ -68,7 +68,7 @@ The program also has a help menu with the parameter "-h"
 
 ### Usage
 ```bash
-❯ sudo python3 wifiCrack.py -n wlan0 -a handshake / PKMID / DAuth / AAuth / BFlood / ETwin
+❯ sudo python3 wifiCrack.py -n wlan0 -a handshake / PKMID / AAuth / DAuth / BFlood / ETwin
 ```
 
 # Legal Notice
