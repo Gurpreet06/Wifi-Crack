@@ -4,7 +4,6 @@ import os
 import subprocess
 import time
 import signal
-import pyfiglet
 
 
 def ctrl_c(signum, frame):
