@@ -1,12 +1,19 @@
 # Wifi-Crack
 
-## The Wifi-Crack program has 5 attack modes.
+## The Wifi-Crack program has 6 attack modes.
 
 #### Handshake attack
 The Handshake attack mode, where we can obtain a valid handshake with which later we can apply brute force attack to obtain the Wi-Fi password.
 
 #### PKMID Attack
 PKMID Attack mode is for wireless networks that do not have associated clients, and it tries to obtain a PMKID.
+
+#### Authentication Denial-Of-Service
+This Denial-of-Service-Mode starts as many requests as possible and keeps track of the 
+answers, the AP sends using (MDK4). where mdk4 does itself keep track about clients, and 
+even re-injects valid Data packets it intercepts from the network, so an AP may not be 
+able to distinguish real and fake clients, and may start dropping legitimate ones to 
+free up space.
 
 #### Deauthentication attack
 Deauthentication attack is used against wireless connections. It is like a denial-of-service, abruptly rendering
@@ -51,6 +58,7 @@ The program also has a help menu with the parameter "-h"
 ┃  [-a] Attack mode
          Handshake
          PKMID
+         AAuth (Authentication Denial-Of-Service)
          DAuth (Deauthentication attack)
          BFlood (Beacon flooding attack)
          ETwin (Evil Twin attack)
@@ -60,7 +68,7 @@ The program also has a help menu with the parameter "-h"
 
 ### Usage
 ```bash
-❯ sudo python3 wifiCrack.py -n wlan0 -a handshake / PKMID / DAuth / BFlood / ETwin
+❯ sudo python3 wifiCrack.py -n wlan0 -a handshake / PKMID / DAuth / AAuth / BFlood / ETwin
 ```
 
 # Legal Notice

