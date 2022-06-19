@@ -526,10 +526,10 @@ def attackModes():
           f"{Fore.YELLOW + 'Select a valid attack Mode: '}")
     print(f"\n{Fore.RED + '┃'} {Fore.YELLOW + '1. Handshake'}")
     print(f"{Fore.RED + '┃'} {Fore.YELLOW + '2. PKMID'}")
-    print(f"{Fore.RED + '┃'} {Fore.YELLOW + '3. DAuth'}")
-    print(f"{Fore.RED + '┃'} {Fore.YELLOW + '4. BFlood'}")
-    print(f"{Fore.RED + '┃'} {Fore.YELLOW + '5. ETwin'}")
-    print(f"{Fore.RED + '┃'} {Fore.YELLOW + '6. AAuth'}")
+    print(f"{Fore.RED + '┃'} {Fore.YELLOW + '3. AAuth'}")
+    print(f"{Fore.RED + '┃'} {Fore.YELLOW + '4. DAuth'}")
+    print(f"{Fore.RED + '┃'} {Fore.YELLOW + '5. BFlood'}")
+    print(f"{Fore.RED + '┃'} {Fore.YELLOW + '6. ETwin'}")
     print(Fore.WHITE)
 
 
