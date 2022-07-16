@@ -50,7 +50,7 @@ The program also has a help menu with the parameter "-h"
 ```bash
 ❯ python3 wifiCrack.py
 
-[!] Usage: sudo python3 wifiCrack.py -n <Network InterFace> -a <parameters>
+[!] Usage: sudo python3 wifiCrack.py -i <Network InterFace> -m <parameters>
 ――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――
 
 ┃  [-n] Monitor mode interface
@@ -68,7 +68,7 @@ The program also has a help menu with the parameter "-h"
 
 ### Usage
 ```bash
-❯ sudo python3 wifiCrack.py -n wlan0 -a handshake / PKMID / AAuth / DAuth / BFlood / ETwin
+❯ sudo python3 wifiCrack.py -i wlan0 -m handshake / PKMID / AAuth / DAuth / BFlood / ETwin
 ```
 
 # Legal Notice
