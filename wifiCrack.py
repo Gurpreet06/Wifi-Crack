@@ -5,14 +5,13 @@ import subprocess
 import time
 import signal
 import argparse
-
+import git
 
 # Global Variable
 global netInterfaceName
 
 
 def ctrl_c(signum, frame):
-    print(netInterfaceName)
     get_colours("\n[!] Stopping attack...", "mangeta")
     get_colours("\n\n[!] Clearing Temporary files..", "red")
     get_colours("\n[*] Setting Network interface to it normal mode..", "mangeta")
@@ -86,11 +85,35 @@ def menu_panel():
 
 
 def check_deps(interfaceName, attackMode):
+    subprocess.run(["clear"])
+    try:
+        print(f"\n{Fore.BLUE + '┃'} {Fore.YELLOW + 'Checking updates in the script...'}")
+        pwd = subprocess.run(["pwd"], capture_output=True, text=True)
+        g = git.cmd.Git(pwd.stdout)
+        gitmsg = g.pull()
+        if "Already up to date." not in gitmsg:
+            print(
+                f"\n{Fore.BLUE + '┃'} {Fore.YELLOW + 'Update available, first update the script with the following command'}")
+            print(f"\n{Fore.BLUE + '┃'}  {Fore.YELLOW + ' git pull'}")
+            exit()
+        else:
+            print(f"\n{Fore.BLUE + '┃'}  {Fore.YELLOW + ' The script is up to date'}")
+            print(f"\n{Fore.BLUE + '┃'}  {Fore.YELLOW + ' Continuing with the script'}")
+    except:
+        print(
+            f"\n{Fore.RED + '┃'}  {Fore.YELLOW + ' Error in the script update, check it manually with the following command'}")
+        print(f"\n{Fore.BLUE + '┃'}  {Fore.YELLOW + ' Continuing with the script'}")
+
+    time.sleep(3)
+
+    subprocess.run(["clear"])
+
     if os.getuid() != 0:
         script_banner()
         print(f"\n{Fore.BLUE + '┃'}  {Fore.GREEN + '['}{Fore.RED + '!'}{Fore.GREEN + ''}]"
               f"{Fore.RED + ' Run this script with administrator privileges.'}")
         exit()
+
     subprocess.run(["clear"])
     script_banner()
     get_colours("\n\n[*] Checking necessary programs...", "blue")
@@ -105,7 +128,7 @@ def check_deps(interfaceName, attackMode):
                                       text=True)
         if "Setting up mdk4" in install_mdk4.stdout:
             get_colours("\n[*] MDK4 Installed...", "blue")
-            check_deps(interfaceName, attackMode) # Check for MDK4
+            check_deps(interfaceName, attackMode)  # Check for MDK4
         else:
             get_colours(f"\n[!] There was an error installing the necessary program, Please install the following"
                         f" programs manually: ", 'red')
@@ -123,7 +146,7 @@ def check_deps(interfaceName, attackMode):
                                          text=True)
         if "Setting up Hashcat" in install_hashcat.stdout:
             get_colours("\n[*] Hashcat Installed...", "blue")
-            check_deps(interfaceName, attackMode) # Another Check for HASHCAT
+            check_deps(interfaceName, attackMode)  # Another Check for HASHCAT
         else:
             get_colours(f"\n[!] There was an error installing the necessary program, Please install the following"
                         f" programs manually: ", 'red')
@@ -474,7 +497,7 @@ def attack_func(network_interface, attack_mode):
     # Evil Twin Attack
     elif attack_mode == "ETwin":
         subprocess.run(["sudo", "airmon-ng", "check", "kill"], stdout=subprocess.DEVNULL)
-        access_name = input(Fore.YELLOW + "Access point name: ")
+        access_name = input(Fore.YELLOW + "Access point name to use: ")
         access_channel = input(Fore.YELLOW + "Channel number: ")
         print(f"\n{Fore.BLUE + '┃'} {Fore.YELLOW + 'Configuring files...'}")
         set_hostapd = f"""interface={network_interface}\ndriver=nl80211\nssid={access_name}\nhw_mode=g\nchannel={access_channel}\nmacaddr_acl=0\nignore_broadcast_ssid=0
@@ -549,7 +572,6 @@ def attackModes():
     print(f"{Fore.RED + '┃'} {Fore.YELLOW + '5. BFlood'}")
     print(f"{Fore.RED + '┃'} {Fore.YELLOW + '6. ETwin'}")
     print(Fore.WHITE)
-
 
 
 def check_parms():
