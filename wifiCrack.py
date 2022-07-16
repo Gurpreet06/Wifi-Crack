@@ -85,28 +85,6 @@ def menu_panel():
 
 
 def check_deps(interfaceName, attackMode):
-    subprocess.run(["clear"])
-    try:
-        print(f"\n{Fore.BLUE + '┃'} {Fore.YELLOW + 'Checking updates in the script...'}")
-        pwd = subprocess.run(["pwd"], capture_output=True, text=True)
-        g = git.cmd.Git(pwd.stdout)
-        gitmsg = g.pull()
-        if "Already up to date." not in gitmsg:
-            print(
-                f"\n{Fore.BLUE + '┃'} {Fore.YELLOW + 'Update available, first update the script with the following command'}")
-            print(f"\n{Fore.BLUE + '┃'}  {Fore.YELLOW + ' git pull'}")
-            exit()
-        else:
-            print(f"\n{Fore.BLUE + '┃'}  {Fore.YELLOW + ' The script is up to date'}")
-    except:
-        print(
-            f"\n{Fore.RED + '┃'}  {Fore.YELLOW + ' Error in the script update, check it manually with the following command'}")
-        print(f"\n{Fore.BLUE + '┃'}  {Fore.YELLOW + ' Continuing with the script'}")
-
-    time.sleep(3)
-
-    subprocess.run(["clear"])
-
     if os.getuid() != 0:
         script_banner()
         print(f"\n{Fore.BLUE + '┃'}  {Fore.GREEN + '['}{Fore.RED + '!'}{Fore.GREEN + ''}]"
@@ -602,6 +580,28 @@ def check_parms():
                 cnt = cnt + 1
         else:
             os.system('clear')
+            subprocess.run(["clear"])
+            try:
+                print(f"\n{Fore.BLUE + '┃'} {Fore.YELLOW + 'Checking updates in the script...'}")
+                pwd = subprocess.run(["pwd"], capture_output=True, text=True)
+                g = git.cmd.Git(pwd.stdout)
+                gitmsg = g.pull()
+                if "Already up to date." not in gitmsg:
+                    print(
+                        f"\n{Fore.BLUE + '┃'} {Fore.YELLOW + 'Update available, first update the script with the following command'}")
+                    print(f"\n{Fore.BLUE + '┃'}  {Fore.YELLOW + ' git pull'}")
+                    exit()
+                else:
+                    print(f"\n{Fore.BLUE + '┃'}  {Fore.YELLOW + ' The script is up to date'}")
+            except:
+                print(
+                    f"\n{Fore.RED + '┃'}  {Fore.YELLOW + ' Error in the script update, check it manually with the following command'}")
+                print(f"\n{Fore.BLUE + '┃'}  {Fore.YELLOW + ' git pull'}")
+                time.sleep(2)
+                print(f"\n{Fore.BLUE + '┃'}  {Fore.YELLOW + ' Continuing with the script'}")
+
+            time.sleep(3)
+            subprocess.run(["clear"])
             global netInterfaceName
             netInterfaceName = args.interface
             check_deps(args.interface, args.mode)  # Check for necessary program to run this script.
