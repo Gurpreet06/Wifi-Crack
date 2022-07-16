@@ -98,7 +98,6 @@ def check_deps(interfaceName, attackMode):
             exit()
         else:
             print(f"\n{Fore.BLUE + '┃'}  {Fore.YELLOW + ' The script is up to date'}")
-            print(f"\n{Fore.BLUE + '┃'}  {Fore.YELLOW + ' Continuing with the script'}")
     except:
         print(
             f"\n{Fore.RED + '┃'}  {Fore.YELLOW + ' Error in the script update, check it manually with the following command'}")
