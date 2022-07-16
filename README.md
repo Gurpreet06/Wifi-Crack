@@ -1,4 +1,5 @@
 # Wifi-Crack
+Python Tool to automate WIFI attacks
 
 ## The Wifi-Crack program has 6 attack modes.
 
@@ -37,12 +38,12 @@ First we install the necessary libraries to run this script correctly, with the 
 ```
 
 ## Tested on the following operating systems:
-- Kali linux 2022.1
-- Parrot security 4.11.3
+- Kali linux 2022.2
+- Parrot security 5.0.1
 
 ## Examples of How To Use
-The program has 2 parameters, the first parameter "-n" to specify the name of the network card.
-The second parameter '-a' to specify the attack mode (Handshake | PKMID | DAuth | BFlood | ETwin).
+The program has 2 parameters, the first parameter "-i" to specify the name of the network card.
+The second parameter '-m' to specify the attack mode (Handshake | PKMID | AAuth | DAuth | BFlood | ETwin).
 
 The program also has a help menu with the parameter "-h"
 
@@ -50,14 +51,14 @@ The program also has a help menu with the parameter "-h"
 ```bash
 ❯ python3 wifiCrack.py
 
-[!] Usage: sudo python3 wifiCrack.py -i <Network InterFace> -m <parameters>
+[!] Usage: sudo python3 wifiCrack.py -i <Network interface> -m <Attack mode>
 ――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――
 
-┃  [-n] Monitor mode interface
+┃  [-n] Network interface
 
 ┃  [-a] Attack mode
-         Handshake
-         PKMID
+         Handshake (Capture a handshake)
+         PKMID (Clientless attack)
          AAuth (Authentication Denial-Of-Service)
          DAuth (Deauthentication attack)
          BFlood (Beacon flooding attack)

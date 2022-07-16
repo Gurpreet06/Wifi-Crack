@@ -39,7 +39,7 @@ def script_banner():
        \_/\_/ |___|_| |___|        \___|_|_\/_/ \_\___|_|\_\         \t│                                         │
                                                                      \t└─────────────────────────────────────────┘
     """
-    print(Fore.YELLOW + owner, " \n")
+    print(Fore.YELLOW + owner)
 
 
 # Colours
@@ -65,16 +65,16 @@ def get_colours(text, color):
 
 
 def menu_panel():
-    get_colours(f"\n[{Fore.RED + '!'}{Fore.GREEN + ''}] Usage: sudo python3 " + sys.argv[0] + " -i <Network InterFace> "
-                                                                                              "-m <parameters>",
+    get_colours(f"[{Fore.RED + '!'}{Fore.GREEN + ''}] Usage: sudo python3 " + sys.argv[0] + " -i <Network interface> "
+                                                                                              "-m <Attack mode>",
                 "green")
     get_colours("――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――", 'red')
-    print(f"\n{Fore.BLUE + '┃'}  {Fore.MAGENTA + '[-i]'}{Fore.YELLOW + ' Monitor mode interface'}")
+    print(f"\n{Fore.BLUE + '┃'}  {Fore.MAGENTA + '[-i]'}{Fore.YELLOW + ' Network interface'}")
     print("")
     print(f"{Fore.BLUE + '┃'}  {Fore.MAGENTA + '[-m]'}{Fore.YELLOW + ' Attack mode'}")
     print("")
-    get_colours(f"\t Handshake", "blue")
-    get_colours(f"\t PKMID", "blue")
+    get_colours(f"\t Handshake (Capture a handshake)", "blue")
+    get_colours(f"\t PKMID (Clientless attack)", "blue")
     get_colours(f"\t AAuth (Authentication Denial-Of-Service)", "blue")
     get_colours(f"\t DAuth (Deauthentication attack)", "blue")
     get_colours(f"\t BFlood (Beacon flooding attack)", "blue")
@@ -588,8 +588,9 @@ def check_parms():
                 gitmsg = g.pull()
                 if "Already up to date." not in gitmsg:
                     print(
-                        f"\n{Fore.BLUE + '┃'} {Fore.YELLOW + 'Update available, first update the script with the following command'}")
-                    print(f"\n{Fore.BLUE + '┃'}  {Fore.YELLOW + ' git pull'}")
+                        f"\n{Fore.BLUE + '┃'} {Fore.YELLOW + 'Update available, updating the script'}")
+                    time.sleep(2)
+                    print(f"\n{Fore.BLUE + '┃'}  {Fore.YELLOW + ' Rerun the script to use the latest version.'}")
                     exit()
                 else:
                     print(f"\n{Fore.BLUE + '┃'}  {Fore.YELLOW + ' The script is up to date'}")
