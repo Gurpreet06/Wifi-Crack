@@ -1,5 +1,5 @@
 # Wifi-Crack
-Python Tool to automate WIFI attacks
+Python Tool to automate WIFI attacks.
 
 ## The Wifi-Crack program has 6 attack modes.
 
@@ -42,10 +42,11 @@ First we install the necessary libraries to run this script correctly, with the 
 - Parrot security 5.0.1
 
 ## Examples of How To Use
-The program has 2 parameters, the first parameter "-i" to specify the name of the network card.
-The second parameter '-m' to specify the attack mode (Handshake | PKMID | AAuth | DAuth | BFlood | ETwin).
+The program has 2 parameters:
 
-The program also has a help menu with the parameter "-h"
+The first parameter "-i" to specify the name of the network card (without monitor mode). The second parameter "-m" to specify the attack mode (Handshake | PKMID | AAuth | DAuth | BFlood | ETwin).
+
+The program has a help menu with the "-h" parameter.
 
 ### Help Menu
 ```bash
@@ -54,9 +55,9 @@ The program also has a help menu with the parameter "-h"
 [!] Usage: sudo python3 wifiCrack.py -i <Network interface> -m <Attack mode>
 ――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――
 
-┃  [-n] Network interface
+┃  [-i] Network interface
 
-┃  [-a] Attack mode
+┃  [-m] Attack mode
          Handshake (Capture a handshake)
          PKMID (Clientless attack)
          AAuth (Authentication Denial-Of-Service)
