@@ -430,7 +430,7 @@ def attack_func(network_interface, attack_mode):
         process = subprocess.Popen(
             ["sudo", "hcxdumptool", "-i" + network_interface, "--enable_status=1", "-o", f"{saveOutput}/Capture_PKMID"])
         try:
-            process.wait(timeout=25)  # Time for the process
+            process.wait(timeout=150)  # Time for the process
         except subprocess.TimeoutExpired:
             get_colours(f"\n[!] Timed out - killing process ID -  {Fore.BLUE + str(process.pid)}", 'red')
             process.kill()
