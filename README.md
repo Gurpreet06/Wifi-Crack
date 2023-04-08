@@ -1,5 +1,5 @@
 # Wifi-Crack
-Python Tool to automate WIFI attacks.
+WiFi-Crack is a Python tool designed to automate WiFi attacks in order to obtain a handshake, perform a PMKID attack, temporarily bring down networks through a denial-of-service (DOS) attack, create fake random access points, and launch an Evil Twin attack. This tool is useful for testing the security of wireless networks and can aid in the discovery of vulnerabilities in the network.
 
 ## The Wifi-Crack program has 6 attack modes.
 
