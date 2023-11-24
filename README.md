@@ -1,10 +1,18 @@
+## Acknowledgments
+- Original Author: Gurpreet ~ Singh (@Gurpreet06) and the orginal 
+- Updated by: Arkhalis (@Arkha1is) 
+
+- The script is intended for use on Debian based systems, therefore compatibility with other systems is not officially supported or maintained.
+- You can check your Network Interface by using the `ifconfig` command in the terminal.
+- The script uses the rockyou wordlist for the Handshake attack by default.
+
 # Wifi-Crack
 WiFi-Crack is a Python tool designed to automate WiFi attacks in order to obtain a handshake, perform a PMKID attack, temporarily bring down networks through a denial-of-service (DOS) attack, create fake random access points, and launch an Evil Twin attack. This tool is useful for testing the security of wireless networks and can aid in the discovery of vulnerabilities in the network.
 
 ## The Wifi-Crack program has 6 attack modes.
 
 #### Handshake attack
-The Handshake attack mode, where we can obtain a valid handshake with which later we can apply brute force attack to obtain the Wi-Fi password.
+The Handshake attack mode allows you to obtain a valid handshake with which you can later apply a brute force attack to obtain the Wi-Fi password.
 
 #### PKMID Attack
 PKMID Attack mode is for wireless networks that do not have associated clients, and it tries to obtain a PMKID.
@@ -37,9 +45,12 @@ First we install the necessary libraries to run this script correctly, with the 
 
 ```
 
-## Tested on the following operating systems:
+## Original version tested on the following operating systems:
 - Kali linux 2022.2
 - Parrot security 5.0.1
+
+#### Updated version personally tested by Arkhalis on the following operating system:
+- Ubuntu 22.04
 
 ## Examples of How To Use
 The program has 2 parameters:
@@ -75,4 +86,18 @@ The program has a help menu with the "-h" parameter.
 
 # Legal Notice
 
-This script is intended to be used on networks you own. Don't use this script maliciously. You are responsible for your own actions.
+## Disclaimer
+This script is provided for educational and informational purposes only. It is designed to promote understanding and knowledge of the subject matter. It is not intended to be used for illegal activities.
+
+The author and contributors of this script do not condone, promote, or endorse any form of illegal and/or unethical activity. The use of this script for any illegal activities is strictly prohibited. 
+
+The author and contributors of this script assumes no responsibility or liability for any misuse of this script, or for any damages that may arise, directly or indirectly, from such misuse. 
+
+The use of this script is at your own risk. If you choose to use this script, you agree to accept all legal and ethical responsibility for your actions.
+
+By using this script, you agree to this disclaimer and you waive any rights to hold the author of this script liable for any damage, harm, or legal issues caused by the misuse of this script.
+
+
+
+
+Remember, hacking is illegal. If you engage in any illegal activity, you are responsible for your actions.
