@@ -1,5 +1,6 @@
 ## Acknowledgments
-- Original Author: Gurpreet ~ Singh (@Gurpreet06) and the orginal 
+- Original Author: Gurpreet ~ Singh (@Gurpreet06) 
+  The Original ptoject can be found [here](https://github.com/Gurpreet06/Wifi-Crack)
 - Updated by: Arkhalis (@Arkha1is) 
 
 - The script is intended for use on Debian based systems, therefore compatibility with other systems is not officially supported or maintained.
@@ -101,3 +102,17 @@ By using this script, you agree to this disclaimer and you waive any rights to h
 
 
 Remember, hacking is illegal. If you engage in any illegal activity, you are responsible for your actions.
+
+## License 
+This project in held under the GNU General Public License v3.0
+
+### Permission
+This software and derivatives may be used for commercial purposes, private use, may be modified, distributed, or used to build derivative works.
+
+### Conditions
+Modifications must be released under the same license when distributing the software. In some cases a similar or related license may be used.
+
+### Limitations
+This license includes a disclaimer of warranty. The software is licensed “as is” without warranty of any kind, either expressed or implied. The software licensee provides no warranty.
+
+Please note that this is a simplified summary of the GNU General Public License v3.0. For the full license text, please visit this [link](https://www.gnu.org/licenses/gpl-3.0.html) to the official GPLv3.0 license on the GNU website. 
